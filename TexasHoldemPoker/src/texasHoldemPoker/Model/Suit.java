@@ -2,7 +2,7 @@ package texasHoldemPoker.Model;
 
 public enum Suit 
 {
-	Pica,
+	Picas,
 	Diamantes,
 	Trebol,
 	Corazones

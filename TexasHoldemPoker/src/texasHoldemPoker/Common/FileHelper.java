@@ -2,11 +2,11 @@ package texasHoldemPoker.Common;
 
 import java.io.File;
 
-public class FileUtils {
+public class FileHelper {
 	
 	private String filename;
 	
-	public FileUtils(String filename)
+	public FileHelper(String filename)
 	{
 		this.setFilename(filename);
 	}
