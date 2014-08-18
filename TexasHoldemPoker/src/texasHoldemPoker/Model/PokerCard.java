@@ -12,7 +12,7 @@ public class PokerCard {
 	}
 	
 	public String toString() {
-		return this.getCard().toString() + " " + this.suit.toString();		
+		return this.card.toString() + " " + this.suit.toString();		
 	}
 	
 	public Card getCard() {
@@ -29,5 +29,13 @@ public class PokerCard {
 
 	public void setSuit(Suit suit) {
 		this.suit = suit;
+	}
+	
+	public int getCardValue() {
+		if (this.card == Card.As) {
+			return 14;
+		}
+		
+		return this.card.ordinal() + 1;
 	}
 }

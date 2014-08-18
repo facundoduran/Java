@@ -57,7 +57,7 @@ public class HandEvaluator {
 		{		
 			o = 0;
 			
-			int cardValue = cards.get(i).getCard().ordinal();			
+			int cardValue = cards.get(i).getCardValue();			
 			o = (long)Math.pow(2, cardValue *4);
 			v += o * (( v / o & 15 ) +1);
 		}
@@ -74,7 +74,7 @@ public class HandEvaluator {
 		}
 		else 
 		{	
-			s = 1 << firstCard.getCard().ordinal() | 1 << secondCard.getCard().ordinal() | 1 << thirdCard.getCard().ordinal() | 1 << fourthCard.getCard().ordinal() | 1 << fifthCard.getCard().ordinal();
+			s = 1 << firstCard.getCardValue() | 1 << secondCard.getCardValue() | 1 << thirdCard.getCardValue() | 1 << fourthCard.getCardValue() | 1 << fifthCard.getCardValue();
 		}
 	  
 		//check if exist straight
