@@ -8,25 +8,69 @@ public class PokerGame {
 	private ArrayList<PokerPlayer> players;
 	private ArrayList<PokerCard> table;
 	private long pot;
+	private int bigBlindPos;
 	private int bigBlind;
 	private int smallBlind;
 
-	public PokerGame() {
+	public PokerGame(int bigBlind, int bigBlingPos) {
 		this.deck = new Deck();
 		this.table = new ArrayList<PokerCard>();
 		this.players = new ArrayList<PokerPlayer>();
-		this.pot = 0;
-		this.smallBlind = bigBlind /2 ;
+		this.bigBlind = bigBlind;
+		this.smallBlind = this.bigBlind /2 ;
+		this.pot = this.bigBlind + smallBlind;	
+		this.bigBlindPos = bigBlingPos;
 	}
 	
 	public void addPlayer(PokerPlayer player) {
 		this.players.add(player);
 	}
-	
+		
 	public void dealCards() {
 		for(PokerPlayer pokerPlayer : players) {
 			PokerCard card = deck.shuffleCard();
 			pokerPlayer.addCard(card);
+		}
+	}
+	
+	public void nextTurn() {		
+		if (bigBlindPos == this.players.size()) {
+			this.bigBlindPos = 0 ;
+		}
+		else {
+			bigBlindPos++;
+		}
+	}
+	
+	public PokerPlayer getPlayer() {
+		PokerPlayer playerTurn = this.players.get(bigBlindPos);
+		return playerTurn;
+	}
+	
+	public void playTurn(PokerPlayer playerTurn, PokerPlayerDecision decision) {
+		this.playTurn(playerTurn, decision, 0);
+	}
+	
+	public void playTurn(PokerPlayer playerTurn, PokerPlayerDecision decision, int bet) {
+		if (this.players.contains(playerTurn)) {
+			long amount = this.bigBlind - playerTurn.getBet();
+			
+			switch(decision) {
+			
+			case Call:
+				playerTurn.call(amount);
+				break;
+			case Raise:
+				playerTurn.raise(bet);
+				break;
+			case AllIn:
+				playerTurn.allIn();
+				break;
+			case Leave:
+				this.players.remove(playerTurn);
+				this.nextTurn();
+				break;
+			}	
 		}
 	}
 	
@@ -44,10 +88,6 @@ public class PokerGame {
 		this.addCardInTable();
 	}
 	
-	public void newGame() {
-		
-	}
-	
 	public void finishGame() {
 		//evaluate hands
 
@@ -56,9 +96,11 @@ public class PokerGame {
 		//remove players with balance zero
 		for(PokerPlayer pokerPlayer : players) {
 			if (pokerPlayer.getBalance() == 0) {
-				players.remove(pokerPlayer);
+				//players.remove(pokerPlayer);
 			}
 		}
+		
+		//return class with winner and blind position
 	}
 	
 	public boolean allPlayersHasSameBet() {
@@ -91,5 +133,15 @@ public class PokerGame {
 	private void addCardInTable() {
 		PokerCard card = deck.shuffleCard();
 		table.add(card);
+	}
+	
+	private PokerPlayer getPlayer(PokerPlayer player) {
+		for (PokerPlayer pokerPlayer : this.players) {
+			if (pokerPlayer.equals(player)) {
+				return pokerPlayer;				
+			}			
+		}
+		
+		return null;
 	}
 }

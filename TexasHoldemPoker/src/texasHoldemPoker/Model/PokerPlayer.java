@@ -7,9 +7,11 @@ public class PokerPlayer extends Player{
 	
 	private ArrayList<PokerCard> hand;
 	
-	private long bet;
+	private int bet;
 	
-	private long balance;
+	private int balance;
+	
+	private PokerPlayerDecision decision;
 	
 	public PokerPlayer(String name) {
 		super(name);
@@ -48,19 +50,27 @@ public class PokerPlayer extends Player{
 		this.hand = hand;
 	}
 
-	public long getBet() {
+	public int getBet() {
 		return bet;
 	}
 
-	public void setBet(long bet) {
+	public void setBet(int bet) {
 		this.bet = bet;
 	}
 
-	public long getBalance() {
+	public int getBalance() {
 		return balance;
 	}
 
-	public void setBalance(long balance) {
+	public void setBalance(int balance) {
 		this.balance = balance;
+	}
+
+	public PokerPlayerDecision getDecision() {
+		return decision;
+	}
+
+	public void setDecision(PokerPlayerDecision decision) {
+		this.decision = decision;
 	}
 }
