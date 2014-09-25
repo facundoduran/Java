@@ -16,10 +16,10 @@ public class PokerGame {
 		this.deck = new Deck();
 		this.table = new ArrayList<PokerCard>();
 		this.players = new ArrayList<PokerPlayer>();
-		this.bigBlind = bigBlind;
-		this.smallBlind = this.bigBlind /2 ;
-		this.pot = this.bigBlind + smallBlind;	
-		this.bigBlindPos = bigBlingPos;
+		this.setBigBlind(bigBlind);
+		this.smallBlind = this.getBigBlind() /2 ;
+		this.pot = this.getBigBlind() + smallBlind;	
+		this.setBigBlindPos(bigBlingPos);
 	}
 	
 	public void addPlayer(PokerPlayer player) {
@@ -34,16 +34,16 @@ public class PokerGame {
 	}
 	
 	public void nextTurn() {		
-		if (bigBlindPos == this.players.size()) {
-			this.bigBlindPos = 0 ;
+		if (getBigBlindPos() == this.players.size()) {
+			this.setBigBlindPos(0) ;
 		}
 		else {
-			bigBlindPos++;
+			setBigBlindPos(getBigBlindPos() + 1);
 		}
 	}
 	
 	public PokerPlayer getPlayer() {
-		PokerPlayer playerTurn = this.players.get(bigBlindPos);
+		PokerPlayer playerTurn = this.players.get(getBigBlindPos());
 		return playerTurn;
 	}
 	
@@ -53,7 +53,7 @@ public class PokerGame {
 	
 	public void playTurn(PokerPlayer playerTurn, PokerPlayerDecision decision, int bet) {
 		if (this.players.contains(playerTurn)) {
-			long amount = this.bigBlind - playerTurn.getBet();
+			long amount = this.getBigBlind() - playerTurn.getBet();
 			
 			switch(decision) {
 			
@@ -106,7 +106,7 @@ public class PokerGame {
 	public boolean allPlayersHasSameBet() {
 	
 		for(PokerPlayer pokerPlayer : players) {
-			if (pokerPlayer.getBet() != this.bigBlind) {
+			if (pokerPlayer.getBet() != this.getBigBlind()) {
 				return false;
 			}
 		}
@@ -130,6 +130,22 @@ public class PokerGame {
 		this.pot = pot;
 	}	
 	
+	public int getBigBlind() {
+		return bigBlind;
+	}
+
+	public void setBigBlind(int bigBlind) {
+		this.bigBlind = bigBlind;
+	}
+
+	public int getBigBlindPos() {
+		return bigBlindPos;
+	}
+
+	public void setBigBlindPos(int bigBlindPos) {
+		this.bigBlindPos = bigBlindPos;
+	}
+
 	private void addCardInTable() {
 		PokerCard card = deck.shuffleCard();
 		table.add(card);
