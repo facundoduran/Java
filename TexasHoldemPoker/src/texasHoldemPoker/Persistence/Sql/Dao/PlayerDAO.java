@@ -18,6 +18,14 @@ public class PlayerDAO implements IPlayerDAO {
 		return this.getjugadoresByQuery(query);
 	}
 	
+	@Override 
+	public ArrayList<Player> getAllPlayers(String name)
+	{
+		String query = "SELECT name, email, balance FROM Player WHERE name LIKE ";
+		query += QueryBuilder.getParameterWithQuotesAndLikeOperator(name);
+		return this.getjugadoresByQuery(query);
+	}	
+	
 	@Override
 	public Player getPlayer(String nombre)
 	{

@@ -6,6 +6,8 @@ import texasHoldemPoker.Model.*;
 public interface IPlayerDAO {
 	ArrayList<Player> getAllPlayers();
 	
+	ArrayList<Player> getAllPlayers(String name);
+	
 	Player getPlayer(String name);
 	
 	void insertPlayer(Player player);

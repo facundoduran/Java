@@ -127,8 +127,8 @@ public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog{
 		String playerEmail = txtEmail.getText();
 		String playerBalance = txtBalance.getText();
 		
-		if (Validators.StringIsNullOrEmpty(playerName) &&
-			Validators.StringIsNullOrEmpty(playerEmail) &&
+		if (Validators.StringIsNotNullOrEmpty(playerName) &&
+			Validators.StringIsNotNullOrEmpty(playerEmail) &&
 			Validators.isNumeric(playerBalance))
 		{
 			int playerSalary = Integer.parseInt(playerBalance);

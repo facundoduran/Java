@@ -14,7 +14,7 @@ public class Validators {
 	  return true;  
 	}
 	
-	public static boolean StringIsNullOrEmpty(String str)
+	public static boolean StringIsNotNullOrEmpty(String str)
 	{
 		return (str != null && !str.isEmpty());	
 	}
