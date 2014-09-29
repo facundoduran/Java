@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class TexasHoldemMainApp {
+public class TexasHoldemMainApp extends JFrame {
 
 	private JFrame frmTexasHoldemPoker;
 
@@ -75,6 +75,18 @@ public class TexasHoldemMainApp {
 			}
 		});
 		mnNewMenu_1.add(mntmNewMenuItem_1);
+		
+		JMenuItem mntmAgregarJugador = new JMenuItem("Agregar Jugador");
+		mntmAgregarJugador.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showCreatePlayerForm();
+			}
+		});
+		mnNewMenu_1.add(mntmAgregarJugador);
+	}
+	
+	private void showCreatePlayerForm() {
+		TexasHoldemPokerCreatePlayer createPlayerForm = new TexasHoldemPokerCreatePlayer(this, true);
 	}
 
 }
