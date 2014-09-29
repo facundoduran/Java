@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class SqlLiteConnection {
 	
-	private final static String databaseSource = "jdbc:sqlite:Database\\TexasHoldemPoker\\";
+	private final static String databaseSource = "jdbc:sqlite:Database\\TexasHoldemPoker.sqlite";
 	private final static String connectorJDBC = "org.sqlite.JDBC";
 		
 	public static void executeQuery(String query)
