@@ -121,7 +121,41 @@ public class TexasHoldemMainApp extends JFrame {
 	}
 	
 	private void showPlayerDecision() {
-		TexasHoldemPlayerDecision playerDecisionForm = new TexasHoldemPlayerDecision();
+		java.util.ArrayList<texasHoldemPoker.Model.PokerCard> cards = 
+				new java.util.ArrayList<texasHoldemPoker.Model.PokerCard>();
+		
+		cards.add(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.As, 
+				texasHoldemPoker.Model.Suit.Corazones));
+		
+		cards.add(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.As, 
+				texasHoldemPoker.Model.Suit.Picas));
+		
+		cards.add(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.As, 
+				texasHoldemPoker.Model.Suit.Diamantes));
+		
+		cards.add(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.As, 
+				texasHoldemPoker.Model.Suit.Trebol));
+		
+		cards.add(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.Cinco, 
+				texasHoldemPoker.Model.Suit.Corazones));
+		
+		texasHoldemPoker.Model.PokerPlayer pokerPlayer = new texasHoldemPoker.Model.PokerPlayer("Facundo");
+		
+		pokerPlayer.addCard(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.Cinco, 
+				texasHoldemPoker.Model.Suit.Trebol));
+		
+		pokerPlayer.addCard(new texasHoldemPoker.Model.PokerCard(
+				texasHoldemPoker.Model.Card.Cinco, 
+				texasHoldemPoker.Model.Suit.Picas));		
+		
+		TexasHoldemPlayerDecision playerDecisionForm = 
+				new TexasHoldemPlayerDecision(cards, pokerPlayer, 50);
 		playerDecisionForm.setVisible(true);
 	}
 }

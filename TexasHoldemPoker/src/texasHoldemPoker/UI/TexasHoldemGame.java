@@ -261,9 +261,7 @@ public class TexasHoldemGame {
 				this.setPlayerInfo(currentPlayer, this.game.getBigBlind());
 				
 				//Wait for UI Response
-				synchronized (currentPlayer) {
-					playerPlays.wait();
-				}
+
 				
 				if(this.game.getPlayers().size() == 1) 
 				{
@@ -303,29 +301,15 @@ public class TexasHoldemGame {
 	}
 	
 	private void playerChecks() {
-		synchronized (playerPlays) {
-			playerPlays.notify();
-			PokerPlayer currentPlayer = this.game.getPlayer();
-			this.game.playTurn(currentPlayer, PokerPlayerDecision.Call);
-        }	
+
 	}
 	
 	private void playerLeave() {
-		synchronized (playerPlays) {
-			playerPlays.notify();
-			PokerPlayer currentPlayer = this.game.getPlayer();
-			this.game.playTurn(currentPlayer, PokerPlayerDecision.Leave);
-        }
+
 	}
 	
 	private void playerBet() {
-		synchronized (playerPlays) {
-			playerPlays.notify();
-			PokerPlayer currentPlayer = this.game.getPlayer();
-			int amount = Integer.parseInt(this.txtBet.getText());
-			
-			this.game.playTurn(currentPlayer, PokerPlayerDecision.Raise, amount);
-        }
+
 	}
 	
 	private void showTurnCards() {
