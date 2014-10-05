@@ -8,6 +8,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import java.awt.BorderLayout;
 
 public class TexasHoldemMainApp extends JFrame {
 
@@ -54,6 +56,7 @@ public class TexasHoldemMainApp extends JFrame {
 		JMenuItem mntmJugar = new JMenuItem("Jugar");
 		mntmJugar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				showSelectPlayerForm();
 			}
 		});
 		mnNewMenu.add(mntmJugar);
@@ -92,13 +95,33 @@ public class TexasHoldemMainApp extends JFrame {
 		});
 		mnSalaryHistoryMain.add(mntmAddCredit);
 		mnSalaryHistoryMain.add(mntmAddPlayer);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showPlayerDecision();
+			}
+		});
+		frmTexasHoldemPoker.getContentPane().add(btnNewButton, BorderLayout.WEST);
+	}
+	
+	private void showSelectPlayerForm() {
+		TexasHoldemSelectPlayers selectPlayerForm = new TexasHoldemSelectPlayers();
+		selectPlayerForm.setVisible(true);
 	}
 	
 	private void showCreatePlayerForm() {
 		TexasHoldemPokerCreatePlayer createPlayerForm = new TexasHoldemPokerCreatePlayer(this, true);
+		createPlayerForm.setVisible(true);
 	}
 	
 	private void showPlayerSearchForm() {
 		TexasHoldemPlayer playerSearch = new TexasHoldemPlayer();
+		playerSearch.setVisible(true);
+	}
+	
+	private void showPlayerDecision() {
+		TexasHoldemPlayerDecision playerDecisionForm = new TexasHoldemPlayerDecision();
+		playerDecisionForm.setVisible(true);
 	}
 }

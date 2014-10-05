@@ -11,12 +11,6 @@ public class FileHelper {
 		this.setFilename(filename);
 	}
 	
-	public String getProjectPath()
-	{
-		String path = System.getProperty("user.dir");
-		return path;
-	}
-	
 	public boolean fileExists()
 	{
 		File file = new File(this.getFilename());
@@ -29,5 +23,15 @@ public class FileHelper {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	
+	public static String getImagePath(String image) {
+		return FileHelper.getProjectPath() + "\\src\\texasHoldemPoker\\UI\\Images\\" + image;
+	}
+	
+	public static String getProjectPath()
+	{
+		String path = System.getProperty("user.dir");
+		return path;
 	}
 }

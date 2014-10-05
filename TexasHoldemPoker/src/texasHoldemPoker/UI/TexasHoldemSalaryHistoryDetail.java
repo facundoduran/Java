@@ -41,11 +41,22 @@ public class TexasHoldemSalaryHistoryDetail extends javax.swing.JDialog {
 	 * Create the application.
 	 */
 	public TexasHoldemSalaryHistoryDetail(java.awt.Frame parent, boolean modal, Player player) {
-		super(parent, modal);
-		
+		super(parent, modal);		
 		this.player = player;
 		this.salaryHistoryDAO = new SalaryHistoryDAO();
 
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {	
+		this.setBounds(100, 100, 461, 315);
+		this.setTitle("Detalle del historial de cargas");
+		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
 		JPanel panel = new JPanel();
 		SpringLayout sl_panel = new SpringLayout();
 		panel.setLayout(sl_panel);
@@ -99,20 +110,7 @@ public class TexasHoldemSalaryHistoryDetail extends javax.swing.JDialog {
 		sl_panel.putConstraint(SpringLayout.NORTH, lblPlayerName, 0, SpringLayout.NORTH, lblHistorial);
 		sl_panel.putConstraint(SpringLayout.WEST, lblPlayerName, 33, SpringLayout.EAST, lblHistorial);
 		panel.add(lblPlayerName);
-		this.getContentPane().setLayout(groupLayout);
-
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {	
-		this.setBounds(100, 100, 461, 315);
-		this.setTitle("Detalle del historial de cargas");
-		this.setResizable(false);
-		this.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.getContentPane().setLayout(groupLayout);		
 	}
 	
 	private void InitializeFormValues(Player player)

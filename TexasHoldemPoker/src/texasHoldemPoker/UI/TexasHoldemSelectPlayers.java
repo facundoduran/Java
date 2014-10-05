@@ -27,29 +27,12 @@ import java.util.ArrayList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class TexasHoldemSelectPlayers {
+public class TexasHoldemSelectPlayers extends JFrame {
 
-	private JFrame frmSeleccionDeJugadores;
 	private JList listPlayers;
 	private JList listPokerPlayers;
 	private IPlayerDAO playerDAO;
 	private JLabel lblPlayerSalary;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TexasHoldemSelectPlayers window = new TexasHoldemSelectPlayers();
-					window.frmSeleccionDeJugadores.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -63,11 +46,19 @@ public class TexasHoldemSelectPlayers {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		/*
 		frmSeleccionDeJugadores = new JFrame();
 		frmSeleccionDeJugadores.setResizable(false);
 		frmSeleccionDeJugadores.setTitle("Seleccion de jugadores");
 		frmSeleccionDeJugadores.setBounds(100, 100, 448, 339);
 		frmSeleccionDeJugadores.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		*/
+		
+		this.setResizable(false);
+		this.setTitle("Seleccion de jugadores");
+		this.setBounds(100, 100, 448, 339);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		listPlayers = new JList();
 		listPlayers.addListSelectionListener(new ListSelectionListener() {
@@ -106,7 +97,7 @@ public class TexasHoldemSelectPlayers {
 		JLabel lblSalary = new JLabel("Salario:");
 		
 		lblPlayerSalary = new JLabel("");
-		GroupLayout groupLayout = new GroupLayout(frmSeleccionDeJugadores.getContentPane());
+		GroupLayout groupLayout = new GroupLayout(this.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -157,7 +148,7 @@ public class TexasHoldemSelectPlayers {
 						.addComponent(lblPlayerSalary))
 					.addContainerGap(53, Short.MAX_VALUE))
 		);
-		frmSeleccionDeJugadores.getContentPane().setLayout(groupLayout);
+		this.getContentPane().setLayout(groupLayout);
 		
 		loadPlayers();
 	}
@@ -227,6 +218,9 @@ public class TexasHoldemSelectPlayers {
 			String playerSalary = Integer.toString(player.getSalary());
 				
 			this.lblPlayerSalary.setText(playerSalary);
+		}
+		else {
+			this.lblPlayerSalary.setText("");
 		}
 	}
 	

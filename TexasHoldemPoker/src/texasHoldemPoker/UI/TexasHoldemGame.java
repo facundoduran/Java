@@ -18,13 +18,16 @@ import javax.swing.JSlider;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
+import texasHoldemPoker.Model.Player;
 import texasHoldemPoker.Model.PokerGame;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
+
 import javax.swing.JTextField;
 
 public class TexasHoldemGame {
@@ -346,5 +349,14 @@ public class TexasHoldemGame {
 	
 	private void updateMethod(int value) {
 		this.txtBet.setText(String.valueOf(value));
+	}
+	
+	private void addPlayers(ArrayList<Player> players) {
+		for(Player player : players) {
+			PokerPlayer pokerPlayer = new PokerPlayer(player.getName());			
+			pokerPlayer.setBalance(player.getSalary());
+			
+			this.game.addPlayer(pokerPlayer);
+		}
 	}
 }

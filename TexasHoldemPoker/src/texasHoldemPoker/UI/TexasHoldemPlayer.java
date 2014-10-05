@@ -3,13 +3,11 @@ package texasHoldemPoker.UI;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.SpringLayout;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import texasHoldemPoker.Model.Player;
 import texasHoldemPoker.Persistence.Sql.Dao.IPlayerDAO;
@@ -18,8 +16,7 @@ import texasHoldemPoker.Common.Validators;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -165,6 +162,7 @@ public class TexasHoldemPlayer extends JFrame {
 			Player player = this.playerDao.getPlayer(playerName);	
 
 			TexasHoldemPokerAddCredit playerDetail = new TexasHoldemPokerAddCredit(this, true, player);
+			playerDetail.setVisible(true);
 		}			
 	}
 	
@@ -187,6 +185,7 @@ public class TexasHoldemPlayer extends JFrame {
 			Player player = this.playerDao.getPlayer(playerName);	
 
 			TexasHoldemSalaryHistoryDetail playerDetail = new TexasHoldemSalaryHistoryDetail(this, true, player);
+			playerDetail.setVisible(true);
 		}		
 	}
 	
