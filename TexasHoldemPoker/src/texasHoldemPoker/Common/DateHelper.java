@@ -8,16 +8,21 @@ import java.util.Date;
 
 public class DateHelper {
 
-	public static String getCurrentDate()
-	{
+	public static String getCurrentDateAsString() {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
+		
 		String currentDate = dateFormat.format((calendar.getTime()));
 		return currentDate;		
 	}
 	
-	public static Date parseString(String date)
-	{
+	public static Date getCurrentDate() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Calendar calendar = Calendar.getInstance();		
+		return calendar.getTime();
+	}
+	
+	public static Date parseString(String date) {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date parsedDate = new Date();
 		

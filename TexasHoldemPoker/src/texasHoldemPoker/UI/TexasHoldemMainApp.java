@@ -66,31 +66,43 @@ public class TexasHoldemMainApp extends JFrame {
 		});
 		mnNewMenu.add(mntmNewMenuItem);
 		
-		JMenu mnNewMenu_1 = new JMenu("Historial de cargas");
-		menuBar.add(mnNewMenu_1);
+		JMenu mnSalaryHistoryMain = new JMenu("Historial de cargas");
+		menuBar.add(mnSalaryHistoryMain);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Consultar Historial de cargas");
-		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+		JMenuItem mntmSalaryHistory = new JMenuItem("Consultar Historial de cargas");
+		mntmSalaryHistory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showPlayerHistoryForm();
 			}
 		});
-		mnNewMenu_1.add(mntmNewMenuItem_1);
+		mnSalaryHistoryMain.add(mntmSalaryHistory);
 		
-		JMenuItem mntmAgregarJugador = new JMenuItem("Agregar Jugador");
-		mntmAgregarJugador.addActionListener(new ActionListener() {
+		JMenuItem mntmAddPlayer = new JMenuItem("Agregar Jugador");
+		mntmAddPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showCreatePlayerForm();
 			}
 		});
-		mnNewMenu_1.add(mntmAgregarJugador);
+		
+		JMenuItem mntmAddCredit = new JMenuItem("Cargar Saldo");
+		mntmAddCredit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		mnSalaryHistoryMain.add(mntmAddCredit);
+		mnSalaryHistoryMain.add(mntmAddPlayer);
 	}
 	
 	private void showPlayerHistoryForm() {
-		TexasHoldemSalaryHistory salaryHistoryForm = new TexasHoldemSalaryHistory();
+		TexasHoldemPlayer playerSearch = new TexasHoldemPlayer();
 	}
 	
 	private void showCreatePlayerForm() {
 		TexasHoldemPokerCreatePlayer createPlayerForm = new TexasHoldemPokerCreatePlayer(this, true);
+	}
+	
+	private void showPlayerSearchForm() {
+		TexasHoldemPlayer playerSearch = new TexasHoldemPlayer();
 	}
 }

@@ -13,6 +13,13 @@ public class Player {
 		this.name = name;
 	}
 	
+	public Player(int id,String name, String email, int balance) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.salary = balance;
+	}
+	
 	public Player(String name, String email, int balance) {
 		this.name = name;
 		this.email = email;

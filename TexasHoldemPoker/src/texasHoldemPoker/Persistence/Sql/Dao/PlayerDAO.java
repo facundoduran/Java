@@ -57,10 +57,18 @@ public class PlayerDAO implements IPlayerDAO {
 		SqlLiteConnection.executeQuery(query);
 	}
 	
+	@Override	
+	public void updateSalary(int playerId, double salary) {
+		String query = "update Player set "  
+				+ "balance = " + QueryBuilder.getParameterWithFinalSpace(String.valueOf(salary))
+				+ "where Id = " + QueryBuilder.getParameterWithEndStatement(playerId);
+		SqlLiteConnection.executeQuery(query);
+	}
+	
 	@SuppressWarnings("finally")
 	private ArrayList<Player> getjugadoresByQuery(String query)
 	{
-		ArrayList<Player> jugadores = new ArrayList<Player>();
+		ArrayList<Player> players = new ArrayList<Player>();
 		
 		try 
 		{
@@ -71,12 +79,14 @@ public class PlayerDAO implements IPlayerDAO {
 	        resultSet = statement.executeQuery(query);
 		    while (resultSet.next() ) 
 		    {
+		    	int playerId = resultSet.getInt("playerId");
 		        String nombre = resultSet.getString("name");
 		        String email = resultSet.getString("email");
 		        int saldo = resultSet.getInt("balance");
 		        
-		        Player jugador = new Player(nombre, email, saldo);
-		        jugadores.add(jugador);
+		        Player player = new Player(playerId, nombre, email, saldo);
+		        
+		        players.add(player);
 		    }
 			
 		    SqlLiteConnection.closeConnection(connection);
@@ -87,7 +97,7 @@ public class PlayerDAO implements IPlayerDAO {
 		}
 		finally
 		{
-			return jugadores;
+			return players;
 		}
 	}	
 }

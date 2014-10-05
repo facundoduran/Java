@@ -4,8 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
@@ -20,6 +20,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -138,7 +139,8 @@ public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog {
 		}
 		else
 		{
-			
+			JOptionPane.showMessageDialog(new JFrame(), "El valor ingresado no es un numero ", "Error",
+			        JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

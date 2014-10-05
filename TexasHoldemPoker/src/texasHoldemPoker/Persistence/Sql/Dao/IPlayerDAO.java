@@ -13,4 +13,6 @@ public interface IPlayerDAO {
 	void insertPlayer(Player player);
 	
 	void updatePlayer(Player player);
+	
+	void updateSalary(int playerId, double salary);
 }
