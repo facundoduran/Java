@@ -136,6 +136,11 @@ public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog {
 			
 			Player player = new Player(playerName, playerEmail, playerSalary);
 			playerDao.insertPlayer(player);
+			
+			JOptionPane.showMessageDialog(new JFrame(), "Se ha creado el jugador", "Jugador creado con exito",
+			        JOptionPane.INFORMATION_MESSAGE);
+			
+			this.dispose();
 		}
 		else
 		{

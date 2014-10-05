@@ -35,7 +35,6 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 	private JFrame frame;
 	private JTextField txtBalance;
 	private JLabel lblName;
-	private JLabel lblPlayerName;
 	private Player player;
 	private IPlayerDAO playerDAO;
 	private ISalaryHistoryDAO salaryHistoryDAO;
@@ -69,32 +68,38 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 		txtBalance = new JTextField();
 		txtBalance.setColumns(10);
 		
-		lblPlayerName = new JLabel(player.getName());
+		String playerName = player != null ? player.getName() : "";
+		
+		JLabel lblPlayerName = new JLabel(playerName);
+		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblName))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblBalance)
-							.addGap(18)
-							.addComponent(txtBalance, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(130)
 							.addComponent(btnCancel)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnSave)))
+							.addComponent(btnSave))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblBalance)
+								.addComponent(lblName))
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblPlayerName)
+								.addComponent(txtBalance, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE))))
 					.addGap(21))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(11)
-					.addComponent(lblName)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblName)
+						.addComponent(lblPlayerName))
 					.addGap(14)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblBalance)
