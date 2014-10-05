@@ -1,6 +1,7 @@
 package texasHoldemPoker.Model;
 
 public class Player {
+	private int id;
 	
 	private String name;
 	
@@ -20,6 +21,14 @@ public class Player {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public void setName(String name) {

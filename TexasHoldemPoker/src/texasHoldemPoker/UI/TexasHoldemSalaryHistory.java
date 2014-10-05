@@ -9,8 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import texasHoldemPoker.Model.Player;
+import texasHoldemPoker.Persistence.Sql.Dao.IPlayerDAO;
 import texasHoldemPoker.Persistence.Sql.Dao.PlayerDAO;
 import texasHoldemPoker.Common.Validators;
 
@@ -19,17 +21,19 @@ import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public class TexasHoldemSalaryHistory {
+public class TexasHoldemSalaryHistory extends JFrame {
 
 	private JFrame frmHistorialDeCargas;
 	private JTable tblSearch;
 	private JTextField txtPlayer;
 	private JLabel lblResults;
+	private IPlayerDAO playerDao;
 
 	/**
 	 * Launch the application.
@@ -51,6 +55,7 @@ public class TexasHoldemSalaryHistory {
 	 * Create the application.
 	 */
 	public TexasHoldemSalaryHistory() {
+		this.playerDao = new PlayerDAO();
 		initialize();
 	}
 
@@ -58,10 +63,17 @@ public class TexasHoldemSalaryHistory {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		/*
 		frmHistorialDeCargas = new JFrame();
 		frmHistorialDeCargas.setTitle("Historial de cargas");
-		frmHistorialDeCargas.setBounds(100, 100, 576, 403);
+		frmHistorialDeCargas.setBounds(100, 100, 575, 422);
 		frmHistorialDeCargas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		*/
+	
+		this.setVisible(true);
+		this.setTitle("Historial de cargas");
+		this.setBounds(100, 100, 575, 422);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JButton btnSearch = new JButton("Buscar");
 		btnSearch.addActionListener(new ActionListener() {
@@ -78,23 +90,32 @@ public class TexasHoldemSalaryHistory {
 		lblResults = new JLabel("Resultados para su busqueda:");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		GroupLayout groupLayout = new GroupLayout(frmHistorialDeCargas.getContentPane());
+		
+		JButton btnShowSalaryHistory = new JButton("Ver Historial");
+		btnShowSalaryHistory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnShowSalaryHistory();
+			}
+		});
+		GroupLayout groupLayout = new GroupLayout(this.getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblPlayer, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
 							.addGap(22)
 							.addComponent(txtPlayer, GroupLayout.PREFERRED_SIZE, 375, GroupLayout.PREFERRED_SIZE)
 							.addGap(6)
 							.addComponent(btnSearch))
-						.addComponent(lblResults, Alignment.LEADING))
+						.addComponent(lblResults))
 					.addGap(149))
-				.addGroup(groupLayout.createSequentialGroup()
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 527, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnShowSalaryHistory)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 527, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(150, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
@@ -110,7 +131,9 @@ public class TexasHoldemSalaryHistory {
 					.addComponent(lblResults)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(19, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnShowSalaryHistory)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		
 		tblSearch = new JTable();
@@ -119,25 +142,36 @@ public class TexasHoldemSalaryHistory {
 			new Object[][] {
 			},
 			new String[] {
-				"Monto", "Fecha", "Saldo"
+				"Nombre", "Email", "Saldo"
 			}
 		));
-		frmHistorialDeCargas.getContentPane().setLayout(groupLayout);
+		this.getContentPane().setLayout(groupLayout);
 	}
 	
 	private void btnSearch() {
-		String playerName = txtPlayer.getText();
+		String playerName = this.txtPlayer.getText();
 
 		if(Validators.StringIsNotNullOrEmpty(playerName)) {
-			PlayerDAO playerDao = new PlayerDAO();
-			//TO DO Crear la tabla de historiales de cargas...			
-			ArrayList<Player> searchResult = playerDao.getAllPlayers(playerName);
+			ArrayList<Player> searchResult = this.playerDao.getAllPlayers(playerName);
 			DrawTable(searchResult);
 		}		
 	}
 	
+	private void btnShowSalaryHistory()
+	{
+		int selectedRow = this.tblSearch.getSelectedRow();
+		
+		if (selectedRow >= 0)
+		{
+			String playerName = this.tblSearch.getModel().getValueAt(selectedRow, 0).toString();
+			Player player = this.playerDao.getPlayer(playerName);	
+
+			TexasHoldemSalaryHistoryDetail playerDetail = new TexasHoldemSalaryHistoryDetail(this, true, player);
+		}		
+	}
+	
 	private void DrawTable(ArrayList<Player> players) {
-	    DefaultTableModel tableModel = (DefaultTableModel) tblSearch.getModel();
+	    DefaultTableModel tableModel = (DefaultTableModel) this.tblSearch.getModel();
 	    	   
 	    for(Player player : players)
 	    {

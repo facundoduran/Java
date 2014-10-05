@@ -14,14 +14,14 @@ public class PlayerDAO implements IPlayerDAO {
 	@Override
 	public ArrayList<Player> getAllPlayers()
 	{
-		String query = "SELECT name, email, balance FROM Player";
+		String query = "SELECT Id, name, email, balance FROM Player";
 		return this.getjugadoresByQuery(query);
 	}
 	
 	@Override 
 	public ArrayList<Player> getAllPlayers(String name)
 	{
-		String query = "SELECT name, email, balance FROM Player WHERE name LIKE ";
+		String query = "SELECT Id, name, email, balance FROM Player WHERE name LIKE ";
 		query += QueryBuilder.getParameterWithQuotesAndLikeOperator(name);
 		return this.getjugadoresByQuery(query);
 	}	
@@ -29,7 +29,7 @@ public class PlayerDAO implements IPlayerDAO {
 	@Override
 	public Player getPlayer(String nombre)
 	{
-		String query = "Select * from Player Where Name = " 
+		String query = "Select Id, name, email, balance from Player Where Name = " 
 			+ QueryBuilder.getParameterWithQuotes(nombre);
 		
 		ArrayList<Player> jugadores = this.getjugadoresByQuery(query); 
@@ -57,6 +57,7 @@ public class PlayerDAO implements IPlayerDAO {
 		SqlLiteConnection.executeQuery(query);
 	}
 	
+	@SuppressWarnings("finally")
 	private ArrayList<Player> getjugadoresByQuery(String query)
 	{
 		ArrayList<Player> jugadores = new ArrayList<Player>();

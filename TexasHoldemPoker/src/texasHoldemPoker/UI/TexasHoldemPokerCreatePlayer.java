@@ -24,7 +24,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog{
+public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog {
 
 	private JFrame frame;
 	private JTextField txtName;
@@ -33,7 +33,6 @@ public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog{
 
 	public TexasHoldemPokerCreatePlayer(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
-		setModal(true);
 		
 		JButton btnSave = new JButton("Aceptar");
 		btnSave.addActionListener(new ActionListener() {
@@ -106,18 +105,19 @@ public class TexasHoldemPokerCreatePlayer extends javax.swing.JDialog{
 					.addContainerGap())
 		);
 		getContentPane().setLayout(groupLayout);
+		
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-	
-		setBounds(100, 100, 270, 202);
-		setTitle("Crear jugador");
-		setResizable(false);
-		setVisible(true);
+	private void initialize() {	
+		this.setBounds(100, 100, 270, 202);
+		this.setTitle("Crear jugador");
+		this.setResizable(false);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	private void btnSaveClick()

@@ -150,14 +150,4 @@ public class PokerGame {
 		PokerCard card = deck.shuffleCard();
 		table.add(card);
 	}
-	
-	private PokerPlayer getPlayer(PokerPlayer player) {
-		for (PokerPlayer pokerPlayer : this.players) {
-			if (pokerPlayer.equals(player)) {
-				return pokerPlayer;				
-			}			
-		}
-		
-		return null;
-	}
 }
