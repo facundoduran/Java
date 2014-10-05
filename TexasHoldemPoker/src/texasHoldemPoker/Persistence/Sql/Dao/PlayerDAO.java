@@ -79,7 +79,7 @@ public class PlayerDAO implements IPlayerDAO {
 	        resultSet = statement.executeQuery(query);
 		    while (resultSet.next() ) 
 		    {
-		    	int playerId = resultSet.getInt("playerId");
+		    	int playerId = resultSet.getInt("Id");
 		        String nombre = resultSet.getString("name");
 		        String email = resultSet.getString("email");
 		        int saldo = resultSet.getInt("balance");

@@ -42,6 +42,7 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 	
 	public TexasHoldemPokerAddCredit(java.awt.Frame parent, boolean modal, Player player) {
 		super(parent, modal);
+		setResizable(false);
 		
 		this.player = player;
 		this.salaryHistoryDAO = new SalaryHistoryDAO();
@@ -68,38 +69,33 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 		txtBalance = new JTextField();
 		txtBalance.setColumns(10);
 		
-		lblPlayerName = new JLabel("");
+		lblPlayerName = new JLabel(player.getName());
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblName)
-							.addGap(42)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblPlayerName)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(10)
-									.addComponent(btnCancel)
-									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(btnSave)))
-							.addContainerGap())
+							.addGap(10)
+							.addComponent(lblName))
 						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
 							.addComponent(lblBalance)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtBalance, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-							.addGap(9))))
+							.addGap(18)
+							.addComponent(txtBalance, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(130)
+							.addComponent(btnCancel)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnSave)))
+					.addGap(21))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblName)
-						.addComponent(lblPlayerName))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(lblName)
+					.addGap(14)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblBalance)
 						.addComponent(txtBalance, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -107,7 +103,7 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnCancel)
 						.addComponent(btnSave))
-					.addContainerGap(77, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		getContentPane().setLayout(groupLayout);
 		
@@ -118,9 +114,8 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {	
-		this.setBounds(100, 100, 270, 137);
-		this.setTitle("Crear jugador");
-		this.setResizable(false);
+		this.setBounds(100, 100, 309, 138);
+		this.setTitle("Cargar Saldo");
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
@@ -131,14 +126,22 @@ public class TexasHoldemPokerAddCredit extends javax.swing.JDialog {
 		
 		if (Validators.isNumeric(playerBalance) && this.player != null)
 		{
-			double salary = Double.parseDouble(playerBalance);
-			double amount = Double.parseDouble(playerBalance);
+			int salary = player.getSalary();
+			int amount = Integer.parseInt(playerBalance);
 			int playerId = player.getId();
+			
+			int newSalary = salary + amount;
 
 			//insert into table
-			salaryHistoryDAO.AddBalance(amount, salary, playerId);			
-			//update credit
-			playerDAO.updateSalary(playerId, salary);
+			salaryHistoryDAO.AddBalance(amount, newSalary, playerId);
+			
+			//update credit			
+			playerDAO.updateSalary(playerId, newSalary);
+			
+			JOptionPane.showMessageDialog(new JFrame(), "Se ha acreditado el saldo en la cuenta ", "Carga realizada con exito",
+			        JOptionPane.INFORMATION_MESSAGE);
+			
+			this.dispose();
 		}
 		else
 		{

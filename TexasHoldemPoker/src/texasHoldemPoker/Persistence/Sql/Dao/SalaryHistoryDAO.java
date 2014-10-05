@@ -26,14 +26,11 @@ public class SalaryHistoryDAO implements ISalaryHistoryDAO {
 	}
 
 	@Override
-	public void AddBalance(double amount, double balance, int playerId) {
+	public void AddBalance(int amount, int balance, int playerId) {
 		
-		Date currentDate = DateHelper.getCurrentDate();
-		
-		String query = "insert into SalaryHistory(date, amount, balance, playerId) values ("
-				+ currentDate
-				+ Double.toString(amount)
-				+ Double.toString(balance)
+		String query = "insert into SalaryHistory(amount, balance, playerId) values ("
+				+ QueryBuilder.getParameterWithComma(amount)
+				+ QueryBuilder.getParameterWithComma(balance)
 				+ QueryBuilder.getParameterWithEndInsertStatement(playerId);
 		
 		SqlLiteConnection.executeQuery(query);		

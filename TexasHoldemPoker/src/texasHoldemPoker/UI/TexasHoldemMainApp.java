@@ -72,7 +72,7 @@ public class TexasHoldemMainApp extends JFrame {
 		JMenuItem mntmSalaryHistory = new JMenuItem("Consultar Historial de cargas");
 		mntmSalaryHistory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showPlayerHistoryForm();
+				showPlayerSearchForm();
 			}
 		});
 		mnSalaryHistoryMain.add(mntmSalaryHistory);
@@ -87,15 +87,11 @@ public class TexasHoldemMainApp extends JFrame {
 		JMenuItem mntmAddCredit = new JMenuItem("Cargar Saldo");
 		mntmAddCredit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				showPlayerSearchForm();
 			}
 		});
 		mnSalaryHistoryMain.add(mntmAddCredit);
 		mnSalaryHistoryMain.add(mntmAddPlayer);
-	}
-	
-	private void showPlayerHistoryForm() {
-		TexasHoldemPlayer playerSearch = new TexasHoldemPlayer();
 	}
 	
 	private void showCreatePlayerForm() {

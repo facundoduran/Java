@@ -66,7 +66,7 @@ public class TexasHoldemPlayer extends JFrame {
 	
 		this.setVisible(true);
 		this.setTitle("Busqueda de jugador: ");
-		this.setBounds(100, 100, 575, 422);
+		this.setBounds(100, 100, 566, 426);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JButton btnSearch = new JButton("Buscar");
@@ -109,9 +109,10 @@ public class TexasHoldemPlayer extends JFrame {
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(lblPlayer, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
 									.addGap(22)
-									.addComponent(txtPlayer, GroupLayout.PREFERRED_SIZE, 375, GroupLayout.PREFERRED_SIZE)
-									.addGap(6)
-									.addComponent(btnSearch))
+									.addComponent(txtPlayer, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(btnSearch, GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED))
 								.addComponent(lblResults)))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
@@ -121,7 +122,7 @@ public class TexasHoldemPlayer extends JFrame {
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(btnShowSalaryHistory))
 								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 527, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(149, Short.MAX_VALUE))
+					.addContainerGap(12, GroupLayout.PREFERRED_SIZE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -163,7 +164,7 @@ public class TexasHoldemPlayer extends JFrame {
 			String playerName = this.tblSearch.getModel().getValueAt(selectedRow, 0).toString();
 			Player player = this.playerDao.getPlayer(playerName);	
 
-			TexasHoldemSalaryHistoryDetail playerDetail = new TexasHoldemSalaryHistoryDetail(this, true, player);
+			TexasHoldemPokerAddCredit playerDetail = new TexasHoldemPokerAddCredit(this, true, player);
 		}			
 	}
 	

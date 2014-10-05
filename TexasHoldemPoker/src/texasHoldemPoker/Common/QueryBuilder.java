@@ -8,6 +8,11 @@ public class QueryBuilder {
 	public final static String End = ";";
 	public final static String LikeOperator = "%";
 	
+	public static String getParameterWithComma(int parameter)
+	{
+		return Integer.toString(parameter)+ Comma;
+	}
+	
 	public static String getParameterWithQuotes(String parameter)
 	{
 		return Quote + parameter + Quote;

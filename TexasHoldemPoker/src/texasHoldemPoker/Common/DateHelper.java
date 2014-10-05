@@ -9,7 +9,7 @@ import java.util.Date;
 public class DateHelper {
 
 	public static String getCurrentDateAsString() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
 		Calendar calendar = Calendar.getInstance();
 		
 		String currentDate = dateFormat.format((calendar.getTime()));
@@ -17,13 +17,13 @@ public class DateHelper {
 	}
 	
 	public static Date getCurrentDate() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
 		Calendar calendar = Calendar.getInstance();		
 		return calendar.getTime();
 	}
 	
 	public static Date parseString(String date) {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
 		Date parsedDate = new Date();
 		
 		try {
