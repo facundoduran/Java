@@ -95,14 +95,6 @@ public class TexasHoldemMainApp extends JFrame {
 		});
 		mnSalaryHistoryMain.add(mntmAddCredit);
 		mnSalaryHistoryMain.add(mntmAddPlayer);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showPlayerDecision();
-			}
-		});
-		frmTexasHoldemPoker.getContentPane().add(btnNewButton, BorderLayout.WEST);
 	}
 	
 	private void showSelectPlayerForm() {
@@ -118,44 +110,5 @@ public class TexasHoldemMainApp extends JFrame {
 	private void showPlayerSearchForm() {
 		TexasHoldemPlayer playerSearch = new TexasHoldemPlayer();
 		playerSearch.setVisible(true);
-	}
-	
-	private void showPlayerDecision() {
-		java.util.ArrayList<texasHoldemPoker.Model.PokerCard> cards = 
-				new java.util.ArrayList<texasHoldemPoker.Model.PokerCard>();
-		
-		cards.add(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.As, 
-				texasHoldemPoker.Model.Suit.Corazones));
-		
-		cards.add(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.As, 
-				texasHoldemPoker.Model.Suit.Picas));
-		
-		cards.add(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.As, 
-				texasHoldemPoker.Model.Suit.Diamantes));
-		
-		cards.add(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.As, 
-				texasHoldemPoker.Model.Suit.Trebol));
-		
-		cards.add(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.Cinco, 
-				texasHoldemPoker.Model.Suit.Corazones));
-		
-		texasHoldemPoker.Model.PokerPlayer pokerPlayer = new texasHoldemPoker.Model.PokerPlayer("Facundo");
-		
-		pokerPlayer.addCard(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.Cinco, 
-				texasHoldemPoker.Model.Suit.Trebol));
-		
-		pokerPlayer.addCard(new texasHoldemPoker.Model.PokerCard(
-				texasHoldemPoker.Model.Card.Cinco, 
-				texasHoldemPoker.Model.Suit.Picas));		
-		
-		TexasHoldemPlayerDecision playerDecisionForm = 
-				new TexasHoldemPlayerDecision(cards, pokerPlayer, 50);
-		playerDecisionForm.setVisible(true);
 	}
 }

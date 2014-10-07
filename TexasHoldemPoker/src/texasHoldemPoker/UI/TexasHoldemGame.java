@@ -37,29 +37,13 @@ public class TexasHoldemGame {
 	private PokerGame game;
 	
 	private Boolean playerPlays; 
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TexasHoldemGame window = new TexasHoldemGame();
-					window.frmPoker.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the application.
 	 */
-	public TexasHoldemGame() throws Exception {
+	public TexasHoldemGame(ArrayList<Player> players) throws Exception {
 		initialize();
-		this.initializeGame();
+		this.initializeGame(players);
 	}
 	/*
 	 * Atrributes
@@ -229,24 +213,14 @@ public class TexasHoldemGame {
 		txtBet.setColumns(10);
 	}
 	
-	public void initializeGame() throws Exception {
+	public void initializeGame(ArrayList<Player> players) throws Exception {
 		this.game = new PokerGame(10, 0);
 		
-		//build players array
-		PokerPlayer player1 = new PokerPlayer("Facundo");
-		PokerPlayer player2 = new PokerPlayer("Jose");
+		this.initializePlayers(players);
 		
-		//Add players
-		game.addPlayer(player1);
-		game.addPlayer(player2);
+		int bigBlind = this.game.getBigBlind();	
 		
-		int bigBlind = this.game.getBigBlind();
-		//for each player call to setPlayerInfo
-		for(PokerPlayer pokerPlayer : this.game.getPlayers())
-		{
-			this.setPlayerInfo(pokerPlayer, bigBlind);
-		}		
-		
+		this.game.dealCards();
 		this.game.dealCards();
 		
 		boolean finishGame = false;
@@ -335,11 +309,11 @@ public class TexasHoldemGame {
 		this.txtBet.setText(String.valueOf(value));
 	}
 	
-	private void addPlayers(ArrayList<Player> players) {
+	private void initializePlayers(ArrayList<Player> players) {
+		
 		for(Player player : players) {
 			PokerPlayer pokerPlayer = new PokerPlayer(player.getName());			
-			pokerPlayer.setBalance(player.getSalary());
-			
+			pokerPlayer.setBalance(player.getSalary());			
 			this.game.addPlayer(pokerPlayer);
 		}
 	}

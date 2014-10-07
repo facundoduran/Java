@@ -226,11 +226,30 @@ public class TexasHoldemSelectPlayers extends JFrame {
 	
 	private void playPoker() {	
 		if (listPokerPlayers.getModel() != null && listPokerPlayers.getModel().getSize() >= 2) {
-			
+			try {
+				ArrayList<Player> players = this.getPlayers();				
+				
+				TexasHoldemGame game = new TexasHoldemGame(players);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else {
 			JOptionPane.showMessageDialog(new JFrame(), "Se necesita un minimo de dos jugadores para iniciar la partida", "Error",
 			        JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	private ArrayList<Player> getPlayers() {
+		ArrayList<Player> players = new ArrayList<Player>();
+		
+		for(int i = 0 ; i< listPokerPlayers.getModel().getSize(); i++ ){
+			String playerName = listPokerPlayers.getModel().getElementAt(i).toString();
+			Player player = this.playerDAO.getPlayer(playerName);
+			players.add(player);
+		}
+		
+		return players;
 	}
 }

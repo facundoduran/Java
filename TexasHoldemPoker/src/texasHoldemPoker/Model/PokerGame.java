@@ -139,6 +139,10 @@ public class PokerGame {
 	}
 
 	public int getBigBlindPos() {
+		if (bigBlindPos == this.players.size()) {
+			return 0;
+		}
+		
 		return bigBlindPos;
 	}
 
