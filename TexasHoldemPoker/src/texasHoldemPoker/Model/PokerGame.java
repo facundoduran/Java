@@ -14,12 +14,22 @@ public class PokerGame {
 
 	public PokerGame(int bigBlind, int bigBlingPos) {
 		this.deck = new Deck();
-		this.table = new ArrayList<PokerCard>();
+		this.setTableCards(new ArrayList<PokerCard>());
 		this.players = new ArrayList<PokerPlayer>();
 		this.setBigBlind(bigBlind);
 		this.smallBlind = this.getBigBlind() /2 ;
 		this.pot = this.getBigBlind() + smallBlind;	
 		this.setBigBlindPos(bigBlingPos);
+	}
+	
+	public void startGame(int bigBlind, ArrayList<PokerPlayer> players) {
+		this.deck = new Deck();
+		this.setTableCards(new ArrayList<PokerCard>());
+		this.players = new ArrayList<PokerPlayer>();
+		this.setBigBlind(bigBlind);
+		this.smallBlind = this.getBigBlind() /2 ;
+		this.pot = this.getBigBlind() + smallBlind;	
+		this.players = players;
 	}
 	
 	public void addPlayer(PokerPlayer player) {
@@ -47,33 +57,43 @@ public class PokerGame {
 		return playerTurn;
 	}
 	
-	public void playTurn(PokerPlayer playerTurn, PokerPlayerDecision decision) {
-		this.playTurn(playerTurn, decision, 0);
-	}
-	
-	public void playTurn(PokerPlayer playerTurn, PokerPlayerDecision decision, int bet) {
-		if (this.players.contains(playerTurn)) {
-			long amount = this.getBigBlind() - playerTurn.getBet();
-			
-			switch(decision) {
-			
-			case Call:
-				playerTurn.call(amount);
-				break;
-			case Raise:
-				playerTurn.raise(bet);
-				break;
-			case AllIn:
-				playerTurn.allIn();
-				break;
-			case Leave:
+	public void playTurn(PokerPlayerDecision decision) {
+		PokerPlayer playerTurn = this.getPlayer();
+		
+		if(playerTurn !=null) {		
+			if (decision == PokerPlayerDecision.Leave) {
 				this.players.remove(playerTurn);
-				this.nextTurn();
-				break;
-			}	
+			}
+			
+			if (decision == PokerPlayerDecision.Call) {
+				long amount = this.getBigBlind() - playerTurn.getBet();
+				playerTurn.call(amount);
+			}
+			
+			if (decision == PokerPlayerDecision.AllIn) {
+				playerTurn.allIn();
+			}
 		}
 	}
 	
+	public void playTurn(PokerPlayerDecision decision, int bet) {
+		PokerPlayer playerTurn = this.getPlayer();
+		
+		if(playerTurn !=null) {
+			
+			if (decision == PokerPlayerDecision.Raise) {
+				
+				if (playerTurn.getBalance() <= bet) {
+					playerTurn.allIn();
+				}
+				else {
+					playerTurn.raise(bet);
+				}				
+			}
+		}
+		
+	}
+		
 	public void flop() {
 		for(int i = 0; i < 3; i++) {
 			this.addCardInTable();
@@ -152,6 +172,14 @@ public class PokerGame {
 
 	private void addCardInTable() {
 		PokerCard card = deck.shuffleCard();
-		table.add(card);
+		getTableCards().add(card);
+	}
+
+	public ArrayList<PokerCard> getTableCards() {
+		return table;
+	}
+
+	public void setTableCards(ArrayList<PokerCard> table) {
+		this.table = table;
 	}
 }

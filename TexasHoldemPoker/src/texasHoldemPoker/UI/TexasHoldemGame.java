@@ -1,49 +1,32 @@
 package texasHoldemPoker.UI;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
-
 import javax.swing.JLabel;
-
-import net.miginfocom.swing.MigLayout;
-
 import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JSlider;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-
+import texasHoldemPoker.Common.FileHelper;
 import texasHoldemPoker.Model.Player;
+import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerGame;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
+import texasHoldemPoker.UI.CustomControls.ImagePanel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 
-import javax.swing.JTextField;
-
-public class TexasHoldemGame {
-
-	private JFrame frmPoker;
+public class TexasHoldemGame extends JFrame{
 	
 	private PokerGame game;
-	
-	private Boolean playerPlays; 
-	
+		
 	/**
 	 * Create the application.
 	 */
-	public TexasHoldemGame(ArrayList<Player> players) throws Exception {
+	public TexasHoldemGame() throws Exception {
 		initialize();
-		this.initializeGame(players);
 	}
 	/*
 	 * Atrributes
@@ -66,151 +49,210 @@ public class TexasHoldemGame {
 	private JPanel imgTurnThirdCard;
 	private JPanel imgFlopCard;		
 	private JPanel imgRiverCard;
-	private JLabel lblTurno;
-	private JLabel lblCurrentPlayer;		
-	private JLabel lblActions;	
-	private JButton btnLeave;
-	private JButton btnCheck;
-	private JButton btnBet;
-	private JSlider slBet;
-	private JTextField txtBet;
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmPoker = new JFrame();
-		frmPoker.setTitle("Poker");
-		frmPoker.setBounds(100, 100, 677, 459);
-		frmPoker.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmPoker.getContentPane().setLayout(null);
+		this.setTitle("Poker");
+		this.setBounds(100, 100, 1023, 526);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(null);
 		
-		lblPlayer1 = new JLabel("New label");
+		lblPlayer1 = new JLabel("");
 		lblPlayer1.setBounds(10, 166, 102, 14);
-		frmPoker.getContentPane().add(lblPlayer1);
+		this.getContentPane().add(lblPlayer1);
 		
-		lblPlayer2 = new JLabel("New label");
-		lblPlayer2.setBounds(154, 11, 102, 14);
-		frmPoker.getContentPane().add(lblPlayer2);
+		lblPlayer2 = new JLabel("");
+		lblPlayer2.setBounds(260, 11, 102, 14);
+		this.getContentPane().add(lblPlayer2);
 		
-		lblPlayer3 = new JLabel("New label");
-		lblPlayer3.setBounds(393, 11, 105, 14);
-		frmPoker.getContentPane().add(lblPlayer3);
+		lblPlayer3 = new JLabel("");
+		lblPlayer3.setBounds(639, 11, 105, 14);
+		this.getContentPane().add(lblPlayer3);
 		
-		lblPlayer4 = new JLabel("New label");
-		lblPlayer4.setBounds(538, 166, 102, 14);
-		frmPoker.getContentPane().add(lblPlayer4);
+		lblPlayer4 = new JLabel("");
+		lblPlayer4.setBounds(804, 166, 102, 14);
+		this.getContentPane().add(lblPlayer4);
 		
 		lblDealer = new JLabel("Dealer");
-		lblDealer.setBounds(302, 290, 46, 14);
-		frmPoker.getContentPane().add(lblDealer);
+		lblDealer.setBounds(492, 323, 46, 14);
+		this.getContentPane().add(lblDealer);
 		
 		imgPlayer1FirstCard = new JPanel();
-		imgPlayer1FirstCard.setBounds(10, 191, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer1FirstCard);
+		imgPlayer1FirstCard.setBounds(10, 191, 86, 121);
+		this.getContentPane().add(imgPlayer1FirstCard);
+		GroupLayout gl_imgPlayer1FirstCard = new GroupLayout(imgPlayer1FirstCard);
+		gl_imgPlayer1FirstCard.setHorizontalGroup(
+			gl_imgPlayer1FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 67, Short.MAX_VALUE)
+		);
+		gl_imgPlayer1FirstCard.setVerticalGroup(
+			gl_imgPlayer1FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 97, Short.MAX_VALUE)
+		);
+		imgPlayer1FirstCard.setLayout(gl_imgPlayer1FirstCard);
 
 		imgPlayer1SecondCard = new JPanel();
-		imgPlayer1SecondCard.setBounds(66, 191, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer1SecondCard);
+		imgPlayer1SecondCard.setBounds(105, 191, 86, 121);
+		this.getContentPane().add(imgPlayer1SecondCard);
+		imgPlayer1SecondCard.setLayout(new BorderLayout(0, 0));
 		
 		imgPlayer2FirstCard = new JPanel();
-		imgPlayer2FirstCard.setBounds(154, 36, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer2FirstCard);
+		imgPlayer2FirstCard.setBounds(260, 36, 86, 121);
+		this.getContentPane().add(imgPlayer2FirstCard);
+		GroupLayout gl_imgPlayer2FirstCard = new GroupLayout(imgPlayer2FirstCard);
+		gl_imgPlayer2FirstCard.setHorizontalGroup(
+			gl_imgPlayer2FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgPlayer2FirstCard.setVerticalGroup(
+			gl_imgPlayer2FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgPlayer2FirstCard.setLayout(gl_imgPlayer2FirstCard);
 		
 		imgPlayer2SecondCard = new JPanel();
-		imgPlayer2SecondCard.setBounds(210, 36, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer2SecondCard);
+		imgPlayer2SecondCard.setBounds(356, 36, 86, 121);
+		this.getContentPane().add(imgPlayer2SecondCard);
+		GroupLayout gl_imgPlayer2SecondCard = new GroupLayout(imgPlayer2SecondCard);
+		gl_imgPlayer2SecondCard.setHorizontalGroup(
+			gl_imgPlayer2SecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgPlayer2SecondCard.setVerticalGroup(
+			gl_imgPlayer2SecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgPlayer2SecondCard.setLayout(gl_imgPlayer2SecondCard);
 		
 		imgPlayer3FirstCard = new JPanel();
-		imgPlayer3FirstCard.setBounds(393, 36, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer3FirstCard);
+		imgPlayer3FirstCard.setBounds(639, 36, 86, 121);
+		this.getContentPane().add(imgPlayer3FirstCard);
+		GroupLayout gl_imgPlayer3FirstCard = new GroupLayout(imgPlayer3FirstCard);
+		gl_imgPlayer3FirstCard.setHorizontalGroup(
+			gl_imgPlayer3FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgPlayer3FirstCard.setVerticalGroup(
+			gl_imgPlayer3FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgPlayer3FirstCard.setLayout(gl_imgPlayer3FirstCard);
 		
 		imgPlayer3SecondCard = new JPanel();
-		imgPlayer3SecondCard.setBounds(452, 36, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer3SecondCard);
+		imgPlayer3SecondCard.setBounds(735, 36, 86, 121);
+		this.getContentPane().add(imgPlayer3SecondCard);
+		GroupLayout gl_imgPlayer3SecondCard = new GroupLayout(imgPlayer3SecondCard);
+		gl_imgPlayer3SecondCard.setHorizontalGroup(
+			gl_imgPlayer3SecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgPlayer3SecondCard.setVerticalGroup(
+			gl_imgPlayer3SecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgPlayer3SecondCard.setLayout(gl_imgPlayer3SecondCard);
 		
 		imgPlayer4FirstCard = new JPanel();
-		imgPlayer4FirstCard.setBounds(538, 191, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer4FirstCard);
+		imgPlayer4FirstCard.setBounds(804, 191, 86, 121);
+		this.getContentPane().add(imgPlayer4FirstCard);
+		GroupLayout gl_imgPlayer4FirstCard = new GroupLayout(imgPlayer4FirstCard);
+		gl_imgPlayer4FirstCard.setHorizontalGroup(
+			gl_imgPlayer4FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgPlayer4FirstCard.setVerticalGroup(
+			gl_imgPlayer4FirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgPlayer4FirstCard.setLayout(gl_imgPlayer4FirstCard);
 		
 		imgPlayer4SecondCard = new JPanel();
-		imgPlayer4SecondCard.setBounds(594, 191, 46, 69);
-		frmPoker.getContentPane().add(imgPlayer4SecondCard);
+		imgPlayer4SecondCard.setBounds(900, 191, 86, 121);
+		this.getContentPane().add(imgPlayer4SecondCard);
+		GroupLayout gl_imgPlayer4SecondCard = new GroupLayout(imgPlayer4SecondCard);
+		gl_imgPlayer4SecondCard.setHorizontalGroup(
+			gl_imgPlayer4SecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgPlayer4SecondCard.setVerticalGroup(
+			gl_imgPlayer4SecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgPlayer4SecondCard.setLayout(gl_imgPlayer4SecondCard);
 		
 		imgTurnFirstCard = new JPanel();
-		imgTurnFirstCard.setBounds(190, 191, 46, 69);
-		frmPoker.getContentPane().add(imgTurnFirstCard);
+		imgTurnFirstCard.setBounds(260, 191, 86, 121);
+		this.getContentPane().add(imgTurnFirstCard);
+		GroupLayout gl_imgTurnFirstCard = new GroupLayout(imgTurnFirstCard);
+		gl_imgTurnFirstCard.setHorizontalGroup(
+			gl_imgTurnFirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgTurnFirstCard.setVerticalGroup(
+			gl_imgTurnFirstCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgTurnFirstCard.setLayout(gl_imgTurnFirstCard);
 		
 		imgTurnSecondCard = new JPanel();
-		imgTurnSecondCard.setBounds(246, 191, 46, 69);
-		frmPoker.getContentPane().add(imgTurnSecondCard);
+		imgTurnSecondCard.setBounds(356, 191, 86, 121);
+		this.getContentPane().add(imgTurnSecondCard);
+		GroupLayout gl_imgTurnSecondCard = new GroupLayout(imgTurnSecondCard);
+		gl_imgTurnSecondCard.setHorizontalGroup(
+			gl_imgTurnSecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgTurnSecondCard.setVerticalGroup(
+			gl_imgTurnSecondCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgTurnSecondCard.setLayout(gl_imgTurnSecondCard);
 		
 		imgTurnThirdCard = new JPanel();
-		imgTurnThirdCard.setBounds(302, 191, 46, 69);
-		frmPoker.getContentPane().add(imgTurnThirdCard);
+		imgTurnThirdCard.setBounds(452, 191, 86, 121);
+		this.getContentPane().add(imgTurnThirdCard);
+		GroupLayout gl_imgTurnThirdCard = new GroupLayout(imgTurnThirdCard);
+		gl_imgTurnThirdCard.setHorizontalGroup(
+			gl_imgTurnThirdCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgTurnThirdCard.setVerticalGroup(
+			gl_imgTurnThirdCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgTurnThirdCard.setLayout(gl_imgTurnThirdCard);
 		
 		imgFlopCard = new JPanel();
-		imgFlopCard.setBounds(358, 191, 46, 69);
-		frmPoker.getContentPane().add(imgFlopCard);
+		imgFlopCard.setBounds(548, 191, 86, 121);
+		this.getContentPane().add(imgFlopCard);
+		GroupLayout gl_imgFlopCard = new GroupLayout(imgFlopCard);
+		gl_imgFlopCard.setHorizontalGroup(
+			gl_imgFlopCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgFlopCard.setVerticalGroup(
+			gl_imgFlopCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgFlopCard.setLayout(gl_imgFlopCard);
 		
 		imgRiverCard = new JPanel();
-		imgRiverCard.setBounds(414, 191, 46, 69);
-		frmPoker.getContentPane().add(imgRiverCard);
+		imgRiverCard.setBounds(643, 191, 86, 121);
+		this.getContentPane().add(imgRiverCard);
+		GroupLayout gl_imgRiverCard = new GroupLayout(imgRiverCard);
+		gl_imgRiverCard.setHorizontalGroup(
+			gl_imgRiverCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 46, Short.MAX_VALUE)
+		);
+		gl_imgRiverCard.setVerticalGroup(
+			gl_imgRiverCard.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+		);
+		imgRiverCard.setLayout(gl_imgRiverCard);
 		
-		lblTurno = new JLabel("Turno del jugador:");
-		lblTurno.setBounds(22, 316, 110, 14);
-		frmPoker.getContentPane().add(lblTurno);
-		
-		lblCurrentPlayer = new JLabel("New label");
-		lblCurrentPlayer.setBounds(142, 316, 58, 14);
-		frmPoker.getContentPane().add(lblCurrentPlayer);
-		
-		lblActions = new JLabel("Acciones:");
-		lblActions.setBounds(22, 337, 58, 14);
-		frmPoker.getContentPane().add(lblActions);
-		
-		btnLeave = new JButton("Retirarse");
-		btnLeave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				playerLeave();
-			}
-		});
-		btnLeave.setBounds(128, 353, 89, 23);
-		frmPoker.getContentPane().add(btnLeave);
-		
-		btnCheck = new JButton("Pasar");
-		btnCheck.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				playerChecks();
-			}
-		});
-		btnCheck.setBounds(221, 353, 78, 23);
-		frmPoker.getContentPane().add(btnCheck);
-		
-		btnBet = new JButton("Apostar");
-		btnBet.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				playerBet();				
-			}
-		});
-		btnBet.setBounds(302, 353, 76, 23);
-		frmPoker.getContentPane().add(btnBet);
-		
-		slBet = new JSlider();
-		slBet.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent event) {
-		        int currentValue = ((JSlider)event.getSource()).getValue();
-		        updateMethod(currentValue);
-			}
-		});
-		
-		slBet.setBounds(128, 387, 181, 23);
-		frmPoker.getContentPane().add(slBet);
-		
-		txtBet = new JTextField();
-		txtBet.setBounds(319, 390, 76, 20);
-		frmPoker.getContentPane().add(txtBet);
-		txtBet.setColumns(10);
+		this.hideAllImages();
 	}
 	
 	public void initializeGame(ArrayList<Player> players) throws Exception {
@@ -223,6 +265,8 @@ public class TexasHoldemGame {
 		this.game.dealCards();
 		this.game.dealCards();
 		
+		this.showPlayerInfo(this.game.getPlayers());
+		
 		boolean finishGame = false;
 		int gameState = 0;
 		
@@ -230,12 +274,28 @@ public class TexasHoldemGame {
 		{
 			do
 			{
-				this.playerPlays = false;
 				PokerPlayer currentPlayer = this.game.getPlayer();
-				this.setPlayerInfo(currentPlayer, this.game.getBigBlind());
+				
+				bigBlind = this.game.getBigBlind();
+				
+				ArrayList<PokerCard> tableCards = this.game.getTableCards();
 				
 				//Wait for UI Response
-
+				TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(tableCards, currentPlayer, bigBlind);
+				playerDecideForm.setVisible(true);
+				
+				PokerPlayerDecision playerDecision = playerDecideForm.getPlayerDecision();
+				
+				if (playerDecision == PokerPlayerDecision.Raise) {
+					int bet = playerDecideForm.getRaiseAmount();
+					this.game.playTurn(playerDecision, bet);
+				}
+				else {
+					this.game.playTurn(playerDecision);					
+				}
+				
+				playerDecideForm.dispose();
+				
 				
 				if(this.game.getPlayers().size() == 1) 
 				{
@@ -270,20 +330,7 @@ public class TexasHoldemGame {
 			}
 		}
 		
-		game.finishGame();
-		
-	}
-	
-	private void playerChecks() {
-
-	}
-	
-	private void playerLeave() {
-
-	}
-	
-	private void playerBet() {
-
+		game.finishGame();		
 	}
 	
 	private void showTurnCards() {
@@ -298,23 +345,77 @@ public class TexasHoldemGame {
 		
 	}
 	
-	private void setPlayerInfo(PokerPlayer player, int bigBlind) {
-		lblCurrentPlayer.setText(player.getName());
-		
-		slBet.setMinimum(bigBlind);
-		slBet.setMaximum(player.getBalance());
+	private void showPlayerInfo(ArrayList<PokerPlayer> pokerPlayers) {			
+		for (int i = 0; i < pokerPlayers.size(); i++) {
+			PokerPlayer player = pokerPlayers.get(i);
+			
+			if (i == 0) {
+				this.setPlayerInfo(player, lblPlayer1, imgPlayer1FirstCard, imgPlayer1SecondCard);
+			}
+			
+			if (i == 1) {
+				this.setPlayerInfo(player, lblPlayer2, imgPlayer2FirstCard, imgPlayer2SecondCard);
+			}
+			
+			if (i == 2) {
+				this.setPlayerInfo(player, lblPlayer3, imgPlayer3FirstCard, imgPlayer3SecondCard);
+			}
+			
+			if (i == 3) {
+				this.setPlayerInfo(player, lblPlayer4, imgPlayer4FirstCard, imgPlayer4SecondCard);
+			}
+		}
 	}
 	
-	private void updateMethod(int value) {
-		this.txtBet.setText(String.valueOf(value));
+	private void hideAllImages() {
+		imgPlayer1FirstCard.setVisible(false);
+		imgPlayer1SecondCard.setVisible(false);
+		imgPlayer2FirstCard.setVisible(false);
+		imgPlayer2SecondCard.setVisible(false);
+		imgPlayer3FirstCard.setVisible(false);
+		imgPlayer3SecondCard.setVisible(false);
+		imgPlayer4FirstCard.setVisible(false);
+		imgPlayer4SecondCard.setVisible(false);
 	}
 	
-	private void initializePlayers(ArrayList<Player> players) {
+	private void initializePlayers(ArrayList<Player> players) {	
+		ArrayList<PokerPlayer> pokerPlayers = getPokerPlayers(players);
+	
+		for(PokerPlayer pokerPlayer : pokerPlayers) {
+			this.game.addPlayer(pokerPlayer);
+		}
+	}
+	
+	private void setPlayerInfo(PokerPlayer player, JLabel lblPlayerName, JPanel firstCardPanel, JPanel secondCardPanel) {
+		if (player != null) {
+			String playerName = player.getName();
+			lblPlayerName.setText(playerName);
+			
+			ArrayList<PokerCard> hand = player.getHand();
+			
+			PokerCard firstCard = hand.get(0);
+			PokerCard secondCard = hand.get(1);
+			
+			String firstCardFilename = FileHelper.getImageCard(firstCard);
+			String secondCardFilename = FileHelper.getImageCard(secondCard);
+			
+			firstCardPanel.add(new ImagePanel(firstCardFilename));
+			secondCardPanel.add(new ImagePanel(secondCardFilename));
+			
+			firstCardPanel.setVisible(true);
+			secondCardPanel.setVisible(true);
+		}
+	}
+	
+	private ArrayList<PokerPlayer> getPokerPlayers(ArrayList<Player> players) {
+		ArrayList<PokerPlayer> pokerPlayers = new ArrayList<PokerPlayer>();
 		
 		for(Player player : players) {
 			PokerPlayer pokerPlayer = new PokerPlayer(player.getName());			
-			pokerPlayer.setBalance(player.getSalary());			
-			this.game.addPlayer(pokerPlayer);
+			pokerPlayer.setBalance(player.getSalary());
+			pokerPlayers.add(pokerPlayer);
 		}
+		
+		return pokerPlayers;
 	}
 }

@@ -6,11 +6,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
-import javax.swing.SpringLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JList;
@@ -46,15 +43,7 @@ public class TexasHoldemSelectPlayers extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
-		/*
-		frmSeleccionDeJugadores = new JFrame();
-		frmSeleccionDeJugadores.setResizable(false);
-		frmSeleccionDeJugadores.setTitle("Seleccion de jugadores");
-		frmSeleccionDeJugadores.setBounds(100, 100, 448, 339);
-		frmSeleccionDeJugadores.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		*/
-		
+				
 		this.setResizable(false);
 		this.setTitle("Seleccion de jugadores");
 		this.setBounds(100, 100, 448, 339);
@@ -229,7 +218,10 @@ public class TexasHoldemSelectPlayers extends JFrame {
 			try {
 				ArrayList<Player> players = this.getPlayers();				
 				
-				TexasHoldemGame game = new TexasHoldemGame(players);
+				TexasHoldemGame game = new TexasHoldemGame();
+				game.setVisible(true);
+				game.initializeGame(players);
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

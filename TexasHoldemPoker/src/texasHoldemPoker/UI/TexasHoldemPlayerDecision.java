@@ -1,22 +1,13 @@
 package texasHoldemPoker.UI;
 
-import java.awt.Dimension;
-import java.awt.EventQueue;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import texasHoldemPoker.Model.Player;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
-import texasHoldemPoker.Persistence.Sql.Dao.IPlayerDAO;
-import texasHoldemPoker.Persistence.Sql.Dao.PlayerDAO;
 import texasHoldemPoker.UI.CustomControls.ImagePanel;
 import texasHoldemPoker.Common.FileHelper;
 import texasHoldemPoker.Common.Validators;
@@ -25,7 +16,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -36,7 +26,6 @@ import javax.swing.event.ChangeEvent;
 
 public class TexasHoldemPlayerDecision extends JDialog {
 
-	private JFrame frmPlayerDecision;
 	private JTextField txtBet;
 	private	JLabel lblCardsInTable;	
 	private	JPanel firstFlopCard;			
@@ -59,6 +48,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	private PokerPlayerDecision playerDecision;
 	private PokerPlayer pokerPlayer;
 	private ArrayList<PokerCard> tableCards;
+	private JLabel lblBigBlindValue;
 	
 	/*
 	 * Create the application.
@@ -133,6 +123,10 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		firstPlayerCard = new JPanel();
 		
 		secondPlayerCard = new JPanel();
+		
+		JLabel lblBigBlind = new JLabel("Apuesta minima:");
+		
+		lblBigBlindValue = new JLabel("");
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -141,6 +135,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(10)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCardsInTable, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(firstFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
 									.addGap(6)
@@ -150,25 +145,29 @@ public class TexasHoldemPlayerDecision extends JDialog {
 									.addGap(6)
 									.addComponent(turnCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
 									.addGap(6)
-									.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblCardsInTable, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(lblTurno)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblPlayerName))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(firstPlayerCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(secondPlayerCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(firstPlayerCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(secondPlayerCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblTurno)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(lblPlayerName)))
 							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblBigBlind)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(lblBigBlindValue))
+								.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(slBet, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(btnLeave)
 									.addPreferredGap(ComponentPlacement.RELATED)
@@ -189,15 +188,22 @@ public class TexasHoldemPlayerDecision extends JDialog {
 						.addComponent(thirdFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
 						.addComponent(turnCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
 						.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
-					.addGap(13)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblTurno)
-						.addComponent(lblPlayerName))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(13)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblTurno)
+								.addComponent(lblPlayerName)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblBigBlind)
+								.addComponent(lblBigBlindValue))))
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(slBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -271,6 +277,10 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		
 		slBet.setMinimum(bigBlind);
 		slBet.setMaximum(player.getBalance());
+		
+		lblBigBlindValue.setText(Integer.toString(bigBlind));
+		
+		slBet.setValue(bigBlind);
 	}
 	
 	private void showPlayerCard() {
