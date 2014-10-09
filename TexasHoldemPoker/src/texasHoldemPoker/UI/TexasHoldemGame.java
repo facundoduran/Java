@@ -44,10 +44,10 @@ public class TexasHoldemGame extends JFrame{
 	private JPanel imgPlayer3SecondCard;
 	private JPanel imgPlayer4FirstCard;
 	private JPanel imgPlayer4SecondCard;
-	private JPanel imgTurnFirstCard;
-	private JPanel imgTurnSecondCard;
-	private JPanel imgTurnThirdCard;
-	private JPanel imgFlopCard;		
+	private JPanel imgFlopFirstCard;
+	private JPanel imgFlopSecondCard;
+	private JPanel imgFlopCardThirdCard;
+	private JPanel imgTurnCard;		
 	private JPanel imgRiverCard;
 
 	/**
@@ -182,61 +182,61 @@ public class TexasHoldemGame extends JFrame{
 		);
 		imgPlayer4SecondCard.setLayout(gl_imgPlayer4SecondCard);
 		
-		imgTurnFirstCard = new JPanel();
-		imgTurnFirstCard.setBounds(260, 191, 86, 121);
-		this.getContentPane().add(imgTurnFirstCard);
-		GroupLayout gl_imgTurnFirstCard = new GroupLayout(imgTurnFirstCard);
-		gl_imgTurnFirstCard.setHorizontalGroup(
-			gl_imgTurnFirstCard.createParallelGroup(Alignment.LEADING)
+		imgFlopFirstCard = new JPanel();
+		imgFlopFirstCard.setBounds(260, 191, 86, 121);
+		this.getContentPane().add(imgFlopFirstCard);
+		GroupLayout gl_imgFlopFirstCard = new GroupLayout(imgFlopFirstCard);
+		gl_imgFlopFirstCard.setHorizontalGroup(
+			gl_imgFlopFirstCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 46, Short.MAX_VALUE)
 		);
-		gl_imgTurnFirstCard.setVerticalGroup(
-			gl_imgTurnFirstCard.createParallelGroup(Alignment.LEADING)
+		gl_imgFlopFirstCard.setVerticalGroup(
+			gl_imgFlopFirstCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 69, Short.MAX_VALUE)
 		);
-		imgTurnFirstCard.setLayout(gl_imgTurnFirstCard);
+		imgFlopFirstCard.setLayout(gl_imgFlopFirstCard);
 		
-		imgTurnSecondCard = new JPanel();
-		imgTurnSecondCard.setBounds(356, 191, 86, 121);
-		this.getContentPane().add(imgTurnSecondCard);
-		GroupLayout gl_imgTurnSecondCard = new GroupLayout(imgTurnSecondCard);
-		gl_imgTurnSecondCard.setHorizontalGroup(
-			gl_imgTurnSecondCard.createParallelGroup(Alignment.LEADING)
+		imgFlopSecondCard = new JPanel();
+		imgFlopSecondCard.setBounds(356, 191, 86, 121);
+		this.getContentPane().add(imgFlopSecondCard);
+		GroupLayout gl_imgFlopSecondCard = new GroupLayout(imgFlopSecondCard);
+		gl_imgFlopSecondCard.setHorizontalGroup(
+			gl_imgFlopSecondCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 46, Short.MAX_VALUE)
 		);
-		gl_imgTurnSecondCard.setVerticalGroup(
-			gl_imgTurnSecondCard.createParallelGroup(Alignment.LEADING)
+		gl_imgFlopSecondCard.setVerticalGroup(
+			gl_imgFlopSecondCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 69, Short.MAX_VALUE)
 		);
-		imgTurnSecondCard.setLayout(gl_imgTurnSecondCard);
+		imgFlopSecondCard.setLayout(gl_imgFlopSecondCard);
 		
-		imgTurnThirdCard = new JPanel();
-		imgTurnThirdCard.setBounds(452, 191, 86, 121);
-		this.getContentPane().add(imgTurnThirdCard);
-		GroupLayout gl_imgTurnThirdCard = new GroupLayout(imgTurnThirdCard);
-		gl_imgTurnThirdCard.setHorizontalGroup(
-			gl_imgTurnThirdCard.createParallelGroup(Alignment.LEADING)
+		imgFlopCardThirdCard = new JPanel();
+		imgFlopCardThirdCard.setBounds(452, 191, 86, 121);
+		this.getContentPane().add(imgFlopCardThirdCard);
+		GroupLayout gl_imgFlopCardThirdCard = new GroupLayout(imgFlopCardThirdCard);
+		gl_imgFlopCardThirdCard.setHorizontalGroup(
+			gl_imgFlopCardThirdCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 46, Short.MAX_VALUE)
 		);
-		gl_imgTurnThirdCard.setVerticalGroup(
-			gl_imgTurnThirdCard.createParallelGroup(Alignment.LEADING)
+		gl_imgFlopCardThirdCard.setVerticalGroup(
+			gl_imgFlopCardThirdCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 69, Short.MAX_VALUE)
 		);
-		imgTurnThirdCard.setLayout(gl_imgTurnThirdCard);
+		imgFlopCardThirdCard.setLayout(gl_imgFlopCardThirdCard);
 		
-		imgFlopCard = new JPanel();
-		imgFlopCard.setBounds(548, 191, 86, 121);
-		this.getContentPane().add(imgFlopCard);
-		GroupLayout gl_imgFlopCard = new GroupLayout(imgFlopCard);
-		gl_imgFlopCard.setHorizontalGroup(
-			gl_imgFlopCard.createParallelGroup(Alignment.LEADING)
+		imgTurnCard = new JPanel();
+		imgTurnCard.setBounds(548, 191, 86, 121);
+		this.getContentPane().add(imgTurnCard);
+		GroupLayout gl_imgTurnCard = new GroupLayout(imgTurnCard);
+		gl_imgTurnCard.setHorizontalGroup(
+			gl_imgTurnCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 46, Short.MAX_VALUE)
 		);
-		gl_imgFlopCard.setVerticalGroup(
-			gl_imgFlopCard.createParallelGroup(Alignment.LEADING)
+		gl_imgTurnCard.setVerticalGroup(
+			gl_imgTurnCard.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 69, Short.MAX_VALUE)
 		);
-		imgFlopCard.setLayout(gl_imgFlopCard);
+		imgTurnCard.setLayout(gl_imgTurnCard);
 		
 		imgRiverCard = new JPanel();
 		imgRiverCard.setBounds(643, 191, 86, 121);
@@ -272,8 +272,10 @@ public class TexasHoldemGame extends JFrame{
 		
 		while(gameState < 3 && !finishGame)
 		{
+			boolean allPlayersHasTheSameBet = false;
+			int playerPlayCounter = 1;
 			do
-			{
+			{				
 				PokerPlayer currentPlayer = this.game.getPlayer();
 				
 				bigBlind = this.game.getBigBlind();
@@ -302,21 +304,26 @@ public class TexasHoldemGame extends JFrame{
 					finishGame = true;
 				}
 				
+				if (this.game.allPlayersHasSameBet() && playerPlayCounter % this.game.getPlayers().size() == 0) {
+					allPlayersHasTheSameBet = true;
+				}
+				
 				this.game.nextTurn();
+				playerPlayCounter++;
 			}				
-			while(!this.game.allPlayersHasSameBet() || !finishGame);
+			while(!finishGame && !allPlayersHasTheSameBet);
 			
 			if (!finishGame)
 			{
 				switch(gameState)
 				{
 					case 0:
-						this.game.turn();
-						showTurnCards();
-						break;
-					case 1:
 						this.game.flop();
 						showFlopCard();
+						break;
+					case 1:
+						this.game.turn();
+						showTurnCards();
 						break;
 					case 2:
 						this.game.river();
@@ -333,16 +340,30 @@ public class TexasHoldemGame extends JFrame{
 		game.finishGame();		
 	}
 	
-	private void showTurnCards() {
+	private void showFlopCard() {
+		ArrayList<PokerCard> cards = this.game.getTableCards();
 		
+		PokerCard firstFlopCard = cards.get(0);
+		PokerCard secondTurnCard = cards.get(1);
+		PokerCard thirdTurnCard = cards.get(2);
+
+		this.showCard(imgFlopFirstCard, firstFlopCard);
+		this.showCard(imgFlopSecondCard, secondTurnCard);
+		this.showCard(imgFlopCardThirdCard, thirdTurnCard);
 	}
 	
-	private void showFlopCard() {
+	private void showTurnCards() {
+		ArrayList<PokerCard> cards = this.game.getTableCards();
+		PokerCard turnCard = cards.get(3);
 		
-	}
+		this.showCard(imgTurnCard, turnCard);
+	}	
 	
 	private void showRiverCard() {
+		ArrayList<PokerCard> cards = this.game.getTableCards();
+		PokerCard riverCard = cards.get(3);
 		
+		this.showCard(imgRiverCard, riverCard);
 	}
 	
 	private void showPlayerInfo(ArrayList<PokerPlayer> pokerPlayers) {			
@@ -396,14 +417,8 @@ public class TexasHoldemGame extends JFrame{
 			PokerCard firstCard = hand.get(0);
 			PokerCard secondCard = hand.get(1);
 			
-			String firstCardFilename = FileHelper.getImageCard(firstCard);
-			String secondCardFilename = FileHelper.getImageCard(secondCard);
-			
-			firstCardPanel.add(new ImagePanel(firstCardFilename));
-			secondCardPanel.add(new ImagePanel(secondCardFilename));
-			
-			firstCardPanel.setVisible(true);
-			secondCardPanel.setVisible(true);
+			this.showCard(firstCardPanel, firstCard);
+			this.showCard(secondCardPanel, secondCard);
 		}
 	}
 	
@@ -417,5 +432,11 @@ public class TexasHoldemGame extends JFrame{
 		}
 		
 		return pokerPlayers;
+	}
+	
+	private void showCard(JPanel cardPanel, PokerCard card) {
+		String cardFilename = FileHelper.getImageCard(card);		
+		cardPanel.add(new ImagePanel(cardFilename));		
+		cardPanel.setVisible(true);
 	}
 }
