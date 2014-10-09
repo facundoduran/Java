@@ -397,6 +397,12 @@ public class TexasHoldemGame extends JFrame{
 		imgPlayer3SecondCard.setVisible(false);
 		imgPlayer4FirstCard.setVisible(false);
 		imgPlayer4SecondCard.setVisible(false);
+		
+		imgFlopFirstCard.setVisible(false);
+		imgFlopSecondCard.setVisible(false);
+		imgFlopCardThirdCard.setVisible(false);
+		imgTurnCard.setVisible(false);
+		imgRiverCard.setVisible(false);
 	}
 	
 	private void initializePlayers(ArrayList<Player> players) {	
