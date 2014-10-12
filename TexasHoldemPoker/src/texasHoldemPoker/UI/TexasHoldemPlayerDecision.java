@@ -4,7 +4,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
@@ -23,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JRadioButton;
 
 public class TexasHoldemPlayerDecision extends JDialog {
 
@@ -111,7 +114,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 			}
 		});
 		
-		btnBet = new JButton("Apostar");
+		btnBet = new JButton("Subir");
 		btnBet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				playerBet();				
@@ -136,11 +139,20 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		lblPotInfo = new JLabel("Pozo:");
 		
 		lblPot = new JLabel("");
+		
+		JRadioButton rdbtnHasBigBlind = new JRadioButton("Ciega Grande");
+		
+		boolean playerHasBigBlind = this.pokerPlayer.hasBigBlind();
+		
+		rdbtnHasBigBlind.setEnabled(false);
+		
+		rdbtnHasBigBlind.setSelected(playerHasBigBlind);
+		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -156,28 +168,32 @@ public class TexasHoldemPlayerDecision extends JDialog {
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(slBet, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(btnLeave)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnCheck, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnBet))
+									.addComponent(btnBet, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblBigBlind)
-										.addComponent(lblPotInfo))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(slBet, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(lblBigBlind)
+												.addComponent(lblPotInfo))
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(lblPot)
+												.addComponent(lblBigBlindValue))))
+									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblPot)
-										.addComponent(lblBigBlindValue)))))
+										.addComponent(rdbtnHasBigBlind)
+										.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))))
+							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(10)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(lblCardsInTable, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(lblCardsInTable, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(firstFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
 									.addGap(6)
 									.addComponent(secondFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
@@ -234,13 +250,15 @@ public class TexasHoldemPlayerDecision extends JDialog {
 							.addComponent(lblPotInfo))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(182)
-							.addComponent(lblPot)))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(rdbtnHasBigBlind)
+								.addComponent(lblPot))))
 					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
 		showCards();
 		showPlayerCard();
-		setPlayerInfo(pokerPlayer, this.bigBlind);
+		setPlayerInfo();
 	}
 
 	public PokerPlayerDecision getPlayerDecision() {
@@ -276,8 +294,19 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		if (Validators.isNumeric(raiseAmount)) 
 		{
 			int amount = Integer.parseInt(raiseAmount);
-			this.setRaiseAmount(amount);
-			this.setVisible(false);		
+			
+			if (amount >= slBet.getMinimum()) {
+				this.setRaiseAmount(amount);
+				this.setVisible(false);	
+			}
+			else {
+				JOptionPane.showMessageDialog(new JFrame(), "El valor ingresado es menor al minimo permitido ", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			}	
+		}
+		else {
+			JOptionPane.showMessageDialog(new JFrame(), "El valor ingresado no es un numero ", "Error",
+		        JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -293,15 +322,17 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		this.txtBet.setText(String.valueOf(value));
 	}
 	
-	private void setPlayerInfo(PokerPlayer player, int bigBlind) {
-		lblPlayerName.setText(player.getName());
+	private void setPlayerInfo() {
+		lblPlayerName.setText(this.pokerPlayer.getName());
 		
-		slBet.setMinimum(bigBlind);
-		slBet.setMaximum(player.getBalance());
+		lblPot.setText(Integer.toString(this.pot));
 		
-		lblBigBlindValue.setText(Integer.toString(bigBlind));
+		slBet.setMinimum(this.bigBlind);
+		slBet.setMaximum(this.pokerPlayer.getBalance());
 		
-		slBet.setValue(bigBlind);
+		lblBigBlindValue.setText(Integer.toString(this.bigBlind));
+		
+		slBet.setValue(this.bigBlind);
 	}
 	
 	private void showPlayerCard() {

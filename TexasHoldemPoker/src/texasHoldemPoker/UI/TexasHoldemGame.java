@@ -22,7 +22,6 @@ import java.awt.BorderLayout;
 
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -36,6 +35,7 @@ public class TexasHoldemGame extends JFrame{
 	private PokerGame game;	
 	private ArrayList<Player> players;
 	private int bigBlind;
+	private int bigBlindPos;
 		
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -54,7 +54,7 @@ public class TexasHoldemGame extends JFrame{
 					players.add(julietaPlayer);
 					players.add(juanPlayer);
 					
-					TexasHoldemGame window = new TexasHoldemGame(players, 10);
+					TexasHoldemGame window = new TexasHoldemGame(players, 4);
 					window.setVisible(true);
 					window.initializeGame();
 					
@@ -67,6 +67,7 @@ public class TexasHoldemGame extends JFrame{
 	
 	public TexasHoldemGame(ArrayList<Player> players, int bigBlind) throws Exception {
 		initialize();
+		this.bigBlindPos = 2;
 		this.players = players;
 		this.bigBlind = bigBlind;
 		
@@ -365,15 +366,20 @@ public class TexasHoldemGame extends JFrame{
 	}
 	
 	public void initializeGame() throws Exception {
-		this.game = new PokerGame(bigBlind, 2);
+		
+		this.game = new PokerGame(bigBlind);
 		
 		this.initializePlayers(this.players);
+		
+		bigBlindPos = bigBlindPos % this.game.getPlayers().size();
+		
+		this.game.startGame(bigBlindPos);
 		
 		int bigBlind = this.game.getBigBlind();	
 		
 		this.game.dealCards();
 		
-		this.showPlayerInfo(this.game.getPlayers());
+		this.showPlayerInfo(this.game.getPlayers(), false);
 		
 		boolean finishGame = false;
 		int gameState = 0;
@@ -409,16 +415,15 @@ public class TexasHoldemGame extends JFrame{
 				playerDecideForm.dispose();
 				
 				
-				if(this.game.getPlayers().size() == 1) 
+				if(this.game.getPlayingPlayers().size() == 1) 
 				{
 					finishGame = true;
 				}
 				
-				if (this.game.allPlayersHasSameBet() && playerPlayCounter % this.game.getPlayers().size() == 0) {
+				if (this.game.allPlayersHasSameBet() && playerPlayCounter % this.game.getPlayingPlayers().size() == 0) {
 					allPlayersHasTheSameBet = true;
 				}
 				
-				this.game.nextTurn();
 				playerPlayCounter++;
 			}				
 			while(!finishGame && !allPlayersHasTheSameBet);
@@ -448,7 +453,12 @@ public class TexasHoldemGame extends JFrame{
 		}
 		
 		game.finishGame();
+		
+		this.showPlayerInfo(game.getPlayers(), true);
+		
 		this.pnlWinner.setVisible(true);
+		
+		this.bigBlindPos++;
 	}
 	
 	private void showFlopCard() {
@@ -477,24 +487,24 @@ public class TexasHoldemGame extends JFrame{
 		this.showCard(imgRiverCard, riverCard);
 	}
 	
-	private void showPlayerInfo(ArrayList<PokerPlayer> pokerPlayers) {			
+	private void showPlayerInfo(ArrayList<PokerPlayer> pokerPlayers, boolean showCards) {			
 		for (int i = 0; i < pokerPlayers.size(); i++) {
 			PokerPlayer player = pokerPlayers.get(i);
 			
 			if (i == 0) {
-				this.setPlayerInfo(player, lblPlayer1, imgPlayer1FirstCard, imgPlayer1SecondCard);
+				this.setPlayerInfo(player, lblPlayer1, imgPlayer1FirstCard, imgPlayer1SecondCard, showCards);
 			}
 			
 			if (i == 1) {
-				this.setPlayerInfo(player, lblPlayer2, imgPlayer2FirstCard, imgPlayer2SecondCard);
+				this.setPlayerInfo(player, lblPlayer2, imgPlayer2FirstCard, imgPlayer2SecondCard, showCards);
 			}
 			
 			if (i == 2) {
-				this.setPlayerInfo(player, lblPlayer3, imgPlayer3FirstCard, imgPlayer3SecondCard);
+				this.setPlayerInfo(player, lblPlayer3, imgPlayer3FirstCard, imgPlayer3SecondCard, showCards);
 			}
 			
 			if (i == 3) {
-				this.setPlayerInfo(player, lblPlayer4, imgPlayer4FirstCard, imgPlayer4SecondCard);
+				this.setPlayerInfo(player, lblPlayer4, imgPlayer4FirstCard, imgPlayer4SecondCard, showCards);
 			}
 		}
 	}
@@ -524,21 +534,30 @@ public class TexasHoldemGame extends JFrame{
 		}
 	}
 	
-	private void setPlayerInfo(PokerPlayer player, JLabel lblPlayerName, JPanel firstCardPanel, JPanel secondCardPanel) {
+	private void setPlayerInfo(PokerPlayer player, JLabel lblPlayerName, JPanel firstCardPanel, JPanel secondCardPanel, boolean showCards) {
 		if (player != null) {
 			String playerName = player.getName();
 			lblPlayerName.setText(playerName);
 						
-			String hiddenCard = FileHelper.getImagePath("b1fv");
-			
 			firstCardPanel.removeAll();
 			secondCardPanel.removeAll();
 			
-			firstCardPanel.add(new ImagePanel(hiddenCard));
-			secondCardPanel.add(new ImagePanel(hiddenCard));
-			
-			firstCardPanel.setVisible(true);
-			secondCardPanel.setVisible(true);
+			if (showCards) {				
+				ArrayList<PokerCard> hand = player.getHand();
+				
+				PokerCard firstCard = hand.get(0);
+				PokerCard secondCard = hand.get(1);
+				
+				this.showCard(firstCardPanel, firstCard);
+				this.showCard(secondCardPanel, secondCard);
+			}
+			else{
+				String hiddenCard = FileHelper.getImagePath("b1fv");
+				firstCardPanel.add(new ImagePanel(hiddenCard));
+				secondCardPanel.add(new ImagePanel(hiddenCard));
+				firstCardPanel.setVisible(true);
+				secondCardPanel.setVisible(true);
+			}		
 		}
 	}
 	
@@ -578,6 +597,7 @@ public class TexasHoldemGame extends JFrame{
 	private void showCard(JPanel cardPanel, PokerCard card) {
 		cardPanel.removeAll();
 		String cardFilename = FileHelper.getImageCard(card);
+		cardPanel.setVisible(false);
 		cardPanel.add(new ImagePanel(cardFilename));
 		cardPanel.setVisible(true);
 	}

@@ -8,27 +8,26 @@ public class PokerGame {
 	private ArrayList<PokerPlayer> players;
 	private ArrayList<PokerCard> communitaryCards;
 	private int pot;
-	private int bigBlindPos;
+	private int turnPosition;
 	private int bigBlind;
 	private int smallBlind;
 
-	public PokerGame(int bigBlind, int bigBlingPos) {
+	public PokerGame(int bigBlind) {
 		this.deck = new Deck();
 		this.setTableCards(new ArrayList<PokerCard>());
 		this.players = new ArrayList<PokerPlayer>();
 		this.setBigBlind(bigBlind);
 		this.smallBlind = this.getBigBlind() /2 ;
 		this.pot = this.getBigBlind() + smallBlind;	
-		this.setBigBlindPos(bigBlingPos);
 	}
 	
-	public void startGame(int bigBlind) {
-		this.deck = new Deck();
-		this.setBigBlind(bigBlind);
-		this.smallBlind = this.getBigBlind() /2 ;
-		this.pot = this.getBigBlind() + smallBlind;	
-		this.clearPlayerHands();
-		this.clearTableCards();
+	public void startGame(int turnPosition) {
+		this.setBigBlindPos(turnPosition);
+		PokerPlayer player = this.getPlayer();
+		player.setHasBigBlind(true);		
+		long amount = this.getBigBlind() - player.getBet();
+		player.call(amount);
+		this.pot = this.getBigBlind() + smallBlind;
 	}
 	
 	public void addPlayer(PokerPlayer player) {
@@ -44,17 +43,8 @@ public class PokerGame {
 		}
 	}
 	
-	public void nextTurn() {		
-		if (getBigBlindPos() == this.players.size()) {
-			this.setBigBlindPos(0) ;
-		}
-		else {
-			setBigBlindPos(getBigBlindPos() + 1);
-		}
-	}
-	
 	public PokerPlayer getPlayer() {
-		PokerPlayer playerTurn = this.players.get(getBigBlindPos());
+		PokerPlayer playerTurn = this.getPlayingPlayers().get(getBigBlindPos());
 		return playerTurn;
 	}
 	
@@ -67,13 +57,18 @@ public class PokerGame {
 			}
 			
 			if (decision == PokerPlayerDecision.Call) {
-				long amount = this.getBigBlind() - playerTurn.getBet();
-				playerTurn.call(amount);
+				if (this.getBigBlind() != playerTurn.getBet()) {
+					long amount = this.getBigBlind() - playerTurn.getBet();
+					playerTurn.call(amount);
+					this.pot += amount;	
+				}
 			}
 			
 			if (decision == PokerPlayerDecision.AllIn) {
 				playerTurn.allIn();
 			}
+			
+			this.nextTurn(decision);
 		}
 	}
 	
@@ -89,10 +84,13 @@ public class PokerGame {
 				}
 				else {
 					playerTurn.raise(bet);
+					this.pot += bet;
+					this.bigBlind += bet;
 				}				
 			}
 		}
 		
+		nextTurn(decision);
 	}
 		
 	public void flop() {
@@ -125,8 +123,9 @@ public class PokerGame {
 	}
 	
 	public boolean allPlayersHasSameBet() {
-	
-		for(PokerPlayer pokerPlayer : players) {
+		ArrayList<PokerPlayer> playerPlaying = new ArrayList<PokerPlayer>();
+		
+		for(PokerPlayer pokerPlayer : playerPlaying) {
 			if (pokerPlayer.getBet() != this.getBigBlind()) {
 				return false;
 			}
@@ -137,6 +136,18 @@ public class PokerGame {
 	
 	public ArrayList<PokerPlayer> getPlayers() {
 		return players;
+	}
+	
+	public ArrayList<PokerPlayer> getPlayingPlayers() {
+		ArrayList<PokerPlayer> playerPlaying = new ArrayList<PokerPlayer>();
+		
+		for(PokerPlayer pokerPlayer : players) {
+			if (pokerPlayer.getDecision() != PokerPlayerDecision.Leave){
+				playerPlaying.add(pokerPlayer);
+			}
+		}
+		
+		return playerPlaying;
 	}
 
 	public void setPlayers(ArrayList<PokerPlayer> players) {
@@ -160,19 +171,19 @@ public class PokerGame {
 	}
 
 	public int getBigBlindPos() {
-		if (bigBlindPos == this.players.size()) {
+		if (turnPosition >= this.players.size()) {
 			return 0;
 		}
 		
-		return bigBlindPos;
+		return turnPosition;
 	}
 
 	public void setBigBlindPos(int bigBlindPos) {
-		if (bigBlindPos > this.players.size()) {
-			this.bigBlindPos = 0;
+		if (bigBlindPos > this.getPlayingPlayers().size()) {
+			this.turnPosition = 0;
 		}
 		else {
-			this.bigBlindPos = bigBlindPos;
+			this.turnPosition = bigBlindPos;
 		}
 	}
 
@@ -189,13 +200,14 @@ public class PokerGame {
 		getTableCards().add(card);
 	}
 	
-	private void clearPlayerHands() {
-		for(PokerPlayer pokerPlayer : players) {
-			pokerPlayer.newGame();
+	private void nextTurn(PokerPlayerDecision decision) {		
+		if (getBigBlindPos() +1 >= this.getPlayingPlayers().size()) {
+			this.setBigBlindPos(0) ;
 		}
-	}	
-	
-	private void clearTableCards() {
-		this.communitaryCards = new ArrayList<PokerCard>();
+		else {
+			if (decision != PokerPlayerDecision.Leave) {
+				setBigBlindPos(getBigBlindPos() + 1);
+			}		
+		}
 	}
 }

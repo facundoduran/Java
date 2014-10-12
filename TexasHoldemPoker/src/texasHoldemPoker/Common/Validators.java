@@ -1,8 +1,6 @@
 package texasHoldemPoker.Common;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import texasHoldemPoker.Model.Player;
 
 public class Validators {
