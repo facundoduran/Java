@@ -2,6 +2,8 @@ package texasHoldemPoker.Model;
 
 import java.util.*;
 
+import texasHoldemPoker.Business.HandEvaluator;
+
 public class PokerGame {
 		
 	private Deck deck;
@@ -112,23 +114,35 @@ public class PokerGame {
 		this.addCardInTable();
 	}
 	
-	public void finishGame() {
+	public ArrayList<PokerHandEvaluation> finishGame() {
 		//evaluate hands
-
-		//give prizes - determine if exists tie
+		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
+		ArrayList<PokerHandEvaluation> gameResult = new ArrayList<PokerHandEvaluation>();
 		
-		//remove players with balance zero
-		for(PokerPlayer pokerPlayer : players) {
-			if (pokerPlayer.getBalance() == 0) {
-				players.remove(pokerPlayer);
-			}
+		for(PokerPlayer player : playersPlaying) {
+			PokerHandEvaluation handEvaluation = HandEvaluator.getBestHand(player, this.getCommunitaryCards());
+			gameResult.add(handEvaluation);
 		}
 		
-		//return class with winner and blind position
+		ArrayList<PokerHandEvaluation> winners = HandEvaluator.getWinners(gameResult);
+
+		//exist tie, resolve it
+		if (winners.size() > 1) {
+			
+		}
+		else {
+			PokerPlayer winner = winners.get(0).getPlayer();
+			int total = this.pot;
+			winner.setBalance(total);
+		}
+		
+		//give prizes - determine if exists tie
+		
+		return winners;
 	}
 	
 	public boolean allPlayersHasSameBet() {
-		ArrayList<PokerPlayer> playerPlaying = new ArrayList<PokerPlayer>();
+		ArrayList<PokerPlayer> playerPlaying = this.getPlayingPlayers();
 		
 		for(PokerPlayer pokerPlayer : playerPlaying) {
 			if (pokerPlayer.getBet() != this.getBigBlind()) {
@@ -192,7 +206,7 @@ public class PokerGame {
 		}
 	}
 
-	public ArrayList<PokerCard> getTableCards() {
+	public ArrayList<PokerCard> getCommunitaryCards() {
 		return communitaryCards;
 	}
 
@@ -202,7 +216,7 @@ public class PokerGame {
 
 	private void addCardInTable() {
 		PokerCard card = deck.shuffleCard();
-		getTableCards().add(card);
+		getCommunitaryCards().add(card);
 	}
 	
 	private void nextTurn(PokerPlayerDecision decision) {		
@@ -214,5 +228,17 @@ public class PokerGame {
 				setPlayerTurnIndex(getPlayerTurnIndex() + 1);
 			}		
 		}
+	}
+	
+	private PokerPlayer getPlayer(String playerName) {
+		ArrayList<PokerPlayer> playerPlaying = this.getPlayingPlayers();
+
+		for (PokerPlayer player : playerPlaying) {
+			if (player.getName() == playerName) {
+				return player;
+			}
+		}
+		
+		return null;
 	}
 }

@@ -394,7 +394,7 @@ public class TexasHoldemGame extends JFrame{
 				
 				bigBlind = this.game.getBigBlind();
 				
-				ArrayList<PokerCard> tableCards = this.game.getTableCards();
+				ArrayList<PokerCard> tableCards = this.game.getCommunitaryCards();
 				
 				int pot = this.game.getPot();
 				
@@ -462,7 +462,7 @@ public class TexasHoldemGame extends JFrame{
 	}
 	
 	private void showFlopCard() {
-		ArrayList<PokerCard> cards = this.game.getTableCards();
+		ArrayList<PokerCard> cards = this.game.getCommunitaryCards();
 		
 		PokerCard firstFlopCard = cards.get(0);
 		PokerCard secondTurnCard = cards.get(1);
@@ -474,15 +474,15 @@ public class TexasHoldemGame extends JFrame{
 	}
 	
 	private void showTurnCards() {
-		ArrayList<PokerCard> cards = this.game.getTableCards();
+		ArrayList<PokerCard> cards = this.game.getCommunitaryCards();
 		PokerCard turnCard = cards.get(3);
 		
 		this.showCard(imgTurnCard, turnCard);
 	}	
 	
 	private void showRiverCard() {
-		ArrayList<PokerCard> cards = this.game.getTableCards();
-		PokerCard riverCard = cards.get(3);
+		ArrayList<PokerCard> cards = this.game.getCommunitaryCards();
+		PokerCard riverCard = cards.get(4);
 		
 		this.showCard(imgRiverCard, riverCard);
 	}
