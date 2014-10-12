@@ -21,12 +21,17 @@ public class PokerGame {
 		this.pot = this.getBigBlind() + smallBlind;	
 	}
 	
-	public void startGame(int turnPosition) {
-		this.setBigBlindPos(turnPosition);
-		PokerPlayer player = this.getPlayer();
-		player.setHasBigBlind(true);		
-		long amount = this.getBigBlind() - player.getBet();
-		player.call(amount);
+	public void startGame(int playerIndexWithBigBlindPos) {		
+		this.setPlayerTurnIndex(playerIndexWithBigBlindPos);		
+		int smallBlindPos = getPlayerTurnIndex() == 0 ? players.size() - 1 : getPlayerTurnIndex() - 1;
+		PokerPlayer smallBlindPlayer = this.players.get(smallBlindPos);
+		smallBlindPlayer.call(this.smallBlind);		
+		
+		PokerPlayer bigBlindPlayer = this.players.get(playerIndexWithBigBlindPos);
+		bigBlindPlayer.setHasBigBlind(true);		
+		long amount = this.getBigBlind() - bigBlindPlayer.getBet();
+		bigBlindPlayer.call(amount);
+		
 		this.pot = this.getBigBlind() + smallBlind;
 	}
 	
@@ -44,7 +49,7 @@ public class PokerGame {
 	}
 	
 	public PokerPlayer getPlayer() {
-		PokerPlayer playerTurn = this.getPlayingPlayers().get(getBigBlindPos());
+		PokerPlayer playerTurn = this.getPlayingPlayers().get(getPlayerTurnIndex());
 		return playerTurn;
 	}
 	
@@ -170,7 +175,7 @@ public class PokerGame {
 		this.bigBlind = bigBlind;
 	}
 
-	public int getBigBlindPos() {
+	public int getPlayerTurnIndex() {
 		if (turnPosition >= this.players.size()) {
 			return 0;
 		}
@@ -178,7 +183,7 @@ public class PokerGame {
 		return turnPosition;
 	}
 
-	public void setBigBlindPos(int bigBlindPos) {
+	public void setPlayerTurnIndex(int bigBlindPos) {
 		if (bigBlindPos > this.getPlayingPlayers().size()) {
 			this.turnPosition = 0;
 		}
@@ -201,12 +206,12 @@ public class PokerGame {
 	}
 	
 	private void nextTurn(PokerPlayerDecision decision) {		
-		if (getBigBlindPos() +1 >= this.getPlayingPlayers().size()) {
-			this.setBigBlindPos(0) ;
+		if (getPlayerTurnIndex() +1 >= this.getPlayingPlayers().size()) {
+			this.setPlayerTurnIndex(0) ;
 		}
 		else {
 			if (decision != PokerPlayerDecision.Leave) {
-				setBigBlindPos(getBigBlindPos() + 1);
+				setPlayerTurnIndex(getPlayerTurnIndex() + 1);
 			}		
 		}
 	}
