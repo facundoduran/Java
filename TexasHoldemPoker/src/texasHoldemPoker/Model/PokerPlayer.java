@@ -12,12 +12,18 @@ public class PokerPlayer extends Player{
 	private int balance;
 	
 	private PokerPlayerDecision decision;
-	
+		
 	public PokerPlayer(String name) {
 		super(name);
 		this.hand = new ArrayList<PokerCard>();
 		this.setBalance(0);
-	}	
+		this.setDecision(PokerPlayerDecision.Play);
+	}
+	
+	public void newGame() {
+		this.setDecision(PokerPlayerDecision.Play);
+		this.clearHand();
+	}
 	
 	public void addCard(PokerCard card) {
 		this.hand.add(card);
@@ -35,6 +41,11 @@ public class PokerPlayer extends Player{
 		else {			
 			this.allIn();
 		}
+	}
+	
+	public void leave() {
+		this.clearHand();
+		this.setDecision(PokerPlayerDecision.Leave);
 	}
 	
 	public void allIn() {
@@ -73,4 +84,8 @@ public class PokerPlayer extends Player{
 	public void setDecision(PokerPlayerDecision decision) {
 		this.decision = decision;
 	}
+	
+	private void clearHand() {
+		this.hand = new ArrayList<PokerCard>();
+	}	
 }

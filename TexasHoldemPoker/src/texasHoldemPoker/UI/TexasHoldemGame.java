@@ -3,6 +3,7 @@ package texasHoldemPoker.UI;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import java.util.ArrayList;
 
 import texasHoldemPoker.Common.FileHelper;
@@ -12,22 +13,86 @@ import texasHoldemPoker.Model.PokerGame;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
 import texasHoldemPoker.UI.CustomControls.ImagePanel;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
+
+import java.awt.EventQueue;
 import java.awt.BorderLayout;
 
+import javax.swing.JOptionPane;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JButton;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+@SuppressWarnings("serial")
 public class TexasHoldemGame extends JFrame{
 	
-	private PokerGame game;
+	private PokerGame game;	
+	private ArrayList<Player> players;
+	private int bigBlind;
 		
-	/**
-	 * Create the application.
-	 */
-	public TexasHoldemGame() throws Exception {
-		initialize();
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ArrayList<Player> players = new ArrayList<Player>();
+					
+					Player facundoPlayer = new Player("Facundo");
+					facundoPlayer.setSalary(5000);
+					Player julietaPlayer = new Player("Julieta");
+					julietaPlayer.setSalary(7000);
+					Player juanPlayer = new Player("Juan");
+					juanPlayer.setSalary(1000);
+					
+					players.add(facundoPlayer);
+					players.add(julietaPlayer);
+					players.add(juanPlayer);
+					
+					TexasHoldemGame window = new TexasHoldemGame(players, 10);
+					window.setVisible(true);
+					window.initializeGame();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
+	
+	public TexasHoldemGame(ArrayList<Player> players, int bigBlind) throws Exception {
+		initialize();
+		this.players = players;
+		this.bigBlind = bigBlind;
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnGame = new JMenu("Juego");
+		menuBar.add(mnGame);
+		
+		JMenuItem mnItemNewGame = new JMenuItem("Nuevo Juego");
+		mnItemNewGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGame();
+			}
+		});
+		mnGame.add(mnItemNewGame);
+		
+		JMenuItem mnItemExit = new JMenuItem("Salir");
+		mnItemExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exitGame();
+			}
+		});
+		mnGame.add(mnItemExit);
+	}
+	
 	/*
 	 * Atrributes
 	 * */
@@ -49,10 +114,13 @@ public class TexasHoldemGame extends JFrame{
 	private JPanel imgFlopCardThirdCard;
 	private JPanel imgTurnCard;		
 	private JPanel imgRiverCard;
+	private JPanel pnlWinner;
+	private JLabel lblWinnerInfo;
+	private JLabel lblPotInfo;
+	private JLabel lblWinner;
+	private JLabel lblPot;
+	private JMenuBar menuBar;
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		this.setTitle("Poker");
 		this.setBounds(100, 100, 1023, 526);
@@ -252,17 +320,57 @@ public class TexasHoldemGame extends JFrame{
 		);
 		imgRiverCard.setLayout(gl_imgRiverCard);
 		
-		this.hideAllImages();
+		pnlWinner = new JPanel();
+		pnlWinner.setBounds(260, 361, 465, 76);
+		pnlWinner.setVisible(false);
+		getContentPane().add(pnlWinner);
+		
+		lblWinner = new JLabel("Ganador:");
+		
+		lblPot = new JLabel("Pozo:");
+		
+		lblWinnerInfo = new JLabel("");
+		
+		lblPotInfo = new JLabel("");
+		GroupLayout gl_pnlWinner = new GroupLayout(pnlWinner);
+		gl_pnlWinner.setHorizontalGroup(
+			gl_pnlWinner.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlWinner.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblWinner, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPot))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblPotInfo)
+						.addComponent(lblWinnerInfo))
+					.addContainerGap(385, Short.MAX_VALUE))
+		);
+		gl_pnlWinner.setVerticalGroup(
+			gl_pnlWinner.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlWinner.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblWinner)
+						.addComponent(lblWinnerInfo))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblPot)
+						.addComponent(lblPotInfo))
+					.addContainerGap(61, Short.MAX_VALUE))
+		);
+		pnlWinner.setLayout(gl_pnlWinner);
+		
+		this.showAllImages(false);
 	}
 	
-	public void initializeGame(ArrayList<Player> players) throws Exception {
-		this.game = new PokerGame(10, 0);
+	public void initializeGame() throws Exception {
+		this.game = new PokerGame(bigBlind, 2);
 		
-		this.initializePlayers(players);
+		this.initializePlayers(this.players);
 		
 		int bigBlind = this.game.getBigBlind();	
 		
-		this.game.dealCards();
 		this.game.dealCards();
 		
 		this.showPlayerInfo(this.game.getPlayers());
@@ -282,8 +390,10 @@ public class TexasHoldemGame extends JFrame{
 				
 				ArrayList<PokerCard> tableCards = this.game.getTableCards();
 				
+				int pot = this.game.getPot();
+				
 				//Wait for UI Response
-				TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(tableCards, currentPlayer, bigBlind);
+				TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(tableCards, currentPlayer, bigBlind, pot);
 				playerDecideForm.setVisible(true);
 				
 				PokerPlayerDecision playerDecision = playerDecideForm.getPlayerDecision();
@@ -337,7 +447,8 @@ public class TexasHoldemGame extends JFrame{
 			}
 		}
 		
-		game.finishGame();		
+		game.finishGame();
+		this.pnlWinner.setVisible(true);
 	}
 	
 	private void showFlopCard() {
@@ -388,21 +499,21 @@ public class TexasHoldemGame extends JFrame{
 		}
 	}
 	
-	private void hideAllImages() {
-		imgPlayer1FirstCard.setVisible(false);
-		imgPlayer1SecondCard.setVisible(false);
-		imgPlayer2FirstCard.setVisible(false);
-		imgPlayer2SecondCard.setVisible(false);
-		imgPlayer3FirstCard.setVisible(false);
-		imgPlayer3SecondCard.setVisible(false);
-		imgPlayer4FirstCard.setVisible(false);
-		imgPlayer4SecondCard.setVisible(false);
+	private void showAllImages(boolean show) {
+		imgPlayer1FirstCard.setVisible(show);
+		imgPlayer1SecondCard.setVisible(show);
+		imgPlayer2FirstCard.setVisible(show);
+		imgPlayer2SecondCard.setVisible(show);
+		imgPlayer3FirstCard.setVisible(show);
+		imgPlayer3SecondCard.setVisible(show);
+		imgPlayer4FirstCard.setVisible(show);
+		imgPlayer4SecondCard.setVisible(show);
 		
-		imgFlopFirstCard.setVisible(false);
-		imgFlopSecondCard.setVisible(false);
-		imgFlopCardThirdCard.setVisible(false);
-		imgTurnCard.setVisible(false);
-		imgRiverCard.setVisible(false);
+		imgFlopFirstCard.setVisible(show);
+		imgFlopSecondCard.setVisible(show);
+		imgFlopCardThirdCard.setVisible(show);
+		imgTurnCard.setVisible(show);
+		imgRiverCard.setVisible(show);
 	}
 	
 	private void initializePlayers(ArrayList<Player> players) {	
@@ -417,14 +528,17 @@ public class TexasHoldemGame extends JFrame{
 		if (player != null) {
 			String playerName = player.getName();
 			lblPlayerName.setText(playerName);
+						
+			String hiddenCard = FileHelper.getImagePath("b1fv");
 			
-			ArrayList<PokerCard> hand = player.getHand();
+			firstCardPanel.removeAll();
+			secondCardPanel.removeAll();
 			
-			PokerCard firstCard = hand.get(0);
-			PokerCard secondCard = hand.get(1);
+			firstCardPanel.add(new ImagePanel(hiddenCard));
+			secondCardPanel.add(new ImagePanel(hiddenCard));
 			
-			this.showCard(firstCardPanel, firstCard);
-			this.showCard(secondCardPanel, secondCard);
+			firstCardPanel.setVisible(true);
+			secondCardPanel.setVisible(true);
 		}
 	}
 	
@@ -440,9 +554,48 @@ public class TexasHoldemGame extends JFrame{
 		return pokerPlayers;
 	}
 	
+	private void newGame() {
+		this.pnlWinner.setVisible(false);
+		this.ClearControls();
+		this.showAllImages(false);
+		
+		try {
+			this.initializeGame();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void exitGame() {
+		int result = JOptionPane.showConfirmDialog(new JFrame(), 
+				   "Esta seguro de salir del juego? ", "Informacion!", JOptionPane.YES_NO_OPTION);
+				if(result == JOptionPane.YES_OPTION) {
+				    System.exit(0);
+				} 
+	}
+	
 	private void showCard(JPanel cardPanel, PokerCard card) {
-		String cardFilename = FileHelper.getImageCard(card);		
-		cardPanel.add(new ImagePanel(cardFilename));		
+		cardPanel.removeAll();
+		String cardFilename = FileHelper.getImageCard(card);
+		cardPanel.add(new ImagePanel(cardFilename));
 		cardPanel.setVisible(true);
+	}
+	
+	private void ClearControls() {
+		imgPlayer1FirstCard.removeAll();
+		imgPlayer1SecondCard.removeAll();
+		imgPlayer2FirstCard.removeAll();
+		imgPlayer2SecondCard.removeAll();
+		imgPlayer3FirstCard.removeAll();
+		imgPlayer3SecondCard.removeAll();
+		imgPlayer4FirstCard.removeAll();
+		imgPlayer4SecondCard.removeAll();	
+		
+		imgFlopFirstCard.removeAll();
+		imgFlopSecondCard.removeAll();
+		imgFlopCardThirdCard.removeAll();
+		imgTurnCard.removeAll();
+		imgRiverCard.removeAll();
 	}
 }

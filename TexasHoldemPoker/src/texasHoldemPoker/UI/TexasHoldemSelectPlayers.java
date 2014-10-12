@@ -1,7 +1,5 @@
 package texasHoldemPoker.UI;
 
-import java.awt.EventQueue;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -13,6 +11,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JList;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import texasHoldemPoker.Common.Validators;
 import texasHoldemPoker.Model.Player;
 import texasHoldemPoker.Persistence.Sql.Dao.IPlayerDAO;
 import texasHoldemPoker.Persistence.Sql.Dao.PlayerDAO;
@@ -23,13 +22,16 @@ import java.util.ArrayList;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class TexasHoldemSelectPlayers extends JFrame {
 
 	private JList listPlayers;
 	private JList listPokerPlayers;
 	private IPlayerDAO playerDAO;
 	private JLabel lblPlayerSalary;
+	private JTextField txtBigBlind;
 
 	/**
 	 * Create the application.
@@ -86,6 +88,12 @@ public class TexasHoldemSelectPlayers extends JFrame {
 		JLabel lblSalary = new JLabel("Salario:");
 		
 		lblPlayerSalary = new JLabel("");
+		
+		JLabel lblBigBlind = new JLabel("Ciega grande");
+		
+		txtBigBlind = new JTextField();
+		txtBigBlind.setText("10");
+		txtBigBlind.setColumns(10);
 		GroupLayout groupLayout = new GroupLayout(this.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -103,22 +111,28 @@ public class TexasHoldemSelectPlayers extends JFrame {
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(btnLetsPlayPoker)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(btnRemovePlayer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(btnAddPlayer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(btnRemovePlayer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(btnAddPlayer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(txtBigBlind))
+											.addPreferredGap(ComponentPlacement.UNRELATED))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblBigBlind, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
+											.addGap(16)))
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(lblLobby)
 										.addComponent(listPokerPlayers, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE))))))
 					.addContainerGap(55, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(277, Short.MAX_VALUE)
 					.addComponent(btnLetsPlayPoker)
 					.addContainerGap())
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(16)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblPlayers)
@@ -130,7 +144,11 @@ public class TexasHoldemSelectPlayers extends JFrame {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnAddPlayer)
 							.addGap(9)
-							.addComponent(btnRemovePlayer)))
+							.addComponent(btnRemovePlayer)
+							.addGap(14)
+							.addComponent(lblBigBlind)
+							.addGap(5)
+							.addComponent(txtBigBlind, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblSalary)
@@ -216,11 +234,35 @@ public class TexasHoldemSelectPlayers extends JFrame {
 	private void playPoker() {	
 		if (listPokerPlayers.getModel() != null && listPokerPlayers.getModel().getSize() >= 2) {
 			try {
-				ArrayList<Player> players = this.getPlayers();				
+				String bigBlind = this.txtBigBlind.getText();
 				
-				TexasHoldemGame game = new TexasHoldemGame();
-				game.setVisible(true);
-				game.initializeGame(players);
+				if (Validators.isNumeric(bigBlind)) {
+					
+					int startBigBlind = Integer.parseInt(bigBlind);
+					ArrayList<Player> players = this.getPlayers();	
+					
+					ArrayList<String> playerCantPlay = Validators.somePlayerHasSalaryLessThanBigBlind(players, startBigBlind);
+					
+					if (playerCantPlay.isEmpty()) {
+						TexasHoldemGame game = new TexasHoldemGame(players, startBigBlind);
+						game.setVisible(true);
+					}
+					else {
+						JOptionPane.showInputDialog(
+								new JFrame(), 
+                                "No es posible iniciar el juego, los siguientes jugadores tienen un salario menor a la ciega grande", 
+                                "Error al Iniciar el juego", 
+                                 JOptionPane.ERROR_MESSAGE, 
+                                 null,
+                                 playerCantPlay.toArray(), 
+                                 playerCantPlay.toArray()[0]);
+						playerCantPlay.toArray();
+					}				
+				}
+				else {
+					JOptionPane.showMessageDialog(new JFrame(), "El valor ingresado no es un numero ", "Error",
+				        JOptionPane.ERROR_MESSAGE);
+				}
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

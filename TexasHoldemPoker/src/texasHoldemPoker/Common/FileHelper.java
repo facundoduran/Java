@@ -49,7 +49,7 @@ public class FileHelper {
 		return path;
 	}
 	
-	private static String getImagePath(String image) {
+	public static String getImagePath(String image) {
 		return FileHelper.getProjectPath() + "\\src\\texasHoldemPoker\\UI\\Images\\" + image + ImageExtension;
 	}
 }

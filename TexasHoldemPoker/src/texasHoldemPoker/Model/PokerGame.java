@@ -6,8 +6,8 @@ public class PokerGame {
 		
 	private Deck deck;
 	private ArrayList<PokerPlayer> players;
-	private ArrayList<PokerCard> table;
-	private long pot;
+	private ArrayList<PokerCard> communitaryCards;
+	private int pot;
 	private int bigBlindPos;
 	private int bigBlind;
 	private int smallBlind;
@@ -22,14 +22,13 @@ public class PokerGame {
 		this.setBigBlindPos(bigBlingPos);
 	}
 	
-	public void startGame(int bigBlind, ArrayList<PokerPlayer> players) {
+	public void startGame(int bigBlind) {
 		this.deck = new Deck();
-		this.setTableCards(new ArrayList<PokerCard>());
-		this.players = new ArrayList<PokerPlayer>();
 		this.setBigBlind(bigBlind);
 		this.smallBlind = this.getBigBlind() /2 ;
 		this.pot = this.getBigBlind() + smallBlind;	
-		this.players = players;
+		this.clearPlayerHands();
+		this.clearTableCards();
 	}
 	
 	public void addPlayer(PokerPlayer player) {
@@ -37,9 +36,11 @@ public class PokerGame {
 	}
 		
 	public void dealCards() {
-		for(PokerPlayer pokerPlayer : players) {
-			PokerCard card = deck.shuffleCard();
-			pokerPlayer.addCard(card);
+		for (int i = 0; i < 2; i++) {
+			for(PokerPlayer pokerPlayer : players) {
+				PokerCard card = deck.shuffleCard();
+				pokerPlayer.addCard(card);
+			}
 		}
 	}
 	
@@ -62,7 +63,7 @@ public class PokerGame {
 		
 		if(playerTurn !=null) {		
 			if (decision == PokerPlayerDecision.Leave) {
-				this.players.remove(playerTurn);
+				playerTurn.leave();
 			}
 			
 			if (decision == PokerPlayerDecision.Call) {
@@ -116,7 +117,7 @@ public class PokerGame {
 		//remove players with balance zero
 		for(PokerPlayer pokerPlayer : players) {
 			if (pokerPlayer.getBalance() == 0) {
-				//players.remove(pokerPlayer);
+				players.remove(pokerPlayer);
 			}
 		}
 		
@@ -142,11 +143,11 @@ public class PokerGame {
 		this.players = players;
 	}
 
-	public long getPot() {
+	public int getPot() {
 		return pot;
 	}
 
-	public void setPot(long pot) {
+	public void setPot(int pot) {
 		this.pot = pot;
 	}	
 	
@@ -167,19 +168,34 @@ public class PokerGame {
 	}
 
 	public void setBigBlindPos(int bigBlindPos) {
-		this.bigBlindPos = bigBlindPos;
+		if (bigBlindPos > this.players.size()) {
+			this.bigBlindPos = 0;
+		}
+		else {
+			this.bigBlindPos = bigBlindPos;
+		}
+	}
+
+	public ArrayList<PokerCard> getTableCards() {
+		return communitaryCards;
+	}
+
+	public void setTableCards(ArrayList<PokerCard> table) {
+		this.communitaryCards = table;
 	}
 
 	private void addCardInTable() {
 		PokerCard card = deck.shuffleCard();
 		getTableCards().add(card);
 	}
-
-	public ArrayList<PokerCard> getTableCards() {
-		return table;
-	}
-
-	public void setTableCards(ArrayList<PokerCard> table) {
-		this.table = table;
+	
+	private void clearPlayerHands() {
+		for(PokerPlayer pokerPlayer : players) {
+			pokerPlayer.newGame();
+		}
+	}	
+	
+	private void clearTableCards() {
+		this.communitaryCards = new ArrayList<PokerCard>();
 	}
 }

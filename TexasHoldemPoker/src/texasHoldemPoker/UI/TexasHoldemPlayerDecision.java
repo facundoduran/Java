@@ -45,18 +45,22 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	
 	private int raiseAmount;
 	private int bigBlind;
+	private int pot;
 	private PokerPlayerDecision playerDecision;
 	private PokerPlayer pokerPlayer;
 	private ArrayList<PokerCard> tableCards;
 	private JLabel lblBigBlindValue;
+	private JLabel lblPotInfo;
+	private JLabel lblPot;
 	
 	/*
 	 * Create the application.
 	 */
-	public TexasHoldemPlayerDecision(ArrayList<PokerCard> tableCards, PokerPlayer pokerPlayer, int bigBlind) {
+	public TexasHoldemPlayerDecision(ArrayList<PokerCard> tableCards, PokerPlayer pokerPlayer, int bigBlind, int pot) {
 		this.tableCards = tableCards;
 		this.pokerPlayer = pokerPlayer;
 		this.bigBlind = bigBlind;
+		this.pot = pot;
 		initialize();
 	}
 
@@ -66,11 +70,12 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	private void initialize() {
 	
 		this.setModal(true);
+		this.setResizable(false);
 		this.setTitle("Decision del jugador");
 		this.setBounds(100, 100, 492, 363);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
-		lblCardsInTable = new JLabel("Cartas en la mesa :");
+		lblCardsInTable = new JLabel("Cartas comunitarias :");
 		
 		firstFlopCard = new JPanel();
 		
@@ -127,25 +132,15 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		JLabel lblBigBlind = new JLabel("Apuesta minima:");
 		
 		lblBigBlindValue = new JLabel("");
+		
+		lblPotInfo = new JLabel("Pozo:");
+		
+		lblPot = new JLabel("");
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCardsInTable, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(firstFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-									.addGap(6)
-									.addComponent(secondFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-									.addGap(6)
-									.addComponent(thirdFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-									.addGap(6)
-									.addComponent(turnCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-									.addGap(6)
-									.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -159,10 +154,6 @@ public class TexasHoldemPlayerDecision extends JDialog {
 									.addComponent(lblPlayerName)))
 							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblBigBlind)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(lblBigBlindValue))
 								.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(slBet, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
@@ -173,48 +164,78 @@ public class TexasHoldemPlayerDecision extends JDialog {
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnCheck, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnBet)))))
+									.addComponent(btnBet))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(lblBigBlind)
+										.addComponent(lblPotInfo))
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(lblPot)
+										.addComponent(lblBigBlindValue)))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(lblCardsInTable, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+									.addComponent(firstFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+									.addGap(6)
+									.addComponent(secondFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
+							.addGap(6)
+							.addComponent(thirdFlopCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(turnCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblCardsInTable)
-					.addGap(5)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(firstFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-						.addComponent(secondFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-						.addComponent(thirdFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-						.addComponent(turnCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-						.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(13)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblTurno)
-								.addComponent(lblPlayerName)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblBigBlind)
-								.addComponent(lblBigBlindValue))))
-					.addGap(11)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
+							.addContainerGap()
+							.addComponent(lblCardsInTable)
+							.addGap(5)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(slBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnLeave)
-								.addComponent(btnCheck)
-								.addComponent(btnBet)))
-						.addComponent(secondPlayerCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-						.addComponent(firstPlayerCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
-					.addGap(56))
+								.addComponent(firstFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+								.addComponent(secondFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+								.addComponent(thirdFlopCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+								.addComponent(turnCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+								.addComponent(riverCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(13)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblTurno)
+										.addComponent(lblPlayerName)))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblBigBlind)
+										.addComponent(lblBigBlindValue))))
+							.addGap(11)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(slBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(18)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(btnLeave)
+										.addComponent(btnCheck)
+										.addComponent(btnBet)))
+								.addComponent(secondPlayerCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+								.addComponent(firstPlayerCard, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(182)
+							.addComponent(lblPotInfo))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(182)
+							.addComponent(lblPot)))
+					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
 		showCards();
