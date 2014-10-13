@@ -36,7 +36,7 @@ public class PokerHandTieEvaluatorTest {
 		
 		int rankIndex = rankDescriptionMap.get(PokerRankingCatalog.TRIO);
 		
-		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.resolveTieHand(cards, newCards, rankIndex);
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.getBestHandWithTie(cards, newCards, rankIndex);
 		
 		assertEquals(bestHand, cards);
 	}
@@ -61,7 +61,7 @@ public class PokerHandTieEvaluatorTest {
 		
 		int rankIndex = rankDescriptionMap.get(PokerRankingCatalog.POKER);
 		
-		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.resolveTieHand(cards, newCards, rankIndex);
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.getBestHandWithTie(cards, newCards, rankIndex);
 		
 		assertEquals(bestHand, newCards);
 	}
@@ -86,7 +86,7 @@ public class PokerHandTieEvaluatorTest {
 		
 		int rankIndex = rankDescriptionMap.get(PokerRankingCatalog.ESCALERA);
 		
-		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.resolveTieHand(cards, newCards, rankIndex);
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.getBestHandWithTie(cards, newCards, rankIndex);
 		
 		assertEquals(bestHand, newCards);
 	}
@@ -111,7 +111,7 @@ public class PokerHandTieEvaluatorTest {
 		
 		int rankIndex = rankDescriptionMap.get(PokerRankingCatalog.COLOR);
 		
-		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.resolveTieHand(cards, newCards, rankIndex);
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.getBestHandWithTie(cards, newCards, rankIndex);
 		
 		assertEquals(bestHand, cards);
 	}
@@ -136,8 +136,33 @@ public class PokerHandTieEvaluatorTest {
 		
 		int rankIndex = rankDescriptionMap.get(PokerRankingCatalog.ESCALERA);
 		
-		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.resolveTieHand(cards, newCards, rankIndex);
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.getBestHandWithTie(cards, newCards, rankIndex);
 		
 		assertEquals(bestHand, newCards);
+	}
+	
+	@Test
+	public void strongestStraight_Test() {
+		ArrayList<PokerCard> cards = new ArrayList<PokerCard>();
+		cards.add(new PokerCard(Card.Diez, Suit.Corazones));
+		cards.add(new PokerCard(Card.Jota, Suit.Diamantes));
+		cards.add(new PokerCard(Card.Reina, Suit.Picas));
+		cards.add(new PokerCard(Card.Rey, Suit.Corazones));
+		cards.add(new PokerCard(Card.Nueve, Suit.Picas));	
+		
+		ArrayList<PokerCard> newCards = new ArrayList<PokerCard>();
+		newCards.add(new PokerCard(Card.Diez, Suit.Corazones));
+		newCards.add(new PokerCard(Card.Jota, Suit.Diamantes));
+		newCards.add(new PokerCard(Card.Reina, Suit.Picas));
+		newCards.add(new PokerCard(Card.Rey, Suit.Corazones));
+		newCards.add(new PokerCard(Card.As, Suit.Picas));		
+		
+		Map<String, Integer> rankDescriptionMap = PokerHelper.getPokerRankDescriptionByIndex();
+		
+		int rankIndex = rankDescriptionMap.get(PokerRankingCatalog.ESCALERA);
+		
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.getBestHandWithTie(cards, newCards, rankIndex);
+		
+		assertEquals(bestHand, newCards);		
 	}
 }

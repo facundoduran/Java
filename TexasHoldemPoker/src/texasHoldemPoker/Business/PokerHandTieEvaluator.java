@@ -10,13 +10,28 @@ import texasHoldemPoker.Common.PokerHelper;
 import texasHoldemPoker.Common.Catalogs.PokerRankingCatalog;
 import texasHoldemPoker.Model.Card;
 import texasHoldemPoker.Model.PokerCard;
+import texasHoldemPoker.Model.PokerHandComparer;
 import texasHoldemPoker.Model.Suit;
 
 public class PokerHandTieEvaluator {
 	
-	public static ArrayList<PokerCard> resolveTieHand(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards, int rank) {
-		Map<Integer, String> pokerHelper = PokerHelper.getPokerRank();
+	public static ArrayList<PokerCard> getBestHandWithTie(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards, int rank) {
+		PokerHandComparer handComparer = resolveTieHand(cards, newCards, rank);
 		
+		if (handComparer == PokerHandComparer.FirstHandIsBetter) {
+			return cards;
+		}
+		else if (handComparer == PokerHandComparer.SecondHandIsBetter) {
+			return newCards;
+		}
+		else {
+			return cards;
+		}
+	}
+	
+	public static PokerHandComparer resolveTieHand(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards, int rank) {
+		
+		Map<Integer, String> pokerHelper = PokerHelper.getPokerRank();		
 		String rankDescription = pokerHelper.get(rank);
 		
 		if (rankDescription == PokerRankingCatalog.CARTA_ALTA) {
@@ -63,49 +78,58 @@ public class PokerHandTieEvaluator {
 		return null;
 	}
 	
-	private static ArrayList<PokerCard> highCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer highCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		return compareByHighCard(cards, newCards);
 	}
 	
-	private static ArrayList<PokerCard> pair(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer pair(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int pairCardValue = getCardValueRepetition(cards, 2);
 		int pairNewCardValue = getCardValueRepetition(newCards, 2);
 		
 		if (pairCardValue > pairNewCardValue) {
-			return cards;
+			return PokerHandComparer.FirstHandIsBetter;
+		}
+		else if (pairCardValue == pairNewCardValue){
+			return PokerHandComparer.BothAreEqual;					
 		}
 		else {
-			return newCards;					
+			return PokerHandComparer.SecondHandIsBetter;
 		}
 	}
 	
-	private static ArrayList<PokerCard> doublePair(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer doublePair(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int pairCardValue = getCardValueRepetitionDoublePair(cards, 2);
 		int pairNewCardValue = getCardValueRepetitionDoublePair(newCards, 2);
 		
 		if (pairCardValue > pairNewCardValue) {
-			return cards;
+			return PokerHandComparer.FirstHandIsBetter;
+		}
+		else if (pairCardValue == pairNewCardValue) {
+			return PokerHandComparer.BothAreEqual;
 		}
 		else {
-			return newCards;					
+			return PokerHandComparer.SecondHandIsBetter;					
 		}
 	}
 	
-	private static ArrayList<PokerCard> threeOfAKind(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer threeOfAKind(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		
 	  int threeOfAKindCardValue = getCardValueRepetition(cards, 3);
 	  int threeOfAKindNewcardValue = getCardValueRepetition(newCards, 3);
 	  
 	  if (threeOfAKindCardValue > threeOfAKindNewcardValue) {
-		  return cards;
+		  return PokerHandComparer.FirstHandIsBetter;
+	  }
+	  else if (threeOfAKindCardValue == threeOfAKindNewcardValue){
+		  return PokerHandComparer.BothAreEqual;
 	  }
 	  else {
-		  return newCards;
+		  return PokerHandComparer.SecondHandIsBetter;
 	  }
 	}
 	
 	//use ordinal instead getCardValue
-	private static ArrayList<PokerCard> straight(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer straight(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int cardIndex = 0;		
 		
 		Collections.sort(cards, new PokerCardComparator());
@@ -116,40 +140,43 @@ public class PokerHandTieEvaluator {
 			int newCardValue = newCards.get(cardIndex).getCard().ordinal();
 			
 			if (cardValue > newCardValue) {
-				return cards;
+				return PokerHandComparer.FirstHandIsBetter;
 			}
 			else if (cardValue == newCardValue) {
 				cardIndex++;
 			}
 			else {
-				return newCards;
+				return PokerHandComparer.SecondHandIsBetter;
 			}
 		}
 		
-		return cards;
+		return PokerHandComparer.BothAreEqual;
 	}
 	
-	private static ArrayList<PokerCard> poker(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer poker(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		return compareByHighCard(cards, newCards);
 	}
 	
-	private static ArrayList<PokerCard> color(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer color(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		return compareCardByCard(cards, newCards);
 	}
 	
-	private static ArrayList<PokerCard> compareByHighCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer compareByHighCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int cardsStraight = getCardSum(cards);
 		int newCardsStraight = getCardSum(newCards);
 		
 		if (cardsStraight > newCardsStraight) {
-			return cards;
+			return PokerHandComparer.FirstHandIsBetter;
+		}
+		else if(cardsStraight == newCardsStraight) {
+			return PokerHandComparer.BothAreEqual;
 		}
 		else {
-			return newCards;
+			return PokerHandComparer.SecondHandIsBetter;
 		}
 	}
 	
-	private static ArrayList<PokerCard> compareCardByCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static PokerHandComparer compareCardByCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int cardIndex = 0;
 		
 		Collections.sort(cards, new PokerCardComparator());
@@ -160,17 +187,17 @@ public class PokerHandTieEvaluator {
 			int newCardValue = cards.get(cardIndex).getCardValue();
 			
 			if (cardValue > newCardValue) {
-				return cards;
+				return PokerHandComparer.FirstHandIsBetter;
 			}
 			else if (cardValue == newCardValue) {
 				cardIndex++;
 			}
 			else {
-				return newCards;
+				return PokerHandComparer.SecondHandIsBetter;
 			}
 		}
 		
-		return cards;
+		return PokerHandComparer.BothAreEqual;
 	}
 	
 	private static int getCardSum(ArrayList<PokerCard> cards) {

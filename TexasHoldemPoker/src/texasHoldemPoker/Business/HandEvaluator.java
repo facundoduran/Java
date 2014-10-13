@@ -44,7 +44,7 @@ public class HandEvaluator {
 				ArrayList<PokerCard> oldCards = new ArrayList<PokerCard>();
 				oldCards.addAll(bestHand);
 				bestHand = new ArrayList<PokerCard>();
-				bestHand = PokerHandTieEvaluator.resolveTieHand(oldCards, hand, index);
+				bestHand = PokerHandTieEvaluator.getBestHandWithTie(oldCards, hand, index);
 			}
 		}
 		

@@ -132,6 +132,11 @@ public class PokerGame {
 		//exist tie, search the winner and give the prize to him
 		if (potentialWinners.size() > 1) {
 			winners = TieEvaluator.getWinners(potentialWinners);
+			
+			
+			for (PokerHandEvaluation winnner : winners) {
+				
+			}
 		}
 		else {
 			//winners = potentialWinners.get(0).getPlayer();
