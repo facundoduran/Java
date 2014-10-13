@@ -43,8 +43,10 @@ public class HandEvaluator {
 				bestHand.addAll(hand);
 			}
 			else if (index == maxRank) {
+				ArrayList<PokerCard> oldCards = new ArrayList<PokerCard>();
+				oldCards.addAll(bestHand);
 				bestHand = new ArrayList<PokerCard>();
-				bestHand = PokerHandTieEvaluator.resolveTieHand(cards, hand, index);
+				bestHand = PokerHandTieEvaluator.resolveTieHand(oldCards, hand, index);
 			}
 		}
 		
