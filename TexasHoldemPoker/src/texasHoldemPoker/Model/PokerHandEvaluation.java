@@ -1,8 +1,10 @@
 package texasHoldemPoker.Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
+import texasHoldemPoker.Common.PokerCardComparator;
 import texasHoldemPoker.Common.PokerHelper;
 
 public class PokerHandEvaluation {
@@ -22,6 +24,8 @@ public class PokerHandEvaluation {
 	}
 	
 	public ArrayList<PokerCard> getBestHand() {
+		
+		Collections.sort(bestHand, new PokerCardComparator());
 		return bestHand;
 	}
 	

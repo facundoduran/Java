@@ -2,12 +2,74 @@ package texasHoldemPoker.Business;
 
 import texasHoldemPoker.Model.*;
 import texasHoldemPoker.Common.Combinatory;
+import texasHoldemPoker.Common.PokerCardComparator;
 import texasHoldemPoker.Common.PokerHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
-public class HandEvaluator {
+public class HandEvaluator {	
+
+	public static PokerHandEvaluation getBestHand(PokerPlayer player, ArrayList<PokerCard> communitaryCards)
+	{				
+		ArrayList<PokerCard> cards = new ArrayList<PokerCard>();
+		cards.addAll(communitaryCards);
+		cards.addAll(player.getHand());
+		
+		ArrayList<ArrayList<Integer>> combinations = Combinatory.getCombinations(5, cards.size());
+		ArrayList<PokerCard> bestHand = new ArrayList<PokerCard>();
+
+		int maxRank = 0;
+		
+		for(int i = 0; i < combinations.size(); i++)
+		{
+			ArrayList<PokerCard> hand = new ArrayList<PokerCard>();
+			
+			ArrayList<Integer> combination = combinations.get(i);
+			for(int j = 0; j < combination.size(); j++)
+			{
+				int index = combination.get(j);
+				PokerCard cardInTable = cards.get(index);
+				hand.add(cardInTable);
+			}
+			
+			int index = evaluateHand(hand);
+			
+			if (index > maxRank)
+			{
+				maxRank = index;
+				bestHand = new ArrayList<PokerCard>();
+				bestHand.addAll(hand);
+			}
+			else if (index == maxRank) {
+				bestHand = new ArrayList<PokerCard>();
+				bestHand = PokerHandTieEvaluator.resolveTieHand(cards, hand, index);
+			}
+		}
+		
+		return new PokerHandEvaluation(player, bestHand, maxRank);
+	}	
+	
+	public static ArrayList<PokerHandEvaluation> getWinners(ArrayList<PokerHandEvaluation> players) {
+		ArrayList<PokerHandEvaluation> winners = new ArrayList<PokerHandEvaluation>();
+		int maxRank = 0;
+		
+		for(PokerHandEvaluation playerEvaluation : players) {
+			if (playerEvaluation.getRank() > maxRank)
+			{
+				winners = new ArrayList<PokerHandEvaluation>();
+				winners.add(playerEvaluation);
+				maxRank = playerEvaluation.getRank();
+			}
+			else if (playerEvaluation.getRank() == maxRank) {
+				winners.add(playerEvaluation);
+				maxRank = playerEvaluation.getRank();
+			}
+		}
+		
+		return winners;
+	}
 	
 	public static int evaluateHand(ArrayList<PokerCard> cards)
 	{
@@ -16,7 +78,7 @@ public class HandEvaluator {
 		Map<Integer, Integer> pokerHelper = PokerHelper.getPokerIndexRank();
 		
 		return pokerHelper.get(index);
-	}	
+	}
 	
 	private static int calcIndex(ArrayList<PokerCard> cards)
 	{
@@ -64,60 +126,5 @@ public class HandEvaluator {
 		
 		return (int)v - ( flush * ((s == 0x7c00) ? -5 : 1));		
 	}
-	
-	public static PokerHandEvaluation getBestHand(PokerPlayer player, ArrayList<PokerCard> communitaryCards)
-	{				
-		ArrayList<PokerCard> cards = new ArrayList<PokerCard>();
-		cards.addAll(communitaryCards);
-		cards.addAll(player.getHand());
 		
-		ArrayList<ArrayList<Integer>> combinations = Combinatory.getCombinations(5, cards.size());
-		ArrayList<PokerCard> bestHand = new ArrayList<PokerCard>();
-
-		int maxRank = 0;
-		
-		for(int i = 0; i < combinations.size(); i++)
-		{
-			ArrayList<PokerCard> hand = new ArrayList<PokerCard>();
-			
-			ArrayList<Integer> combination = combinations.get(i);
-			for(int j = 0; j < combination.size(); j++)
-			{
-				int index = combination.get(j);
-				PokerCard cardInTable = cards.get(index);
-				hand.add(cardInTable);
-			}
-			
-			int index = evaluateHand(hand);
-			
-			if (index > maxRank)
-			{
-				maxRank = index;
-				bestHand = new ArrayList<PokerCard>();
-				bestHand.addAll(hand);
-			}
-		}
-		
-		return new PokerHandEvaluation(player, bestHand, maxRank);
-	}	
-	
-	public static ArrayList<PokerHandEvaluation> getWinners(ArrayList<PokerHandEvaluation> players) {
-		ArrayList<PokerHandEvaluation> winners = new ArrayList<PokerHandEvaluation>();
-		int maxRank = 0;
-		
-		for(PokerHandEvaluation playerEvaluation : players) {
-			if (playerEvaluation.getRank() > maxRank)
-			{
-				winners = new ArrayList<PokerHandEvaluation>();
-				winners.add(playerEvaluation);
-				maxRank = playerEvaluation.getRank();
-			}
-			else if (playerEvaluation.getRank() == maxRank) {
-				winners.add(playerEvaluation);
-				maxRank = playerEvaluation.getRank();
-			}
-		}
-		
-		return winners;
-	}
 }

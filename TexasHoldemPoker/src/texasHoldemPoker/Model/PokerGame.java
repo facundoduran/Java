@@ -3,6 +3,7 @@ package texasHoldemPoker.Model;
 import java.util.*;
 
 import texasHoldemPoker.Business.HandEvaluator;
+import texasHoldemPoker.Business.TieEvaluator;
 
 public class PokerGame {
 		
@@ -124,20 +125,24 @@ public class PokerGame {
 			gameResult.add(handEvaluation);
 		}
 		
-		ArrayList<PokerHandEvaluation> winners = HandEvaluator.getWinners(gameResult);
+		ArrayList<PokerHandEvaluation> potentialWinners = HandEvaluator.getWinners(gameResult);
 
-		//exist tie, resolve it
-		if (winners.size() > 1) {
-			
+		ArrayList<PokerHandEvaluation> winners = new ArrayList<PokerHandEvaluation>();
+		
+		//exist tie, search the winner and give the prize to him
+		if (potentialWinners.size() > 1) {
+			winners = TieEvaluator.getWinners(potentialWinners);
 		}
 		else {
-			PokerPlayer winner = winners.get(0).getPlayer();
-			int total = this.pot;
-			winner.setBalance(total);
+			//winners = potentialWinners.get(0).getPlayer();
 		}
 		
-		//give prizes - determine if exists tie
-		
+		/*
+		if (winner != null) {
+			int total = this.getPot() + winner.getBalance();
+			winner.setBalance(total);
+		}
+		*/
 		return winners;
 	}
 	
@@ -228,17 +233,5 @@ public class PokerGame {
 				setPlayerTurnIndex(getPlayerTurnIndex() + 1);
 			}		
 		}
-	}
-	
-	private PokerPlayer getPlayer(String playerName) {
-		ArrayList<PokerPlayer> playerPlaying = this.getPlayingPlayers();
-
-		for (PokerPlayer player : playerPlaying) {
-			if (player.getName() == playerName) {
-				return player;
-			}
-		}
-		
-		return null;
 	}
 }
