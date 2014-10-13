@@ -2,11 +2,9 @@ package texasHoldemPoker.Business;
 
 import texasHoldemPoker.Model.*;
 import texasHoldemPoker.Common.Combinatory;
-import texasHoldemPoker.Common.PokerCardComparator;
 import texasHoldemPoker.Common.PokerHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 
 public class HandEvaluator {	

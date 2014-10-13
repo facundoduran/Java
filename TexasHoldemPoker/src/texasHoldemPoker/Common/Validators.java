@@ -1,9 +1,11 @@
 package texasHoldemPoker.Common;
 
 import java.util.ArrayList;
+
 import texasHoldemPoker.Model.Player;
 
 public class Validators {
+	@SuppressWarnings("unused")
 	public static boolean isNumeric(String str)  
 	{  
 	  try  
@@ -14,6 +16,7 @@ public class Validators {
 	  {  
 	    return false;  
 	  }  
+	  
 	  return true;  
 	}
 	

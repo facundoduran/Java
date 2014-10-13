@@ -42,4 +42,22 @@ public class PokerHelper {
 		
 		return pokerRank;
 	}
+	
+	public static Map<String, Integer> getPokerRankDescriptionByIndex()
+	{
+		Map<String, Integer> pokerRank = new HashMap<String, Integer>();
+		
+		pokerRank.put(PokerRankingCatalog.CARTA_ALTA, 1);
+		pokerRank.put(PokerRankingCatalog.PAREJA, 2);
+		pokerRank.put(PokerRankingCatalog.DOBLE_PAREJA, 3);
+		pokerRank.put(PokerRankingCatalog.TRIO, 4);
+		pokerRank.put(PokerRankingCatalog.ESCALERA, 5);
+		pokerRank.put(PokerRankingCatalog.COLOR, 6);
+		pokerRank.put(PokerRankingCatalog.FULL_HOUSE, 7);
+		pokerRank.put(PokerRankingCatalog.POKER, 8);
+		pokerRank.put(PokerRankingCatalog.ESCALERA_DE_COLOR, 9);
+		pokerRank.put(PokerRankingCatalog.ESCALERA_REAL, 10);
+		
+		return pokerRank;
+	}
 }

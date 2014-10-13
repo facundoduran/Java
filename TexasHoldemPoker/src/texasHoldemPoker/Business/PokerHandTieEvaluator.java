@@ -1,12 +1,16 @@
 package texasHoldemPoker.Business;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import texasHoldemPoker.Common.PokerCardComparator;
 import texasHoldemPoker.Common.PokerHelper;
 import texasHoldemPoker.Common.Catalogs.PokerRankingCatalog;
+import texasHoldemPoker.Model.Card;
 import texasHoldemPoker.Model.PokerCard;
+import texasHoldemPoker.Model.Suit;
 
 public class PokerHandTieEvaluator {
 	
@@ -14,17 +18,7 @@ public class PokerHandTieEvaluator {
 		Map<Integer, String> pokerHelper = PokerHelper.getPokerRank();
 		
 		String rankDescription = pokerHelper.get(rank);
-		/*
-			pokerRank.put(1, PokerRankingCatalog.CARTA_ALTA);
-			pokerRank.put(2, PokerRankingCatalog.PAREJA);
-			pokerRank.put(3, PokerRankingCatalog.DOBLE_PAREJA);
-			pokerRank.put(4, PokerRankingCatalog.TRIO);
-			pokerRank.put(5, PokerRankingCatalog.ESCALERA);
-			pokerRank.put(6, PokerRankingCatalog.COLOR);
-			pokerRank.put(7, PokerRankingCatalog.FULL_HOUSE);
-			pokerRank.put(8, PokerRankingCatalog.POKER);
-			pokerRank.put(9, PokerRankingCatalog.ESCALERA_DE_COLOR);
-		  */
+		
 		if (rankDescription == PokerRankingCatalog.CARTA_ALTA) {
 			return highCard(cards, newCards);
 		}
@@ -33,12 +27,20 @@ public class PokerHandTieEvaluator {
 			return pair(cards, newCards);
 		}
 		
+		if (rankDescription == PokerRankingCatalog.DOBLE_PAREJA) {
+			return doublePair(cards, newCards);
+		}
+		
 		if (rankDescription == PokerRankingCatalog.TRIO) {
 			return threeOfAKind(cards, newCards);
 		}
 		
 		if (rankDescription == PokerRankingCatalog.ESCALERA) {
 			return straight(cards, newCards);
+		}
+		
+		if (rankDescription == PokerRankingCatalog.COLOR) {
+			return color(cards, newCards);
 		}
 		
 		if (rankDescription == PokerRankingCatalog.FULL_HOUSE) {
@@ -53,16 +55,33 @@ public class PokerHandTieEvaluator {
 			return straight(cards, newCards);
 		}
 		
+		if (rankDescription == PokerRankingCatalog.ESCALERA_REAL) {
+			return straight(cards, newCards);
+		}
+		
+		//to avoid errors with the compiler;
 		return null;
 	}
 	
 	private static ArrayList<PokerCard> highCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
-		return compareByHandCard(cards, newCards);
+		return compareByHighCard(cards, newCards);
 	}
 	
 	private static ArrayList<PokerCard> pair(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int pairCardValue = getCardValueRepetition(cards, 2);
 		int pairNewCardValue = getCardValueRepetition(newCards, 2);
+		
+		if (pairCardValue > pairNewCardValue) {
+			return cards;
+		}
+		else {
+			return newCards;					
+		}
+	}
+	
+	private static ArrayList<PokerCard> doublePair(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+		int pairCardValue = getCardValueRepetitionDoublePair(cards, 2);
+		int pairNewCardValue = getCardValueRepetitionDoublePair(newCards, 2);
 		
 		if (pairCardValue > pairNewCardValue) {
 			return cards;
@@ -85,15 +104,40 @@ public class PokerHandTieEvaluator {
 	  }
 	}
 	
+	//use ordinal instead getCardValue
 	private static ArrayList<PokerCard> straight(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
-		return compareByHandCard(cards, newCards);
+		int cardIndex = 0;		
+		
+		Collections.sort(cards, new PokerCardComparator());
+		Collections.sort(newCards, new PokerCardComparator());
+
+		while (cardIndex < 5) {
+			int cardValue = cards.get(cardIndex).getCard().ordinal();
+			int newCardValue = newCards.get(cardIndex).getCard().ordinal();
+			
+			if (cardValue > newCardValue) {
+				return cards;
+			}
+			else if (cardValue == newCardValue) {
+				cardIndex++;
+			}
+			else {
+				return newCards;
+			}
+		}
+		
+		return cards;
 	}
 	
 	private static ArrayList<PokerCard> poker(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
-		return compareByHandCard(cards, newCards);
+		return compareByHighCard(cards, newCards);
 	}
 	
-	private static ArrayList<PokerCard> compareByHandCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+	private static ArrayList<PokerCard> color(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+		return compareCardByCard(cards, newCards);
+	}
+	
+	private static ArrayList<PokerCard> compareByHighCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
 		int cardsStraight = getCardSum(cards);
 		int newCardsStraight = getCardSum(newCards);
 		
@@ -103,6 +147,30 @@ public class PokerHandTieEvaluator {
 		else {
 			return newCards;
 		}
+	}
+	
+	private static ArrayList<PokerCard> compareCardByCard(ArrayList<PokerCard> cards, ArrayList<PokerCard> newCards) {
+		int cardIndex = 0;
+		
+		Collections.sort(cards, new PokerCardComparator());
+		Collections.sort(newCards, new PokerCardComparator());
+		
+		while (cardIndex < 5) {
+			int cardValue = cards.get(cardIndex).getCardValue();
+			int newCardValue = cards.get(cardIndex).getCardValue();
+			
+			if (cardValue > newCardValue) {
+				return cards;
+			}
+			else if (cardValue == newCardValue) {
+				cardIndex++;
+			}
+			else {
+				return newCards;
+			}
+		}
+		
+		return cards;
 	}
 	
 	private static int getCardSum(ArrayList<PokerCard> cards) {
@@ -135,5 +203,29 @@ public class PokerHandTieEvaluator {
 		 }
 		 
 		 return 0;
+	}
+	
+	private static int getCardValueRepetitionDoublePair(ArrayList<PokerCard> cards, int repeated) {
+		
+		HashMap<Integer, Integer> repetitions = new HashMap<Integer, Integer>();
+		
+		for (int i = 0; i < cards.size(); ++i) {
+		    int item = cards.get(i).getCardValue();
+	
+		    if (repetitions.containsKey(item))
+		        repetitions.put(item, repetitions.get(item) + 1);
+		    else
+		        repetitions.put(item, 1);
+		}
+		
+		int sum = 0;
+		
+		 for (Map.Entry<Integer, Integer> e : repetitions.entrySet()) {
+			 if (e.getValue() == repeated) {
+				 sum += e.getKey();
+			 }
+		 }
+		 
+		 return sum;
 	}
 }
