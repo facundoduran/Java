@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import texasHoldemPoker.Business.PokerHandTieEvaluator;
 import texasHoldemPoker.Model.Card;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.Suit;
@@ -23,24 +24,16 @@ public class PokerHandTieEvaluatorTest {
 		cards.add(new PokerCard(Card.Dos, Suit.Corazones));
 		cards.add(new PokerCard(Card.Tres, Suit.Corazones));
 		
-		HashMap<Integer, Integer> repetitions = new HashMap<Integer, Integer>();
-	
-		for (int i = 0; i < cards.size(); ++i) {
-		    int item = cards.get(i).getCardValue();
-	
-		    if (repetitions.containsKey(item))
-		        repetitions.put(item, repetitions.get(item) + 1);
-		    else
-		        repetitions.put(item, 1);
-		}
+		ArrayList<PokerCard> newCards = new ArrayList<PokerCard>();
+		newCards.add(new PokerCard(Card.Dos, Suit.Corazones));
+		newCards.add(new PokerCard(Card.Dos, Suit.Diamantes));
+		newCards.add(new PokerCard(Card.Dos, Suit.Picas));
+		newCards.add(new PokerCard(Card.Cinco, Suit.Corazones));
+		newCards.add(new PokerCard(Card.Tres, Suit.Corazones));		
 		
-		 for (Map.Entry<Integer, Integer> e : repetitions.entrySet()) {
-			 if (e.getValue() == 3) {
-				 System.out.println(e.getKey() * 3);
-				 System.out.println(e.getValue());
-			 }
-		 }
-		 
+		ArrayList<PokerCard> bestHand = PokerHandTieEvaluator.resolveTieHand(cards, newCards, 4);
+		
+		assertEquals(bestHand, cards);
 	}
 
 }
