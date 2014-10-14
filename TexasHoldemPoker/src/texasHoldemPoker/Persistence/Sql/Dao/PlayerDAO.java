@@ -27,6 +27,25 @@ public class PlayerDAO implements IPlayerDAO {
 	}	
 	
 	@Override
+	public ArrayList<Player> getPlayersInList(ArrayList<String> playerNames) {
+
+		String playerNameQuery = "";
+		for (int i = 0; i < playerNames.size(); i++) {
+			
+			String playerName = playerNames.get(i);
+			if (i != playerNames.size() -1) {
+				playerNameQuery += QueryBuilder.getParameterWithQuotesAndComma(playerName);
+			}
+			else {
+				playerNameQuery += QueryBuilder.getParameterWithQuotes(playerName);
+			}
+		}
+		
+		String query = "Select Id, name, email, balance from Player Where Name IN (" + playerNameQuery + ")"; 
+		return this.getjugadoresByQuery(query);
+	}	
+	
+	@Override
 	public Player getPlayer(String nombre)
 	{
 		String query = "Select Id, name, email, balance from Player Where Name = " 
@@ -65,6 +84,14 @@ public class PlayerDAO implements IPlayerDAO {
 		SqlLiteConnection.executeQuery(query);
 	}
 	
+	@Override	
+	public void updateSalary(String playerName, double salary) {
+		String query = "update Player set "  
+				+ "balance = " + QueryBuilder.getParameterWithFinalSpace(String.valueOf(salary))
+				+ "where Name = " + QueryBuilder.getParameterWithQuotes(playerName);
+		SqlLiteConnection.executeQuery(query);
+	}
+	
 	@SuppressWarnings("finally")
 	private ArrayList<Player> getjugadoresByQuery(String query)
 	{
@@ -99,5 +126,5 @@ public class PlayerDAO implements IPlayerDAO {
 		{
 			return players;
 		}
-	}	
+	}
 }

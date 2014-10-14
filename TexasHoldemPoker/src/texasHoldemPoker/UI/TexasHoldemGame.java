@@ -13,6 +13,8 @@ import texasHoldemPoker.Model.PokerGame;
 import texasHoldemPoker.Model.PokerHandEvaluation;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
+import texasHoldemPoker.Persistence.Sql.Dao.IPlayerDAO;
+import texasHoldemPoker.Persistence.Sql.Dao.PlayerDAO;
 import texasHoldemPoker.UI.CustomControls.ImagePanel;
 
 import javax.swing.GroupLayout;
@@ -33,8 +35,9 @@ import java.awt.event.ActionEvent;
 @SuppressWarnings("serial")
 public class TexasHoldemGame extends JFrame{
 	
+	private IPlayerDAO playerDAO;
 	private PokerGame game;	
-	private ArrayList<Player> players;
+	private ArrayList<String> players;
 	private int bigBlind;
 	private int bigBlindPos;
 		
@@ -42,20 +45,14 @@ public class TexasHoldemGame extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ArrayList<Player> players = new ArrayList<Player>();
-					
-					Player facundoPlayer = new Player("Facundo");
-					facundoPlayer.setSalary(5000);
-					Player julietaPlayer = new Player("Julieta");
-					julietaPlayer.setSalary(7000);
-					Player juanPlayer = new Player("Juan");
-					juanPlayer.setSalary(1000);
-					
-					players.add(facundoPlayer);
-					players.add(julietaPlayer);
-					players.add(juanPlayer);
+								
+					ArrayList<String> players = new ArrayList<String>();
+					players.add("Facundo");
+					players.add("Julieta");
+					players.add("Juan");
 					
 					TexasHoldemGame window = new TexasHoldemGame(players, 4);
+
 					window.setVisible(true);
 					window.initializeGame();
 					
@@ -66,11 +63,12 @@ public class TexasHoldemGame extends JFrame{
 		});
 	}
 	
-	public TexasHoldemGame(ArrayList<Player> players, int bigBlind) throws Exception {
+	public TexasHoldemGame(ArrayList<String> players, int bigBlind) throws Exception {
 		initialize();
 		this.bigBlindPos = 2;
 		this.players = players;
 		this.bigBlind = bigBlind;
+		this.playerDAO = new PlayerDAO();
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -415,7 +413,7 @@ public class TexasHoldemGame extends JFrame{
 		
 		this.hideShowdownControls();
 		
-		this.initializePlayers(this.players);
+		this.initializePlayers();
 		
 		bigBlindPos = bigBlindPos % this.game.getPlayers().size();
 		
@@ -578,10 +576,17 @@ public class TexasHoldemGame extends JFrame{
 		imgRiverCard.setVisible(show);
 	}
 	
-	private void initializePlayers(ArrayList<Player> players) {	
-		ArrayList<PokerPlayer> pokerPlayers = getPokerPlayers(players);
+	private void initializePlayers() {	
+		//Search the player in the database using player names
+		ArrayList<Player> players = playerDAO.getPlayersInList(this.players);
 	
-		for(PokerPlayer pokerPlayer : pokerPlayers) {
+		for (Player player : players) {
+			String playerName = player.getName();
+			int balance = player.getSalary();
+			
+			PokerPlayer pokerPlayer = new PokerPlayer(playerName);
+			pokerPlayer.setBalance(balance);
+			
 			this.game.addPlayer(pokerPlayer);
 		}
 	}
@@ -611,18 +616,6 @@ public class TexasHoldemGame extends JFrame{
 				secondCardPanel.setVisible(true);
 			}		
 		}
-	}
-	
-	private ArrayList<PokerPlayer> getPokerPlayers(ArrayList<Player> players) {
-		ArrayList<PokerPlayer> pokerPlayers = new ArrayList<PokerPlayer>();
-		
-		for(Player player : players) {
-			PokerPlayer pokerPlayer = new PokerPlayer(player.getName());			
-			pokerPlayer.setBalance(player.getSalary());
-			pokerPlayers.add(pokerPlayer);
-		}
-		
-		return pokerPlayers;
 	}
 	
 	private void newGame() {
@@ -676,12 +669,20 @@ public class TexasHoldemGame extends JFrame{
 		this.showdownPlayerControls(playersEvaluation, true);
 	}
 	
+	private void updatePlayer(PokerPlayer pokerPlayer) {
+		String playerName = pokerPlayer.getName();
+		int salary = pokerPlayer.getBalance();
+		playerDAO.updateSalary(playerName, salary);
+	}
+	
 	private void showWinnersInfo(ArrayList<PokerHandEvaluation> winners) {
 		
 		String winnerNames = "";
 		
 		for (PokerHandEvaluation winner : winners) {
-			winnerNames += winner.getPlayer().getName() + " ";
+			PokerPlayer player = winner.getPlayer();
+			winnerNames += player.getName() + " ";
+			this.updatePlayer(player);			
 		}
 		
 		String pot = Integer.toString(this.game.getPot());

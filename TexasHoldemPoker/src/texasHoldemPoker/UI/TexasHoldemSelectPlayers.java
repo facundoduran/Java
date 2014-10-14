@@ -244,7 +244,8 @@ public class TexasHoldemSelectPlayers extends JFrame {
 					ArrayList<String> playerCantPlay = Validators.somePlayerHasSalaryLessThanBigBlind(players, startBigBlind);
 					
 					if (playerCantPlay.isEmpty()) {
-						TexasHoldemGame game = new TexasHoldemGame(players, startBigBlind);
+						ArrayList<String> playerNames = this.getPlayerNamesAsList(players);
+						TexasHoldemGame game = new TexasHoldemGame(playerNames, startBigBlind);
 						game.setVisible(true);
 					}
 					else {
@@ -285,5 +286,16 @@ public class TexasHoldemSelectPlayers extends JFrame {
 		}
 		
 		return players;
+	}
+	
+	private ArrayList<String> getPlayerNamesAsList(ArrayList<Player> players ) {
+		ArrayList<String> playerNames = new ArrayList<String>();
+		
+		for (Player player : players) {
+			String playerName = player.getName();
+			playerNames.add(playerName);
+		}
+		
+		return playerNames;
 	}
 }
