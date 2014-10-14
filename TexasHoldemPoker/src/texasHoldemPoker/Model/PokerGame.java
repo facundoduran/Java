@@ -119,21 +119,22 @@ public class PokerGame {
 		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
 
 		ArrayList<PokerHandEvaluation> playersEvaluation = new ArrayList<PokerHandEvaluation>();
-
 		
-		for(PokerPlayer player : playersPlaying) {
-			PokerHandEvaluation handEvaluation = HandEvaluator.getBestHand(player, this.getCommunitaryCards());
-			playersEvaluation.add(handEvaluation);
+		for(PokerPlayer player : playersPlaying) {			
+			if (this.getCommunitaryCards().size() > 1) {
+				PokerHandEvaluation handEvaluation = HandEvaluator.getBestHand(player, this.getCommunitaryCards());
+				playersEvaluation.add(handEvaluation);	
+			}
 		}
 		
 		return playersEvaluation;
 	}
 	
 	public ArrayList<PokerHandEvaluation> finishGame() {
-		//evaluate hands
 		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
 		ArrayList<PokerHandEvaluation> winners = new ArrayList<PokerHandEvaluation>();
 		
+		//evaluate hands only if exists players playing
 		if (playersPlaying.size() > 1) {			
 			ArrayList<PokerHandEvaluation> gameResult = new ArrayList<PokerHandEvaluation>();
 			
@@ -142,8 +143,7 @@ public class PokerGame {
 				gameResult.add(handEvaluation);
 			}
 			
-			ArrayList<PokerHandEvaluation> potentialWinners = HandEvaluator.getWinners(gameResult);
-	
+			ArrayList<PokerHandEvaluation> potentialWinners = HandEvaluator.getWinners(gameResult);	
 			
 			//exist tie, search the winner and give the prize to him
 			if (potentialWinners.size() > 1) {
@@ -158,7 +158,7 @@ public class PokerGame {
 					player.setBalance(total);
 				}
 			}
-			else if (winners.size() == 1){
+			else if (potentialWinners.size() == 1){
 				PokerHandEvaluation winner = potentialWinners.get(0);
 				int total = this.getPot() + winner.getPlayer().getBalance();
 				winner.getPlayer().setBalance(total);

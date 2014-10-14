@@ -184,7 +184,7 @@ public class PokerHandTieEvaluator {
 		
 		while (cardIndex < 5) {
 			int cardValue = cards.get(cardIndex).getCardValue();
-			int newCardValue = cards.get(cardIndex).getCardValue();
+			int newCardValue = newCards.get(cardIndex).getCardValue();
 			
 			if (cardValue > newCardValue) {
 				return PokerHandComparer.FirstHandIsBetter;

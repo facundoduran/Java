@@ -16,8 +16,7 @@ import texasHoldemPoker.Model.*;
 public class TieEvaluatorTest {
 	
 	@Test
-	public void checkKickers_OneWinner_Test() {
-	
+	public void checkKickers_OneWinner_Test() {	
 		PokerPlayer firstPlayer = new PokerPlayer("firstPlayer");
 		firstPlayer.setBalance(2000);
 		PokerPlayer secondPlayer = new PokerPlayer("secondPlayer");
@@ -342,10 +341,53 @@ public class TieEvaluatorTest {
 		potentialWinners.add(thirdPlayerEvaluation);
 		potentialWinners.add(fourthPlayerEvaluation);
 		
-		
 		ArrayList<PokerHandEvaluation> winners = this.getWinners(potentialWinners);
 		
 		assertEquals(winners.size(), 4);
+	}
+	
+	@Test
+	public void color_OneWinner_Test() {
+		PokerPlayer firstPlayer = new PokerPlayer("firstPlayer");
+		firstPlayer.setBalance(2000);
+		PokerPlayer secondPlayer = new PokerPlayer("secondPlayer");
+		secondPlayer.setBalance(3000);
+		PokerPlayer thirdPlayer = new PokerPlayer("thirdPlayer");
+		thirdPlayer.setBalance(5000);
+		PokerPlayer fourthPlayer = new PokerPlayer("fourthPlayer");
+		fourthPlayer.setBalance(9000);
+		
+		//Color
+		firstPlayer.addCard(new PokerCard(Card.As, Suit.Diamantes));
+		firstPlayer.addCard(new PokerCard(Card.As, Suit.Picas));
+		
+		//Pair
+		secondPlayer.addCard(new PokerCard(Card.Diez, Suit.Trebol));
+		secondPlayer.addCard(new PokerCard(Card.Diez, Suit.Corazones));
+		
+		//Color
+		thirdPlayer.addCard(new PokerCard(Card.Siete, Suit.Trebol));
+		thirdPlayer.addCard(new PokerCard(Card.Cinco, Suit.Picas));
+		
+		ArrayList<PokerCard> communitaryCards = new ArrayList<PokerCard>();
+		communitaryCards.add(new PokerCard(Card.Seis, Suit.Picas));
+		communitaryCards.add(new PokerCard(Card.Tres, Suit.Diamantes));
+		communitaryCards.add(new PokerCard(Card.Cuatro, Suit.Picas));
+		communitaryCards.add(new PokerCard(Card.Reina, Suit.Picas));
+		communitaryCards.add(new PokerCard(Card.Nueve, Suit.Picas));
+		
+		PokerHandEvaluation firstPlayerEvaluation = HandEvaluator.getBestHand(firstPlayer, communitaryCards);
+		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
+		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(thirdPlayer, communitaryCards);
+		
+		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
+		potentialWinners.add(firstPlayerEvaluation);
+		//potentialWinners.add(secondPlayerEvaluation);
+		potentialWinners.add(thirdPlayerEvaluation);
+		
+		ArrayList<PokerHandEvaluation> winners = this.getWinners(potentialWinners);
+		
+		assertEquals(winners.size(), 1);		
 	}
 	
 	private ArrayList<PokerHandEvaluation> getWinners(ArrayList<PokerHandEvaluation> potentialWinners) {
