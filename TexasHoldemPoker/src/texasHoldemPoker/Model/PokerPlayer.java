@@ -56,6 +56,10 @@ public class PokerPlayer extends Player{
 		this.bet += balance;
 		this.balance = 0;		
 	}
+	
+	public boolean madeAllIn() {
+		return this.getBalance() == 0;
+	}
 
 	public ArrayList<PokerCard> getHand() {
 		return hand;

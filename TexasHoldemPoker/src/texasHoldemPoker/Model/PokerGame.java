@@ -115,39 +115,65 @@ public class PokerGame {
 		this.addCardInTable();
 	}
 	
-	public ArrayList<PokerHandEvaluation> finishGame() {
-		//evaluate hands
+	public ArrayList<PokerHandEvaluation> getPlayersEvaluation() {
 		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
-		ArrayList<PokerHandEvaluation> gameResult = new ArrayList<PokerHandEvaluation>();
+
+		ArrayList<PokerHandEvaluation> playersEvaluation = new ArrayList<PokerHandEvaluation>();
+
 		
 		for(PokerPlayer player : playersPlaying) {
 			PokerHandEvaluation handEvaluation = HandEvaluator.getBestHand(player, this.getCommunitaryCards());
-			gameResult.add(handEvaluation);
+			playersEvaluation.add(handEvaluation);
 		}
 		
-		ArrayList<PokerHandEvaluation> potentialWinners = HandEvaluator.getWinners(gameResult);
-
+		return playersEvaluation;
+	}
+	
+	public ArrayList<PokerHandEvaluation> finishGame() {
+		//evaluate hands
+		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
 		ArrayList<PokerHandEvaluation> winners = new ArrayList<PokerHandEvaluation>();
 		
-		//exist tie, search the winner and give the prize to him
-		if (potentialWinners.size() > 1) {
-			winners = TieEvaluator.getWinners(potentialWinners);
+		if (playersPlaying.size() > 1) {			
+			ArrayList<PokerHandEvaluation> gameResult = new ArrayList<PokerHandEvaluation>();
 			
+			for(PokerPlayer player : playersPlaying) {
+				PokerHandEvaluation handEvaluation = HandEvaluator.getBestHand(player, this.getCommunitaryCards());
+				gameResult.add(handEvaluation);
+			}
 			
-			for (PokerHandEvaluation winnner : winners) {
+			ArrayList<PokerHandEvaluation> potentialWinners = HandEvaluator.getWinners(gameResult);
+	
+			
+			//exist tie, search the winner and give the prize to him
+			if (potentialWinners.size() > 1) {
 				
+				winners = TieEvaluator.getWinners(potentialWinners);			
+				
+				int totalForEachPlayer = this.getPot() / winners.size();
+				
+				for (PokerHandEvaluation winner : winners) {
+					PokerPlayer player = winner.getPlayer();
+					int total = totalForEachPlayer + player.getBalance();
+					player.setBalance(total);
+				}
+			}
+			else if (winners.size() == 1){
+				PokerHandEvaluation winner = potentialWinners.get(0);
+				int total = this.getPot() + winner.getPlayer().getBalance();
+				winner.getPlayer().setBalance(total);
+				
+				winners.add(winner);
 			}
 		}
-		else {
-			//winners = potentialWinners.get(0).getPlayer();
-		}
-		
-		/*
-		if (winner != null) {
+		else if (playersPlaying.size() == 1) {			
+			PokerPlayer winner = playersPlaying.get(0);
 			int total = this.getPot() + winner.getBalance();
 			winner.setBalance(total);
+			
+			winners.add(new PokerHandEvaluation(winner, winner.getHand()));
 		}
-		*/
+		
 		return winners;
 	}
 	
@@ -155,7 +181,7 @@ public class PokerGame {
 		ArrayList<PokerPlayer> playerPlaying = this.getPlayingPlayers();
 		
 		for(PokerPlayer pokerPlayer : playerPlaying) {
-			if (pokerPlayer.getBet() != this.getBigBlind()) {
+			if (!pokerPlayer.madeAllIn() && pokerPlayer.getBet() != bigBlind) {
 				return false;
 			}
 		}

@@ -10,6 +10,7 @@ import texasHoldemPoker.Common.FileHelper;
 import texasHoldemPoker.Model.Player;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerGame;
+import texasHoldemPoker.Model.PokerHandEvaluation;
 import texasHoldemPoker.Model.PokerPlayer;
 import texasHoldemPoker.Model.PokerPlayerDecision;
 import texasHoldemPoker.UI.CustomControls.ImagePanel;
@@ -121,6 +122,14 @@ public class TexasHoldemGame extends JFrame{
 	private JLabel lblWinner;
 	private JLabel lblPot;
 	private JMenuBar menuBar;
+	private JLabel lblFirstPlayerHandResult;
+	private JLabel lblFirstPlayerHandResultInfo;
+	private JLabel lblSecondPlayerHandResult;
+	private JLabel lblSecondPlayerHandResultInfo;
+	private JLabel lblThirdPlayerHandResult;
+	private JLabel lblThirdPlayerHandResultInfo;
+	private JLabel lblFourthPlayerHandResult;
+	private JLabel lblFourthPlayerHandResultInfo;
 
 	private void initialize() {
 		this.setTitle("Poker");
@@ -133,11 +142,11 @@ public class TexasHoldemGame extends JFrame{
 		this.getContentPane().add(lblPlayer1);
 		
 		lblPlayer2 = new JLabel("");
-		lblPlayer2.setBounds(260, 11, 102, 14);
+		lblPlayer2.setBounds(148, 11, 102, 14);
 		this.getContentPane().add(lblPlayer2);
 		
 		lblPlayer3 = new JLabel("");
-		lblPlayer3.setBounds(639, 11, 105, 14);
+		lblPlayer3.setBounds(527, 11, 105, 14);
 		this.getContentPane().add(lblPlayer3);
 		
 		lblPlayer4 = new JLabel("");
@@ -168,7 +177,7 @@ public class TexasHoldemGame extends JFrame{
 		imgPlayer1SecondCard.setLayout(new BorderLayout(0, 0));
 		
 		imgPlayer2FirstCard = new JPanel();
-		imgPlayer2FirstCard.setBounds(260, 36, 86, 121);
+		imgPlayer2FirstCard.setBounds(260, 11, 86, 121);
 		this.getContentPane().add(imgPlayer2FirstCard);
 		GroupLayout gl_imgPlayer2FirstCard = new GroupLayout(imgPlayer2FirstCard);
 		gl_imgPlayer2FirstCard.setHorizontalGroup(
@@ -182,7 +191,7 @@ public class TexasHoldemGame extends JFrame{
 		imgPlayer2FirstCard.setLayout(gl_imgPlayer2FirstCard);
 		
 		imgPlayer2SecondCard = new JPanel();
-		imgPlayer2SecondCard.setBounds(356, 36, 86, 121);
+		imgPlayer2SecondCard.setBounds(356, 11, 86, 121);
 		this.getContentPane().add(imgPlayer2SecondCard);
 		GroupLayout gl_imgPlayer2SecondCard = new GroupLayout(imgPlayer2SecondCard);
 		gl_imgPlayer2SecondCard.setHorizontalGroup(
@@ -196,7 +205,7 @@ public class TexasHoldemGame extends JFrame{
 		imgPlayer2SecondCard.setLayout(gl_imgPlayer2SecondCard);
 		
 		imgPlayer3FirstCard = new JPanel();
-		imgPlayer3FirstCard.setBounds(639, 36, 86, 121);
+		imgPlayer3FirstCard.setBounds(639, 11, 86, 121);
 		this.getContentPane().add(imgPlayer3FirstCard);
 		GroupLayout gl_imgPlayer3FirstCard = new GroupLayout(imgPlayer3FirstCard);
 		gl_imgPlayer3FirstCard.setHorizontalGroup(
@@ -210,7 +219,7 @@ public class TexasHoldemGame extends JFrame{
 		imgPlayer3FirstCard.setLayout(gl_imgPlayer3FirstCard);
 		
 		imgPlayer3SecondCard = new JPanel();
-		imgPlayer3SecondCard.setBounds(735, 36, 86, 121);
+		imgPlayer3SecondCard.setBounds(735, 11, 86, 121);
 		this.getContentPane().add(imgPlayer3SecondCard);
 		GroupLayout gl_imgPlayer3SecondCard = new GroupLayout(imgPlayer3SecondCard);
 		gl_imgPlayer3SecondCard.setHorizontalGroup(
@@ -343,9 +352,12 @@ public class TexasHoldemGame extends JFrame{
 						.addComponent(lblPot))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblPotInfo)
-						.addComponent(lblWinnerInfo))
-					.addContainerGap(385, Short.MAX_VALUE))
+						.addGroup(gl_pnlWinner.createSequentialGroup()
+							.addComponent(lblPotInfo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addContainerGap(29, Short.MAX_VALUE))
+						.addGroup(gl_pnlWinner.createSequentialGroup()
+							.addComponent(lblWinnerInfo, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		gl_pnlWinner.setVerticalGroup(
 			gl_pnlWinner.createParallelGroup(Alignment.LEADING)
@@ -353,14 +365,46 @@ public class TexasHoldemGame extends JFrame{
 					.addContainerGap()
 					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblWinner)
-						.addComponent(lblWinnerInfo))
+						.addComponent(lblWinnerInfo, GroupLayout.PREFERRED_SIZE, 9, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblPot)
-						.addComponent(lblPotInfo))
-					.addContainerGap(61, Short.MAX_VALUE))
+					.addGroup(gl_pnlWinner.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblPotInfo, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPot))
+					.addContainerGap(31, Short.MAX_VALUE))
 		);
 		pnlWinner.setLayout(gl_pnlWinner);
+		
+		lblFirstPlayerHandResult = new JLabel("Mano:");
+		lblFirstPlayerHandResult.setBounds(10, 323, 38, 14);
+		getContentPane().add(lblFirstPlayerHandResult);
+		
+		lblFirstPlayerHandResultInfo = new JLabel("");
+		lblFirstPlayerHandResultInfo.setBounds(58, 323, 133, 14);
+		getContentPane().add(lblFirstPlayerHandResultInfo);
+		
+		lblSecondPlayerHandResult = new JLabel("Mano:");
+		lblSecondPlayerHandResult.setBounds(260, 141, 38, 14);
+		getContentPane().add(lblSecondPlayerHandResult);
+		
+		lblSecondPlayerHandResultInfo = new JLabel("");
+		lblSecondPlayerHandResultInfo.setBounds(308, 141, 134, 14);
+		getContentPane().add(lblSecondPlayerHandResultInfo);
+		
+		lblThirdPlayerHandResult = new JLabel("Mano:");
+		lblThirdPlayerHandResult.setBounds(639, 141, 38, 14);
+		getContentPane().add(lblThirdPlayerHandResult);
+		
+		lblThirdPlayerHandResultInfo = new JLabel("");
+		lblThirdPlayerHandResultInfo.setBounds(687, 141, 134, 14);
+		getContentPane().add(lblThirdPlayerHandResultInfo);
+		
+		lblFourthPlayerHandResult = new JLabel("Mano:");
+		lblFourthPlayerHandResult.setBounds(804, 323, 38, 14);
+		getContentPane().add(lblFourthPlayerHandResult);
+		
+		lblFourthPlayerHandResultInfo = new JLabel("");
+		lblFourthPlayerHandResultInfo.setBounds(852, 323, 134, 14);
+		getContentPane().add(lblFourthPlayerHandResultInfo);
 		
 		this.showAllImages(false);
 	}
@@ -368,6 +412,8 @@ public class TexasHoldemGame extends JFrame{
 	public void initializeGame() throws Exception {
 		
 		this.game = new PokerGame(bigBlind);
+		
+		this.hideShowdownControls();
 		
 		this.initializePlayers(this.players);
 		
@@ -452,7 +498,13 @@ public class TexasHoldemGame extends JFrame{
 			}
 		}
 		
-		game.finishGame();
+		ArrayList<PokerHandEvaluation> winners = game.finishGame();
+		
+		ArrayList<PokerHandEvaluation> finalEvaluation = game.getPlayersEvaluation();
+		
+		this.showWinnersInfo(winners);
+		
+		this.showPlayerEvaluation(finalEvaluation);
 		
 		this.showPlayerInfo(game.getPlayers(), true);
 		
@@ -460,7 +512,7 @@ public class TexasHoldemGame extends JFrame{
 		
 		this.bigBlindPos++;
 	}
-	
+
 	private void showFlopCard() {
 		ArrayList<PokerCard> cards = this.game.getCommunitaryCards();
 		
@@ -575,8 +627,9 @@ public class TexasHoldemGame extends JFrame{
 	
 	private void newGame() {
 		this.pnlWinner.setVisible(false);
-		this.ClearControls();
+		this.clearControls();
 		this.showAllImages(false);
+		this.hideShowdownControls();
 		
 		try {
 			this.initializeGame();
@@ -602,7 +655,7 @@ public class TexasHoldemGame extends JFrame{
 		cardPanel.setVisible(true);
 	}
 	
-	private void ClearControls() {
+	private void clearControls() {
 		imgPlayer1FirstCard.removeAll();
 		imgPlayer1SecondCard.removeAll();
 		imgPlayer2FirstCard.removeAll();
@@ -617,5 +670,77 @@ public class TexasHoldemGame extends JFrame{
 		imgFlopCardThirdCard.removeAll();
 		imgTurnCard.removeAll();
 		imgRiverCard.removeAll();
+	}
+	
+	private void showPlayerEvaluation(ArrayList<PokerHandEvaluation> playersEvaluation){
+		this.showdownPlayerControls(playersEvaluation, true);
+	}
+	
+	private void showWinnersInfo(ArrayList<PokerHandEvaluation> winners) {
+		
+		String winnerNames = "";
+		
+		for (PokerHandEvaluation winner : winners) {
+			winnerNames += winner.getPlayer().getName() + " ";
+		}
+		
+		String pot = Integer.toString(this.game.getPot());
+		
+		lblWinnerInfo.setText(winnerNames);
+		lblPotInfo.setText(pot);
+	}
+	
+	private void showdownPlayerControls(ArrayList<PokerHandEvaluation> playerEvaluation, boolean show) {
+		
+		for (int i = 0; i < playerEvaluation.size(); i++) {
+			String rankDescription = playerEvaluation.get(i).getRankDescription();
+			
+			if (i == 0) {
+				lblFirstPlayerHandResult.setVisible(show);
+				lblFirstPlayerHandResultInfo.setVisible(show);
+				lblFirstPlayerHandResultInfo.setText(rankDescription);
+			}
+			
+			if (i == 1) {
+				lblSecondPlayerHandResult.setVisible(show);
+				lblSecondPlayerHandResultInfo.setVisible(show);
+				lblSecondPlayerHandResultInfo.setText(rankDescription);
+			}
+			
+			if (i == 2) {
+				lblThirdPlayerHandResult.setVisible(show);
+				lblThirdPlayerHandResultInfo.setVisible(show);
+				lblThirdPlayerHandResultInfo.setText(rankDescription);				
+			}
+			
+			if (i == 3) {
+				lblFourthPlayerHandResult.setVisible(show);
+				lblFourthPlayerHandResultInfo.setVisible(show);
+				lblFourthPlayerHandResultInfo.setText(rankDescription);				
+			}
+		}
+		lblWinner.setVisible(show);
+		lblWinnerInfo.setVisible(show);
+		pnlWinner.setVisible(show);
+		
+		lblPot.setVisible(show);
+		lblPotInfo.setVisible(show);
+	}
+	
+	private void hideShowdownControls() {
+		lblFirstPlayerHandResult.setVisible(false);
+		lblFirstPlayerHandResultInfo.setVisible(false);
+		lblSecondPlayerHandResult.setVisible(false);
+		lblSecondPlayerHandResultInfo.setVisible(false);
+		lblThirdPlayerHandResult.setVisible(false);
+		lblThirdPlayerHandResultInfo.setVisible(false);
+		lblFourthPlayerHandResult.setVisible(false);
+		lblFourthPlayerHandResultInfo.setVisible(false);
+		lblWinner.setVisible(false);
+		lblWinnerInfo.setVisible(false);
+		pnlWinner.setVisible(false);
+		
+		lblPot.setVisible(false);
+		lblPotInfo.setVisible(false);	
 	}
 }

@@ -18,6 +18,11 @@ public class PokerHandEvaluation {
 		this.setRank(rank);
 	}
 	
+	public PokerHandEvaluation(PokerPlayer player, ArrayList<PokerCard> besthand) {
+		this.setPlayer(player);
+		this.setBestHand(besthand);
+	}
+	
 	public String getRankDescription() {
 		Map<Integer, String> ranks = PokerHelper.getPokerRank();
 		return ranks.get(this.rank);
