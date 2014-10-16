@@ -425,12 +425,13 @@ public class TexasHoldemGame extends JFrame{
 		
 		this.showPlayerInfo(this.game.getPlayers(), false);
 		
+		boolean allInBreak = false;
 		boolean finishGame = false;
 		int gameState = 0;
 		
 		while(gameState < 3 && !finishGame)
 		{
-			boolean allPlayersHasTheSameBet = false;
+			boolean continuePlaying = false;
 			int playerPlayCounter = 1;
 			do
 			{				
@@ -441,36 +442,47 @@ public class TexasHoldemGame extends JFrame{
 				ArrayList<PokerCard> tableCards = this.game.getCommunitaryCards();
 				
 				int pot = this.game.getPot();
-				
-				//Wait for UI Response
-				TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(tableCards, currentPlayer, bigBlind, pot);
-				playerDecideForm.setVisible(true);
-				
-				PokerPlayerDecision playerDecision = playerDecideForm.getPlayerDecision();
-				
-				if (playerDecision == PokerPlayerDecision.Raise) {
-					int bet = playerDecideForm.getRaiseAmount();
-					this.game.playTurn(playerDecision, bet);
+												
+				if (!currentPlayer.madeAllIn() && !allInBreak) {
+					//Wait for UI Response
+					TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(tableCards, currentPlayer, bigBlind, pot);
+					playerDecideForm.setVisible(true);
+					
+					PokerPlayerDecision playerDecision = playerDecideForm.getPlayerDecision();
+					
+					if (playerDecision == PokerPlayerDecision.Raise) {
+						int bet = playerDecideForm.getRaiseAmount();
+						this.game.playTurn(playerDecision, bet);
+					}
+					else {
+						this.game.playTurn(playerDecision);					
+					}
+					
+					playerDecideForm.dispose();	
 				}
 				else {
-					this.game.playTurn(playerDecision);					
+					this.game.nextTurn(PokerPlayerDecision.AllIn);
 				}
 				
-				playerDecideForm.dispose();
-				
-				
+				//check if all players leave
 				if(this.game.getPlayingPlayers().size() == 1) 
 				{
 					finishGame = true;
 				}
 				
+				//check if all players raise
 				if (this.game.allPlayersHasSameBet() && playerPlayCounter % this.game.getPlayingPlayers().size() == 0) {
-					allPlayersHasTheSameBet = true;
+					continuePlaying = true;
+				}
+				
+				//check if all players made all in
+				if (!this.game.existMoreThanOnePlayerWithoutAllInOrLeave()) {
+					continuePlaying = true;
 				}
 				
 				playerPlayCounter++;
 			}				
-			while(!finishGame && !allPlayersHasTheSameBet);
+			while(!finishGame && !continuePlaying);
 			
 			if (!finishGame)
 			{

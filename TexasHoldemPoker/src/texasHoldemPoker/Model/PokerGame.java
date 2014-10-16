@@ -25,7 +25,7 @@ public class PokerGame {
 	}
 	
 	public void startGame(int playerIndexWithBigBlindPos) {		
-		this.setPlayerTurnIndex(playerIndexWithBigBlindPos);		
+		this.setPlayerTurnIndex(playerIndexWithBigBlindPos +1);		
 		int smallBlindPos = getPlayerTurnIndex() == 0 ? players.size() - 1 : getPlayerTurnIndex() - 1;
 		PokerPlayer smallBlindPlayer = this.players.get(smallBlindPos);
 		smallBlindPlayer.call(this.smallBlind);		
@@ -73,7 +73,9 @@ public class PokerGame {
 			}
 			
 			if (decision == PokerPlayerDecision.AllIn) {
-				playerTurn.allIn();
+				this.pot += playerTurn.getBalance();
+				this.bigBlind = playerTurn.getBalance();
+				playerTurn.allIn();				
 			}
 			
 			this.nextTurn(decision);
@@ -204,6 +206,17 @@ public class PokerGame {
 		
 		return playerPlaying;
 	}
+	
+	public boolean existMoreThanOnePlayerWithoutAllInOrLeave() {
+		int quantity = 0;
+		for(PokerPlayer pokerPlayer : players) {
+			if (pokerPlayer.getDecision() != PokerPlayerDecision.Leave && pokerPlayer.getDecision() != PokerPlayerDecision.AllIn){
+				quantity++;
+			}
+		}
+		
+		return quantity > 1;
+	}
 
 	public void setPlayers(ArrayList<PokerPlayer> players) {
 		this.players = players;
@@ -255,7 +268,7 @@ public class PokerGame {
 		getCommunitaryCards().add(card);
 	}
 	
-	private void nextTurn(PokerPlayerDecision decision) {		
+	public void nextTurn(PokerPlayerDecision decision) {		
 		if (getPlayerTurnIndex() + 1 >= this.getPlayingPlayers().size()) {
 			this.setPlayerTurnIndex(0) ;
 		}

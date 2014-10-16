@@ -53,6 +53,7 @@ public class PokerPlayer extends Player{
 	}
 	
 	public void allIn() {
+		this.setDecision(PokerPlayerDecision.AllIn);
 		this.bet += balance;
 		this.balance = 0;		
 	}

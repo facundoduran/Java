@@ -55,6 +55,8 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	private JLabel lblBigBlindValue;
 	private JLabel lblPotInfo;
 	private JLabel lblPot;
+	private JLabel lblChipsInfo;
+	private JLabel lblChips;
 	
 	/*
 	 * Create the application.
@@ -148,6 +150,10 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		
 		rdbtnHasBigBlind.setSelected(playerHasBigBlind);
 		
+		lblChipsInfo = new JLabel("Fichas:");
+		
+		lblChips = new JLabel("");
+		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -177,6 +183,10 @@ public class TexasHoldemPlayerDecision extends JDialog {
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(slBet, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
 										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblChipsInfo)
+											.addGap(15)
+											.addComponent(lblChips, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
+										.addGroup(groupLayout.createSequentialGroup()
 											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 												.addComponent(lblBigBlind)
 												.addComponent(lblPotInfo))
@@ -187,8 +197,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(rdbtnHasBigBlind)
-										.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))))
-							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE))
+										.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(10)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
@@ -231,10 +240,15 @@ public class TexasHoldemPlayerDecision extends JDialog {
 										.addComponent(lblBigBlind)
 										.addComponent(lblBigBlindValue))))
 							.addGap(11)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
 								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(13)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblChipsInfo)
+										.addComponent(lblChips, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(lblBet, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
+									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(slBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addComponent(txtBet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -253,7 +267,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(rdbtnHasBigBlind)
 								.addComponent(lblPot))))
-					.addContainerGap(25, Short.MAX_VALUE))
+					.addContainerGap(23, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
 		showCards();
@@ -288,17 +302,22 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	}
 	
 	private void playerBet() {
-		this.playerDecision = PokerPlayerDecision.Raise;
 		String raiseAmount = this.txtBet.getText();
 		
 		if (Validators.isNumeric(raiseAmount)) 
 		{
 			int amount = Integer.parseInt(raiseAmount);
 			
-			if (amount >= slBet.getMinimum()) {
+			if (amount == this.slBet.getMaximum()) {
+				this.playerDecision = PokerPlayerDecision.AllIn;
+				this.setRaiseAmount(amount);
+				this.setVisible(false);
+			}
+			else if (amount >= slBet.getMinimum()) {
+				this.playerDecision = PokerPlayerDecision.Raise;
 				this.setRaiseAmount(amount);
 				this.setVisible(false);	
-			}
+			}			 
 			else {
 				JOptionPane.showMessageDialog(new JFrame(), "El valor ingresado es menor al minimo permitido ", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -320,12 +339,25 @@ public class TexasHoldemPlayerDecision extends JDialog {
 
 	private void updateMethod(int value) {
 		this.txtBet.setText(String.valueOf(value));
+		
+		if (value == this.slBet.getMaximum()) {
+			this.btnBet.setText("All-In");
+		}
+		else {
+			this.btnBet.setText("Subir");
+		}
 	}
 	
 	private void setPlayerInfo() {
 		lblPlayerName.setText(this.pokerPlayer.getName());
 		
 		lblPot.setText(Integer.toString(this.pot));
+		lblChips.setText(Integer.toString(pokerPlayer.getBalance()));
+		
+		if (this.pokerPlayer.getBalance() < this.bigBlind) {
+			this.btnBet.setText("All-In");
+			this.btnCheck.setEnabled(false);
+		}
 		
 		slBet.setMinimum(this.bigBlind);
 		slBet.setMaximum(this.pokerPlayer.getBalance());
