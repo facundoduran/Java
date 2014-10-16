@@ -12,16 +12,16 @@ public class PokerGame {
 	private ArrayList<PokerCard> communitaryCards;
 	private int pot;
 	private int turnPosition;
-	private int bigBlind;
+	private int highestBet;
 	private int smallBlind;
 
 	public PokerGame(int bigBlind) {
 		this.deck = new Deck();
 		this.setTableCards(new ArrayList<PokerCard>());
 		this.players = new ArrayList<PokerPlayer>();
-		this.setBigBlind(bigBlind);
-		this.smallBlind = this.getBigBlind() /2 ;
-		this.pot = this.getBigBlind() + smallBlind;	
+		this.setHighestBet(bigBlind);
+		this.smallBlind = this.getHighestBet() /2 ;
+		this.pot = this.getHighestBet() + smallBlind;	
 	}
 	
 	public void startGame(int playerIndexWithBigBlindPos) {		
@@ -32,10 +32,10 @@ public class PokerGame {
 		
 		PokerPlayer bigBlindPlayer = this.players.get(playerIndexWithBigBlindPos);
 		bigBlindPlayer.setHasBigBlind(true);		
-		long amount = this.getBigBlind() - bigBlindPlayer.getBet();
+		long amount = this.getHighestBet() - bigBlindPlayer.getBet();
 		bigBlindPlayer.call(amount);
 		
-		this.pot = this.getBigBlind() + smallBlind;
+		this.pot = this.getHighestBet() + smallBlind;
 	}
 	
 	public void addPlayer(PokerPlayer player) {
@@ -65,8 +65,8 @@ public class PokerGame {
 			}
 			
 			if (decision == PokerPlayerDecision.Call) {
-				if (this.getBigBlind() != playerTurn.getBet()) {
-					long amount = this.getBigBlind() - playerTurn.getBet();
+				if (this.getHighestBet() != playerTurn.getBet()) {
+					long amount = this.getHighestBet() - playerTurn.getBet();
 					playerTurn.call(amount);
 					this.pot += amount;	
 				}
@@ -74,7 +74,7 @@ public class PokerGame {
 			
 			if (decision == PokerPlayerDecision.AllIn) {
 				this.pot += playerTurn.getBalance();
-				this.bigBlind = playerTurn.getBalance();
+				this.highestBet = playerTurn.getBalance();
 				playerTurn.allIn();				
 			}
 			
@@ -95,7 +95,7 @@ public class PokerGame {
 				else {
 					playerTurn.raise(bet);
 					this.pot += bet;
-					this.bigBlind += bet;
+					this.highestBet += bet;
 				}				
 			}
 		}
@@ -183,7 +183,7 @@ public class PokerGame {
 		ArrayList<PokerPlayer> playerPlaying = this.getPlayingPlayers();
 		
 		for(PokerPlayer pokerPlayer : playerPlaying) {
-			if (!pokerPlayer.madeAllIn() && pokerPlayer.getBet() != bigBlind) {
+			if (!pokerPlayer.madeAllIn() && pokerPlayer.getBet() != highestBet) {
 				return false;
 			}
 		}
@@ -230,12 +230,12 @@ public class PokerGame {
 		this.pot = pot;
 	}	
 	
-	public int getBigBlind() {
-		return bigBlind;
+	public int getHighestBet() {
+		return highestBet;
 	}
 
-	public void setBigBlind(int bigBlind) {
-		this.bigBlind = bigBlind;
+	public void setHighestBet(int highestBet) {
+		this.highestBet = highestBet;
 	}
 
 	public int getPlayerTurnIndex() {

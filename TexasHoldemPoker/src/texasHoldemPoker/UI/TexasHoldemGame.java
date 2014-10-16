@@ -418,9 +418,7 @@ public class TexasHoldemGame extends JFrame{
 		bigBlindPos = bigBlindPos % this.game.getPlayers().size();
 		
 		this.game.startGame(bigBlindPos);
-		
-		int bigBlind = this.game.getBigBlind();	
-		
+				
 		this.game.dealCards();
 		
 		this.showPlayerInfo(this.game.getPlayers(), false);
@@ -429,36 +427,16 @@ public class TexasHoldemGame extends JFrame{
 		boolean finishGame = false;
 		int gameState = 0;
 		
-		while(gameState < 3 && !finishGame)
+		while(gameState < 4 && !finishGame)
 		{
 			boolean continuePlaying = false;
 			int playerPlayCounter = 1;
 			do
 			{				
-				PokerPlayer currentPlayer = this.game.getPlayer();
-				
-				bigBlind = this.game.getBigBlind();
-				
-				ArrayList<PokerCard> tableCards = this.game.getCommunitaryCards();
-				
-				int pot = this.game.getPot();
+				PokerPlayer currentPlayer = this.game.getPlayer();				
 												
 				if (!currentPlayer.madeAllIn() && !allInBreak) {
-					//Wait for UI Response
-					TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(tableCards, currentPlayer, bigBlind, pot);
-					playerDecideForm.setVisible(true);
-					
-					PokerPlayerDecision playerDecision = playerDecideForm.getPlayerDecision();
-					
-					if (playerDecision == PokerPlayerDecision.Raise) {
-						int bet = playerDecideForm.getRaiseAmount();
-						this.game.playTurn(playerDecision, bet);
-					}
-					else {
-						this.game.playTurn(playerDecision);					
-					}
-					
-					playerDecideForm.dispose();	
+					this.showPlayerDecisionForm(currentPlayer);
 				}
 				else {
 					this.game.nextTurn(PokerPlayerDecision.AllIn);
@@ -521,6 +499,28 @@ public class TexasHoldemGame extends JFrame{
 		this.pnlWinner.setVisible(true);
 		
 		this.bigBlindPos++;
+	}
+
+	private void showPlayerDecisionForm(PokerPlayer currentPlayer) {
+		int highestBet = this.game.getHighestBet();				
+		ArrayList<PokerCard> communitaryCards = this.game.getCommunitaryCards();				
+		int pot = this.game.getPot();
+		
+		//Wait for UI Response
+		TexasHoldemPlayerDecision playerDecideForm = new TexasHoldemPlayerDecision(communitaryCards, currentPlayer, highestBet, pot);
+		playerDecideForm.setVisible(true);
+		
+		PokerPlayerDecision playerDecision = playerDecideForm.getPlayerDecision();
+		
+		if (playerDecision == PokerPlayerDecision.Raise) {
+			int bet = playerDecideForm.getRaiseAmount();
+			this.game.playTurn(playerDecision, bet);
+		}
+		else {
+			this.game.playTurn(playerDecision);					
+		}
+		
+		playerDecideForm.dispose();			
 	}
 
 	private void showFlopCard() {
