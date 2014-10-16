@@ -16,6 +16,96 @@ import texasHoldemPoker.Model.*;
 public class TieEvaluatorTest {
 	
 	@Test
+	public void highCard_Test() {
+		PokerPlayer firstPlayer = new PokerPlayer("firstPlayer");
+		firstPlayer.setBalance(2000);
+		PokerPlayer secondPlayer = new PokerPlayer("secondPlayer");
+		secondPlayer.setBalance(3000);
+		PokerPlayer thirdPlayer = new PokerPlayer("thirdPlayer");
+		thirdPlayer.setBalance(5000);
+		
+		//Double Pair
+		firstPlayer.addCard(new PokerCard(Card.Diez, Suit.Trebol));
+		firstPlayer.addCard(new PokerCard(Card.Tres, Suit.Corazones));
+		
+		//Double Pair
+		secondPlayer.addCard(new PokerCard(Card.Seis, Suit.Trebol));
+		secondPlayer.addCard(new PokerCard(Card.Dos, Suit.Trebol));
+		
+		//Pair
+		thirdPlayer.addCard(new PokerCard(Card.Dos, Suit.Picas));
+		thirdPlayer.addCard(new PokerCard(Card.Tres, Suit.Diamantes));
+		
+		ArrayList<PokerCard> communitaryCards = new ArrayList<PokerCard>();
+		communitaryCards.add(new PokerCard(Card.Cinco, Suit.Trebol));
+		communitaryCards.add(new PokerCard(Card.Rey, Suit.Corazones));
+		communitaryCards.add(new PokerCard(Card.Cuatro, Suit.Picas));
+		communitaryCards.add(new PokerCard(Card.Nueve, Suit.Diamantes));
+		communitaryCards.add(new PokerCard(Card.Jota, Suit.Picas));
+		
+		PokerHandEvaluation firstPlayerEvaluation = HandEvaluator.getBestHand(firstPlayer, communitaryCards);
+		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
+		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
+			
+		//tie beetween first, second and fourth- check the kickers
+		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
+		potentialWinners.add(firstPlayerEvaluation);
+		potentialWinners.add(secondPlayerEvaluation);
+		potentialWinners.add(thirdPlayerEvaluation);
+		
+		ArrayList<PokerHandEvaluation> winners = this.getWinners(potentialWinners);
+		
+		assertEquals(winners.get(0).getPlayer().getName(), "firstPlayer");
+		
+		//assertEquals(, 1);
+	}
+	
+	@Test	
+	public void pair_Test() {
+		PokerPlayer firstPlayer = new PokerPlayer("firstPlayer");
+		firstPlayer.setBalance(2000);
+		PokerPlayer secondPlayer = new PokerPlayer("secondPlayer");
+		secondPlayer.setBalance(3000);
+		PokerPlayer thirdPlayer = new PokerPlayer("thirdPlayer");
+		thirdPlayer.setBalance(5000);
+		
+		//Double Pair
+		firstPlayer.addCard(new PokerCard(Card.Cuatro, Suit.Picas));
+		firstPlayer.addCard(new PokerCard(Card.Cinco, Suit.Diamantes));
+		
+		//Double Pair
+		secondPlayer.addCard(new PokerCard(Card.Siete, Suit.Corazones));
+		secondPlayer.addCard(new PokerCard(Card.Diez, Suit.Corazones));
+		
+		//Pair
+		thirdPlayer.addCard(new PokerCard(Card.Cuatro, Suit.Trebol));
+		thirdPlayer.addCard(new PokerCard(Card.Seis, Suit.Diamantes));
+		
+		ArrayList<PokerCard> communitaryCards = new ArrayList<PokerCard>();
+		communitaryCards.add(new PokerCard(Card.Ocho, Suit.Trebol));
+		communitaryCards.add(new PokerCard(Card.Jota, Suit.Corazones));
+		communitaryCards.add(new PokerCard(Card.Rey, Suit.Corazones));
+		communitaryCards.add(new PokerCard(Card.Reina, Suit.Picas));
+		communitaryCards.add(new PokerCard(Card.Jota, Suit.Trebol));
+		
+		PokerHandEvaluation firstPlayerEvaluation = HandEvaluator.getBestHand(firstPlayer, communitaryCards);
+		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
+		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
+		
+		int rank = firstPlayerEvaluation.getRank();
+		
+		//tie beetween first, second and fourth- check the kickers
+		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
+		potentialWinners.add(firstPlayerEvaluation);
+		potentialWinners.add(secondPlayerEvaluation);
+		potentialWinners.add(thirdPlayerEvaluation);
+		
+		ArrayList<PokerHandEvaluation> winners = this.getWinners(potentialWinners);
+		
+		assertEquals(winners.get(0).getPlayer().getName(), "secondPlayer");
+	}
+	
+	@Test
 	public void checkKickers_OneWinner_Test() {	
 		PokerPlayer firstPlayer = new PokerPlayer("firstPlayer");
 		firstPlayer.setBalance(2000);

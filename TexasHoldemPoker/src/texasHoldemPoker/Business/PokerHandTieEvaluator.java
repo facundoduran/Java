@@ -89,8 +89,8 @@ public class PokerHandTieEvaluator {
 		if (pairCardValue > pairNewCardValue) {
 			return PokerHandComparer.FirstHandIsBetter;
 		}
-		else if (pairCardValue == pairNewCardValue){
-			return PokerHandComparer.BothAreEqual;					
+		else if (pairCardValue == pairNewCardValue) {
+			return compareCardByCard(cards, newCards);				
 		}
 		else {
 			return PokerHandComparer.SecondHandIsBetter;
@@ -105,7 +105,7 @@ public class PokerHandTieEvaluator {
 			return PokerHandComparer.FirstHandIsBetter;
 		}
 		else if (pairCardValue == pairNewCardValue) {
-			return PokerHandComparer.BothAreEqual;
+			return compareCardByCard(cards, newCards);
 		}
 		else {
 			return PokerHandComparer.SecondHandIsBetter;					
@@ -121,7 +121,7 @@ public class PokerHandTieEvaluator {
 		  return PokerHandComparer.FirstHandIsBetter;
 	  }
 	  else if (threeOfAKindCardValue == threeOfAKindNewcardValue){
-		  return PokerHandComparer.BothAreEqual;
+			return compareCardByCard(cards, newCards);
 	  }
 	  else {
 		  return PokerHandComparer.SecondHandIsBetter;

@@ -233,12 +233,12 @@ public class PokerGame {
 		return turnPosition;
 	}
 
-	public void setPlayerTurnIndex(int bigBlindPos) {
-		if (bigBlindPos > this.getPlayingPlayers().size()) {
+	public void setPlayerTurnIndex(int turnPosition) {
+		if (turnPosition > this.getPlayingPlayers().size()) {
 			this.turnPosition = 0;
 		}
 		else {
-			this.turnPosition = bigBlindPos;
+			this.turnPosition = turnPosition;
 		}
 	}
 
@@ -256,7 +256,7 @@ public class PokerGame {
 	}
 	
 	private void nextTurn(PokerPlayerDecision decision) {		
-		if (getPlayerTurnIndex() +1 >= this.getPlayingPlayers().size()) {
+		if (getPlayerTurnIndex() + 1 >= this.getPlayingPlayers().size()) {
 			this.setPlayerTurnIndex(0) ;
 		}
 		else {
