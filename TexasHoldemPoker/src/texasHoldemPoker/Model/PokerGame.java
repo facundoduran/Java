@@ -264,8 +264,7 @@ public class PokerGame {
 		
 		for(PokerPlayer pokerPlayer : players) {
 			if (pokerPlayer.getMove() != PokerPlayerMovement.Fold && 
-				pokerPlayer.getMove() != PokerPlayerMovement.Out &&
-				pokerPlayer.getMove() != PokerPlayerMovement.AllIn) {
+				pokerPlayer.getMove() != PokerPlayerMovement.Out) {
 				activePlayers.add(pokerPlayer);
 			}
 		}

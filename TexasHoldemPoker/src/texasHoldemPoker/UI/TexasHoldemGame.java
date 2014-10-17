@@ -152,31 +152,23 @@ public class TexasHoldemGame extends JFrame{
 		
 		this.showPlayerInfo(this.game.getPlayers(), false);
 		
-		//Pre-flop betting round
-		doBettingRound(true);
-		
-		boolean preFlop = this.game.isFinish();
-		if(preFlop) {
-			this.game.flop();
-			showFlopCard();
-		}
-		
-		doBettingRound(preFlop);
-		boolean flop = this.game.isFinish();	
-		if (flop) {
-			this.game.turn();
-			showTurnCards();
-		}
-		
-		doBettingRound(flop);
-		boolean turn = this.game.isFinish();	
-		if (turn) {
-			this.game.river();
-			showRiverCard();
-		}
-		
-		boolean river = this.game.isFinish();
-		doBettingRound(river);	
+		int gameState = 0;
+		boolean canContinue = true;
+		boolean allPlayersMadeAllIn = false;
+		while (canContinue && !allPlayersMadeAllIn)
+		{
+			//Pre-flop betting round
+			doBettingRound(canContinue);
+			
+			allPlayersMadeAllIn = this.game.allPlayersMadeAllIn();
+			canContinue = this.game.isFinish();
+			
+			if (canContinue) {
+				this.resolveGameState(allPlayersMadeAllIn, gameState);			
+			}
+			
+			gameState++;
+		}		
 		
 		ArrayList<PokerHandEvaluation> winners = game.finishGame();
 		
@@ -191,6 +183,51 @@ public class TexasHoldemGame extends JFrame{
 		this.pnlWinner.setVisible(true);
 		
 		this.bigBlindPos++;
+	}
+	
+	private void resolveGameState(boolean allPlayersMadeAllIn, int gameState) {
+		if (!allPlayersMadeAllIn) {
+			switch (gameState) {
+			case 0:
+				this.game.flop();
+				showFlopCard();
+				break;
+			case 1:
+				this.game.turn();
+				showTurnCards();
+				break;
+			case 2:
+				this.game.river();
+				showRiverCard();
+				break;
+			default:
+				break;
+			}
+		}
+		else {
+			switch (gameState) {
+			case 0:
+				this.game.flop();
+				showFlopCard();
+				this.game.turn();
+				showTurnCards();
+				this.game.river();
+				showRiverCard();
+				break;
+			case 1:
+				this.game.turn();
+				showTurnCards();
+				this.game.river();
+				showRiverCard();
+				break;
+			case 2:
+				this.game.river();
+				showRiverCard();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	private void doBettingRound(boolean continuePlaying) {
@@ -226,7 +263,6 @@ public class TexasHoldemGame extends JFrame{
 				continuePlaying = false;
 			}
 			
-			//check if all players made all in
 			if (!this.game.isFinish()) {
 				continuePlaying = false;
 			}
