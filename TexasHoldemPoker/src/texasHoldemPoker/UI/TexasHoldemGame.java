@@ -155,7 +155,7 @@ public class TexasHoldemGame extends JFrame{
 		int gameState = 0;
 		boolean canContinue = true;
 		boolean allPlayersMadeAllIn = false;
-		while (canContinue && !allPlayersMadeAllIn)
+		while (canContinue && !allPlayersMadeAllIn && gameState < 4)
 		{
 			//Pre-flop betting round
 			doBettingRound(canContinue);
