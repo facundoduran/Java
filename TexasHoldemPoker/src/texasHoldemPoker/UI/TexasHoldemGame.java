@@ -51,8 +51,8 @@ public class TexasHoldemGame extends JFrame{
 					ArrayList<String> players = new ArrayList<String>();
 					players.add("Facundo");
 					players.add("Julieta");
-					players.add("Juan");
-					players.add("Damian");
+					//players.add("Juan");
+					//players.add("Damian");
 					
 					TexasHoldemGame window = new TexasHoldemGame(players, 4);
 

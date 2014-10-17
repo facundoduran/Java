@@ -342,7 +342,9 @@ public class PokerGame {
 	
 	public void updatePlayerMovements() {
 		for (PokerPlayer player : this.getActivePlayers()) {
-			player.setMove(PokerPlayerMovement.Wait);
+			if (player.getMove() != PokerPlayerMovement.AllIn) {
+				player.setMove(PokerPlayerMovement.Wait);
+			}
 		}
 	}
 	
