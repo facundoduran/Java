@@ -244,6 +244,17 @@ public class PokerGame {
 		return true;
 	}
 	
+	public boolean allPlayersMadeAllIn() {
+		ArrayList<PokerPlayer> playerPlaying = this.getActivePlayers();
+		for(PokerPlayer pokerPlayer : playerPlaying) {
+			if (pokerPlayer.getMove() != PokerPlayerMovement.AllIn) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public ArrayList<PokerPlayer> getPlayers() {
 		return players;
 	}
