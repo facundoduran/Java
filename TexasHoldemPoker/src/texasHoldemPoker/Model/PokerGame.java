@@ -62,7 +62,8 @@ public class PokerGame {
 	}
 	
 	public PokerPlayer getPlayer() {
-		PokerPlayer playerTurn = this.getPlayingPlayers().get(getPlayerTurnIndex());
+		int currentPlayerIndex = this.getPlayerTurnIndex();
+		PokerPlayer playerTurn = this.getPlayingPlayers().get(currentPlayerIndex);
 		return playerTurn;
 	}
 	
@@ -291,6 +292,10 @@ public class PokerGame {
 				setPlayerTurnIndex(getPlayerTurnIndex() + 1);
 			}		
 		}
+	}
+	
+	public boolean isFinish() {
+		return this.getPlayingPlayers().size() > 1;
 	}
 
 	public int getBottomPosition() {

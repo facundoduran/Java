@@ -67,7 +67,7 @@ public class TexasHoldemGame extends JFrame{
 	
 	public TexasHoldemGame(ArrayList<String> players, int bigBlind) throws Exception {
 		initialize();
-		this.bigBlindPos = 0;
+		this.bigBlindPos = 1;
 		this.players = players;
 		this.bigBlind = bigBlind;
 		this.playerDAO = new PlayerDAO();
@@ -446,25 +446,30 @@ public class TexasHoldemGame extends JFrame{
 		this.showPlayerInfo(this.game.getPlayers(), false);
 		
 		//Pre-flop betting round
-		doBettingRound();
+		doBettingRound(true);
 		
-		this.game.flop();
-		showFlopCard();
+		boolean preFlop = this.game.isFinish();
+		if(preFlop) {
+			this.game.flop();
+			showFlopCard();
+		}
 		
-		//flop betting round
-		doBettingRound();
-
-		this.game.turn();
-		showTurnCards();
+		doBettingRound(preFlop);
+		boolean flop = this.game.isFinish();	
+		if (flop) {
+			this.game.turn();
+			showTurnCards();
+		}
 		
-		//turn betting round
-		doBettingRound();
+		doBettingRound(flop);
+		boolean turn = this.game.isFinish();	
+		if (turn) {
+			this.game.river();
+			showRiverCard();
+		}
 		
-		this.game.river();
-		showRiverCard();
-		
-		//river betting round
-		doBettingRound();
+		boolean river = this.game.isFinish();
+		doBettingRound(river);	
 		
 		ArrayList<PokerHandEvaluation> winners = game.finishGame();
 		
@@ -481,15 +486,14 @@ public class TexasHoldemGame extends JFrame{
 		this.bigBlindPos++;
 	}
 	
-	private void doBettingRound() {
-		boolean finishGame = false;
-		boolean continuePlaying = true;
+	private void doBettingRound(boolean continuePlaying) {
+		boolean continueBeeting = false;
 		int playerPlayCounter = 1;
-		do
+		while(!continueBeeting && continuePlaying)		
 		{				
 			PokerPlayer currentPlayer = this.game.getPlayer();				
 											
-			if (!currentPlayer.madeAllIn()) {
+			if (!currentPlayer.madeAllIn() && this.game.getPlayingPlayers().size() > 1) {
 				this.showPlayerDecisionForm(currentPlayer);
 			}
 			else {
@@ -499,7 +503,7 @@ public class TexasHoldemGame extends JFrame{
 			//check if all players leave
 			if(this.game.getPlayingPlayers().size() == 1) 
 			{
-				finishGame = true;
+				continueBeeting = true;
 			}
 			
 			//check if all players has the same bet
@@ -514,7 +518,6 @@ public class TexasHoldemGame extends JFrame{
 			
 			playerPlayCounter++;
 		}				
-		while(!finishGame && continuePlaying);		
 	}
 
 	private void showPlayerDecisionForm(PokerPlayer currentPlayer) {
