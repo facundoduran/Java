@@ -11,7 +11,8 @@ public class PokerGame {
 	private ArrayList<PokerPlayer> players;
 	private ArrayList<PokerCard> communitaryCards;
 	private int pot;
-	private int turnPosition;
+	private int bottomPosition;
+	private int playerIndex;
 	private int highestBet;
 	private int smallBlind;
 
@@ -24,18 +25,27 @@ public class PokerGame {
 		this.pot = this.getHighestBet() + smallBlind;	
 	}
 	
-	public void startGame(int playerIndexWithBigBlindPos) {		
-		this.setPlayerTurnIndex(playerIndexWithBigBlindPos +1);		
-		int smallBlindPos = getPlayerTurnIndex() == 0 ? players.size() - 1 : getPlayerTurnIndex() - 1;
-		PokerPlayer smallBlindPlayer = this.players.get(smallBlindPos);
-		smallBlindPlayer.call(this.smallBlind);		
+	public void startGame(int bottomPosition) {
+		this.setBottomPosition(bottomPosition);
+		PokerPlayer dealerPlayer = this.players.get(bottomPosition);
+		dealerPlayer.setBlind(PokerBlind.Dealer);
 		
-		PokerPlayer bigBlindPlayer = this.players.get(playerIndexWithBigBlindPos);
-		bigBlindPlayer.setHasBigBlind(true);		
+		int bigBlindIndex = (bottomPosition + 2) % players.size();
+		int smallBlindIndex = (bottomPosition + 1) % players.size();		
+		
+		PokerPlayer smallBlindPlayer = this.players.get(smallBlindIndex);
+		smallBlindPlayer.setBlind(PokerBlind.SmallBlind);
+		smallBlindPlayer.call(this.smallBlind);	
+		
+		PokerPlayer bigBlindPlayer = this.players.get(bigBlindIndex);
+		bigBlindPlayer.setBlind(PokerBlind.BigBlind);
 		long amount = this.getHighestBet() - bigBlindPlayer.getBet();
 		bigBlindPlayer.call(amount);
 		
 		this.pot = this.getHighestBet() + smallBlind;
+		
+		int preFlopTurnIndex = (bottomPosition + 3) % players.size();
+		this.setPlayerTurnIndex(preFlopTurnIndex);
 	}
 	
 	public void addPlayer(PokerPlayer player) {
@@ -107,6 +117,10 @@ public class PokerGame {
 		for(int i = 0; i < 3; i++) {
 			this.addCardInTable();
 		}
+		
+		int bottomPosition = this.getBottomPosition();
+		int nextPlayerPosition = bottomPosition + 1 % this.getPlayingPlayers().size();
+		this.setPlayerTurnIndex(nextPlayerPosition);
 	}
 	
 	public void turn() {
@@ -239,19 +253,19 @@ public class PokerGame {
 	}
 
 	public int getPlayerTurnIndex() {
-		if (turnPosition >= this.players.size()) {
+		if (playerIndex >= this.players.size()) {
 			return 0;
 		}
 		
-		return turnPosition;
+		return playerIndex;
 	}
 
 	public void setPlayerTurnIndex(int turnPosition) {
 		if (turnPosition > this.getPlayingPlayers().size()) {
-			this.turnPosition = 0;
+			this.playerIndex = 0;
 		}
 		else {
-			this.turnPosition = turnPosition;
+			this.playerIndex = turnPosition;
 		}
 	}
 
@@ -277,5 +291,13 @@ public class PokerGame {
 				setPlayerTurnIndex(getPlayerTurnIndex() + 1);
 			}		
 		}
+	}
+
+	public int getBottomPosition() {
+		return bottomPosition;
+	}
+
+	public void setBottomPosition(int bottomPosition) {
+		this.bottomPosition = bottomPosition;
 	}
 }

@@ -51,7 +51,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	private int pot;
 	private PokerPlayerDecision playerDecision;
 	private PokerPlayer pokerPlayer;
-	private ArrayList<PokerCard> tableCards;
+	private ArrayList<PokerCard> communitaryCards;
 	private JLabel lblBigBlindValue;
 	private JLabel lblPotInfo;
 	private JLabel lblPot;
@@ -62,7 +62,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	 * Create the application.
 	 */
 	public TexasHoldemPlayerDecision(ArrayList<PokerCard> tableCards, PokerPlayer pokerPlayer, int bigBlind, int pot) {
-		this.tableCards = tableCards;
+		this.communitaryCards = tableCards;
 		this.pokerPlayer = pokerPlayer;
 		this.bigBlind = bigBlind;
 		this.pot = pot;
@@ -284,11 +284,11 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	}
 
 	public ArrayList<PokerCard> getTableCards() {
-		return tableCards;
+		return communitaryCards;
 	}
 
 	public void setTableCards(ArrayList<PokerCard> tableCards) {
-		this.tableCards = tableCards;
+		this.communitaryCards = tableCards;
 	}
 	
 	private void playerChecks() {
@@ -359,6 +359,25 @@ public class TexasHoldemPlayerDecision extends JDialog {
 			this.btnCheck.setEnabled(false);
 		}
 		
+		String title = this.getTitle() + " ";
+		
+		if (communitaryCards.size() <= 1) {
+			//Pre flop
+			this.setTitle(title + "Pre-Flop");
+		}
+		else if (communitaryCards.size() >= 1 && communitaryCards.size() <= 3) {
+			//Flop
+			this.setTitle(title + "Flop");
+		}
+		else if (communitaryCards.size() == 4) {
+			//Turn
+			this.setTitle(title + "Turn");
+		}
+		else if (communitaryCards.size() == 5) {
+			//River
+			this.setTitle(title + "River");
+		}
+		
 		slBet.setMinimum(this.bigBlind);
 		slBet.setMaximum(this.pokerPlayer.getBalance());
 		
@@ -381,9 +400,9 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	}
 	
 	private void showCards() {
-		for(int i = 1; i <= tableCards.size(); i++) {
+		for(int i = 1; i <= communitaryCards.size(); i++) {
 			
-			PokerCard card = tableCards.get(i-1);
+			PokerCard card = communitaryCards.get(i-1);
 			String cardFilename = FileHelper.getImageCard(card);
 			
 			if (i == 1) {

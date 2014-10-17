@@ -13,22 +13,18 @@ public class PokerPlayer extends Player{
 	
 	private PokerPlayerDecision decision;
 	
-	private boolean hasBigBlind;
-		
+	private PokerBlind blind;
+			
 	public PokerPlayer(String name) {
 		super(name);
 		this.hand = new ArrayList<PokerCard>();
 		this.setBet(0);
 		this.setBalance(0);
 		this.setDecision(PokerPlayerDecision.Play);
+		this.setBlind(PokerBlind.None);
 	}
 	
-	public void newGame() {
-		this.setHasBigBlind(false);
-		this.setBet(0);
-		this.setDecision(PokerPlayerDecision.Play);
-		this.clearHand();
-	}
+
 	
 	public void addCard(PokerCard card) {
 		this.hand.add(card);
@@ -99,10 +95,26 @@ public class PokerPlayer extends Player{
 	}
 
 	public boolean hasBigBlind() {
-		return hasBigBlind;
+		return this.blind == PokerBlind.BigBlind;
+	}
+	
+	public boolean hasSmallBlind() {
+		return this.blind == PokerBlind.SmallBlind;
+	}
+	
+	public boolean hasDealer() {
+		return this.blind == PokerBlind.Dealer;
+	}
+	
+	public boolean hasNotBlind() {
+		return this.blind == PokerBlind.None;
 	}
 
-	public void setHasBigBlind(boolean hasBigBlind) {
-		this.hasBigBlind = hasBigBlind;
+	public PokerBlind getBlind() {
+		return blind;
+	}
+
+	public void setBlind(PokerBlind blind) {
+		this.blind = blind;
 	}	
 }

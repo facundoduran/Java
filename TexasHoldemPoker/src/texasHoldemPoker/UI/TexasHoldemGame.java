@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import texasHoldemPoker.Common.FileHelper;
 import texasHoldemPoker.Model.Player;
+import texasHoldemPoker.Model.PokerBlind;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerGame;
 import texasHoldemPoker.Model.PokerHandEvaluation;
@@ -50,6 +51,7 @@ public class TexasHoldemGame extends JFrame{
 					players.add("Facundo");
 					players.add("Julieta");
 					players.add("Juan");
+					players.add("Damian");
 					
 					TexasHoldemGame window = new TexasHoldemGame(players, 4);
 
@@ -65,7 +67,7 @@ public class TexasHoldemGame extends JFrame{
 	
 	public TexasHoldemGame(ArrayList<String> players, int bigBlind) throws Exception {
 		initialize();
-		this.bigBlindPos = 2;
+		this.bigBlindPos = 0;
 		this.players = players;
 		this.bigBlind = bigBlind;
 		this.playerDAO = new PlayerDAO();
@@ -128,6 +130,10 @@ public class TexasHoldemGame extends JFrame{
 	private JLabel lblThirdPlayerHandResultInfo;
 	private JLabel lblFourthPlayerHandResult;
 	private JLabel lblFourthPlayerHandResultInfo;
+	private JPanel pnlFirstPlayerState;
+	private JPanel pnlSecondPlayerState;
+	private JPanel pnlThirdPlayerState;
+	private JPanel pnlFourthPlayerState;
 
 	private void initialize() {
 		this.setTitle("Poker");
@@ -404,6 +410,22 @@ public class TexasHoldemGame extends JFrame{
 		lblFourthPlayerHandResultInfo.setBounds(852, 323, 134, 14);
 		getContentPane().add(lblFourthPlayerHandResultInfo);
 		
+		pnlFirstPlayerState = new JPanel();
+		pnlFirstPlayerState.setBounds(141, 130, 50, 50);
+		getContentPane().add(pnlFirstPlayerState);
+		
+		pnlSecondPlayerState = new JPanel();
+		pnlSecondPlayerState.setBounds(452, 11, 50, 50);
+		getContentPane().add(pnlSecondPlayerState);
+		
+		pnlThirdPlayerState = new JPanel();
+		pnlThirdPlayerState.setBounds(831, 11, 50, 50);
+		getContentPane().add(pnlThirdPlayerState);
+		
+		pnlFourthPlayerState = new JPanel();
+		pnlFourthPlayerState.setBounds(804, 361, 50, 50);
+		getContentPane().add(pnlFourthPlayerState);
+		
 		this.showAllImages(false);
 	}
 	
@@ -549,18 +571,22 @@ public class TexasHoldemGame extends JFrame{
 			
 			if (i == 0) {
 				this.setPlayerInfo(player, lblPlayer1, imgPlayer1FirstCard, imgPlayer1SecondCard, showCards);
+				this.showBlind(player, pnlFirstPlayerState);
 			}
 			
 			if (i == 1) {
 				this.setPlayerInfo(player, lblPlayer2, imgPlayer2FirstCard, imgPlayer2SecondCard, showCards);
+				this.showBlind(player, pnlSecondPlayerState);
 			}
 			
 			if (i == 2) {
 				this.setPlayerInfo(player, lblPlayer3, imgPlayer3FirstCard, imgPlayer3SecondCard, showCards);
+				this.showBlind(player, pnlThirdPlayerState);
 			}
 			
 			if (i == 3) {
 				this.setPlayerInfo(player, lblPlayer4, imgPlayer4FirstCard, imgPlayer4SecondCard, showCards);
+				this.showBlind(player, pnlFourthPlayerState);
 			}
 		}
 	}
@@ -580,6 +606,11 @@ public class TexasHoldemGame extends JFrame{
 		imgFlopCardThirdCard.setVisible(show);
 		imgTurnCard.setVisible(show);
 		imgRiverCard.setVisible(show);
+		
+		pnlFirstPlayerState.setVisible(show);
+		pnlSecondPlayerState.setVisible(show);
+		pnlThirdPlayerState.setVisible(show);
+		pnlFourthPlayerState.setVisible(show);
 	}
 	
 	private void initializePlayers() {	
@@ -654,6 +685,17 @@ public class TexasHoldemGame extends JFrame{
 		cardPanel.setVisible(true);
 	}
 	
+	private void showBlind(PokerPlayer player, JPanel blindPanel) {
+		PokerBlind blind = player.getBlind();
+		
+		if (blind != PokerBlind.None) {
+			String blindFilename = FileHelper.getBlindImage(player.getBlind());
+			blindPanel.setVisible(false);
+			blindPanel.add(new ImagePanel(blindFilename));
+			blindPanel.setVisible(true);
+		}
+	}
+	
 	private void clearControls() {
 		imgPlayer1FirstCard.removeAll();
 		imgPlayer1SecondCard.removeAll();
@@ -669,6 +711,11 @@ public class TexasHoldemGame extends JFrame{
 		imgFlopCardThirdCard.removeAll();
 		imgTurnCard.removeAll();
 		imgRiverCard.removeAll();
+		
+		pnlFirstPlayerState.removeAll();
+		pnlSecondPlayerState.removeAll();
+		pnlThirdPlayerState.removeAll();
+		pnlFourthPlayerState.removeAll();
 	}
 	
 	private void showPlayerEvaluation(ArrayList<PokerHandEvaluation> playersEvaluation){
@@ -737,12 +784,20 @@ public class TexasHoldemGame extends JFrame{
 	private void hideShowdownControls() {
 		lblFirstPlayerHandResult.setVisible(false);
 		lblFirstPlayerHandResultInfo.setVisible(false);
+		pnlFirstPlayerState.setVisible(false);
+		
 		lblSecondPlayerHandResult.setVisible(false);
 		lblSecondPlayerHandResultInfo.setVisible(false);
+		pnlSecondPlayerState.setVisible(false);
+		
 		lblThirdPlayerHandResult.setVisible(false);
 		lblThirdPlayerHandResultInfo.setVisible(false);
+		pnlThirdPlayerState.setVisible(false);
+		
 		lblFourthPlayerHandResult.setVisible(false);
 		lblFourthPlayerHandResultInfo.setVisible(false);
+		pnlFourthPlayerState.setVisible(false);
+		
 		lblWinner.setVisible(false);
 		lblWinnerInfo.setVisible(false);
 		pnlWinner.setVisible(false);

@@ -3,6 +3,7 @@ package texasHoldemPoker.Common;
 import java.io.File;
 
 import texasHoldemPoker.Model.Card;
+import texasHoldemPoker.Model.PokerBlind;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.Suit;
 
@@ -40,6 +41,11 @@ public class FileHelper {
 		String cardSuit = suit.toString().substring(0, 1);
 		
 		String image = Integer.toString(cardOrdinal) + cardSuit;
+		return getImagePath(image);
+	}
+	
+	public static String getBlindImage(PokerBlind blind) {
+		String image = blind.toString() ;
 		return getImagePath(image);
 	}
 	
