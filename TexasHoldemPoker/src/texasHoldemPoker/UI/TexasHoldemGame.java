@@ -68,11 +68,12 @@ public class TexasHoldemGame extends JFrame{
 	
 	public TexasHoldemGame(ArrayList<String> players, int bigBlind) throws Exception {
 		initialize();
-		this.bigBlindPos = 1;
+		this.bigBlindPos = 0;
 		this.players = players;
 		this.bigBlind = bigBlind;
 		this.playerDAO = new PlayerDAO();
 		
+		this.setResizable(false);
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -180,6 +181,8 @@ public class TexasHoldemGame extends JFrame{
 		
 		this.showPlayerInfo(game.getPlayers(), true);
 		
+		this.updatePlayers(this.game.getPlayers());
+		
 		this.pnlWinner.setVisible(true);
 		
 		this.bigBlindPos++;
@@ -251,14 +254,7 @@ public class TexasHoldemGame extends JFrame{
 				continuePlaying = false;
 			}
 			
-			/*
-			//check if all players leave
-			if(this.game.getActivePlayers().size() == 1) 
-			{
-				continueBeeting = true;
-			}
-			*/
-			//check if all players has the same bet
+			//check if all players has the same bet and played
 			if (this.game.allPlayersHasSameBet() && this.game.allPlayerPlays()) {
 				continuePlaying = false;
 			}
@@ -366,11 +362,9 @@ public class TexasHoldemGame extends JFrame{
 	}
 	
 	private void initializePlayers() {	
-		//Search the player in the database using player names
-		ArrayList<Player> players = playerDAO.getPlayersInList(this.players);
-	
-		for (Player player : players) {
-			String playerName = player.getName();
+		//Search the player in the database using player names				
+		for (String playerName : this.players) {
+			Player player = playerDAO.getPlayer(playerName);
 			int balance = player.getSalary();
 			
 			PokerPlayer pokerPlayer = new PokerPlayer(playerName);
@@ -449,6 +443,34 @@ public class TexasHoldemGame extends JFrame{
 		}
 	}
 	
+	private void showPlayerEvaluation(ArrayList<PokerHandEvaluation> playersEvaluation){
+		this.showdownPlayerControls(playersEvaluation, true);
+	}
+	
+	private void updatePlayers(ArrayList<PokerPlayer> players) {
+		
+		for(PokerPlayer pokerPlayer : players) {
+			String playerName = pokerPlayer.getName();
+			int salary = pokerPlayer.getBalance();
+			playerDAO.updateSalary(playerName, salary);
+		}
+	}
+	
+	private void showWinnersInfo(ArrayList<PokerHandEvaluation> winners) {
+		
+		String winnerNames = "";
+		
+		for (PokerHandEvaluation winner : winners) {
+			PokerPlayer player = winner.getPlayer();
+			winnerNames += player.getName() + " ";
+		}
+		
+		String pot = Integer.toString(this.game.getPot());
+		
+		lblWinnerInfo.setText(winnerNames);
+		lblPotInfo.setText(pot);
+	}
+	
 	private void clearControls() {
 		imgPlayer1FirstCard.removeAll();
 		imgPlayer1SecondCard.removeAll();
@@ -469,32 +491,6 @@ public class TexasHoldemGame extends JFrame{
 		pnlSecondPlayerState.removeAll();
 		pnlThirdPlayerState.removeAll();
 		pnlFourthPlayerState.removeAll();
-	}
-	
-	private void showPlayerEvaluation(ArrayList<PokerHandEvaluation> playersEvaluation){
-		this.showdownPlayerControls(playersEvaluation, true);
-	}
-	
-	private void updatePlayer(PokerPlayer pokerPlayer) {
-		String playerName = pokerPlayer.getName();
-		int salary = pokerPlayer.getBalance();
-		playerDAO.updateSalary(playerName, salary);
-	}
-	
-	private void showWinnersInfo(ArrayList<PokerHandEvaluation> winners) {
-		
-		String winnerNames = "";
-		
-		for (PokerHandEvaluation winner : winners) {
-			PokerPlayer player = winner.getPlayer();
-			winnerNames += player.getName() + " ";
-			this.updatePlayer(player);			
-		}
-		
-		String pot = Integer.toString(this.game.getPot());
-		
-		lblWinnerInfo.setText(winnerNames);
-		lblPotInfo.setText(pot);
 	}
 	
 	private void showdownPlayerControls(ArrayList<PokerHandEvaluation> playerEvaluation, boolean show) {
