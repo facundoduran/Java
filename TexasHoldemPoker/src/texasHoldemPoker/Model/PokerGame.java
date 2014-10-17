@@ -63,27 +63,53 @@ public class PokerGame {
 	
 	public PokerPlayer getPlayer() {
 		int currentPlayerIndex = this.getPlayerTurnIndex();
-		PokerPlayer playerTurn = this.getPlayingPlayers().get(currentPlayerIndex);
-		return playerTurn;
+		int activePlayersSize = this.getActivePlayers().size();
+		ArrayList<PokerPlayer> activePlayers = this.getActivePlayers();
+		
+		while (currentPlayerIndex < activePlayersSize) {
+			PokerPlayer playerTurn = activePlayers.get(currentPlayerIndex);
+			if (playerTurn.getMove() == PokerPlayerMovement.Wait) {
+				return playerTurn;
+			}
+			
+			currentPlayerIndex++;
+		}
+		
+		currentPlayerIndex = this.getPlayerTurnIndex();
+		while(currentPlayerIndex >= 0) {
+			PokerPlayer playerTurn = this.getActivePlayers().get(currentPlayerIndex);
+			if (playerTurn.getMove() == PokerPlayerMovement.Wait) {
+				return playerTurn;
+			}
+			currentPlayerIndex--;
+		}
+		
+		return null;
+		//PokerPlayer playerTurn = this.getActivePlayers().get(currentPlayerIndex);
+		//return playerTurn;
 	}
 	
-	public void playTurn(PokerPlayerDecision decision) {
+	public void playTurn(PokerPlayerMovement decision) {
 		PokerPlayer playerTurn = this.getPlayer();
 		
 		if(playerTurn !=null) {		
-			if (decision == PokerPlayerDecision.Leave) {
+			if (decision == PokerPlayerMovement.Fold) {
 				playerTurn.leave();
 			}
 			
-			if (decision == PokerPlayerDecision.Call) {
+			if (decision == PokerPlayerMovement.Call) {				
+				
 				if (this.getHighestBet() != playerTurn.getBet()) {
 					long amount = this.getHighestBet() - playerTurn.getBet();
 					playerTurn.call(amount);
 					this.pot += amount;	
 				}
+				else {
+					playerTurn.call();
+				}
 			}
 			
-			if (decision == PokerPlayerDecision.AllIn) {
+			if (decision == PokerPlayerMovement.AllIn) {
 				this.pot += playerTurn.getBalance();
 				this.highestBet = playerTurn.getBalance();
 				playerTurn.allIn();				
@@ -93,12 +119,12 @@ public class PokerGame {
 		}
 	}
 	
-	public void playTurn(PokerPlayerDecision decision, int bet) {
+	public void playTurn(PokerPlayerMovement decision, int bet) {
 		PokerPlayer playerTurn = this.getPlayer();
 		
 		if(playerTurn !=null) {
 			
-			if (decision == PokerPlayerDecision.Raise) {
+			if (decision == PokerPlayerMovement.Raise) {
 				
 				if (playerTurn.getBalance() <= bet) {
 					playerTurn.allIn();
@@ -107,6 +133,7 @@ public class PokerGame {
 					playerTurn.raise(bet);
 					this.pot += bet;
 					this.highestBet += bet;
+					this.notifyRaise(playerTurn);
 				}				
 			}
 		}
@@ -116,24 +143,24 @@ public class PokerGame {
 		
 	public void flop() {
 		for(int i = 0; i < 3; i++) {
-			this.addCardInTable();
+			this.showCommunitaryCard();
 		}
 		
 		int bottomPosition = this.getBottomPosition();
-		int nextPlayerPosition = bottomPosition + 1 % this.getPlayingPlayers().size();
+		int nextPlayerPosition = bottomPosition + 1 % this.getActivePlayers().size();
 		this.setPlayerTurnIndex(nextPlayerPosition);
 	}
 	
 	public void turn() {
-		this.addCardInTable();
+		this.showCommunitaryCard();
 	}
 	
 	public void river() {
-		this.addCardInTable();
+		this.showCommunitaryCard();
 	}
 	
 	public ArrayList<PokerHandEvaluation> getPlayersEvaluation() {
-		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
+		ArrayList<PokerPlayer> playersPlaying = this.getActivePlayers();
 
 		ArrayList<PokerHandEvaluation> playersEvaluation = new ArrayList<PokerHandEvaluation>();
 		
@@ -148,7 +175,7 @@ public class PokerGame {
 	}
 	
 	public ArrayList<PokerHandEvaluation> finishGame() {
-		ArrayList<PokerPlayer> playersPlaying = this.getPlayingPlayers();
+		ArrayList<PokerPlayer> playersPlaying = this.getActivePlayers();
 		ArrayList<PokerHandEvaluation> winners = new ArrayList<PokerHandEvaluation>();
 		
 		//evaluate hands only if exists players playing
@@ -195,10 +222,21 @@ public class PokerGame {
 	}
 	
 	public boolean allPlayersHasSameBet() {
-		ArrayList<PokerPlayer> playerPlaying = this.getPlayingPlayers();
+		ArrayList<PokerPlayer> playerPlaying = this.getActivePlayers();
 		
 		for(PokerPlayer pokerPlayer : playerPlaying) {
 			if (!pokerPlayer.madeAllIn() && pokerPlayer.getBet() != highestBet) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public boolean allPlayerPlays() {
+		ArrayList<PokerPlayer> playerPlaying = this.getActivePlayers();
+		for(PokerPlayer pokerPlayer : playerPlaying) {
+			if (pokerPlayer.getMove() == PokerPlayerMovement.Wait) {
 				return false;
 			}
 		}
@@ -210,27 +248,18 @@ public class PokerGame {
 		return players;
 	}
 	
-	public ArrayList<PokerPlayer> getPlayingPlayers() {
-		ArrayList<PokerPlayer> playerPlaying = new ArrayList<PokerPlayer>();
+	public ArrayList<PokerPlayer> getActivePlayers() {
+		ArrayList<PokerPlayer> activePlayers = new ArrayList<PokerPlayer>();
 		
 		for(PokerPlayer pokerPlayer : players) {
-			if (pokerPlayer.getDecision() != PokerPlayerDecision.Leave){
-				playerPlaying.add(pokerPlayer);
+			if (pokerPlayer.getMove() != PokerPlayerMovement.Fold && 
+				pokerPlayer.getMove() != PokerPlayerMovement.Out &&
+				pokerPlayer.getMove() != PokerPlayerMovement.AllIn) {
+				activePlayers.add(pokerPlayer);
 			}
 		}
 		
-		return playerPlaying;
-	}
-	
-	public boolean existMoreThanOnePlayerWithoutAllInOrLeave() {
-		int quantity = 0;
-		for(PokerPlayer pokerPlayer : players) {
-			if (pokerPlayer.getDecision() != PokerPlayerDecision.Leave && pokerPlayer.getDecision() != PokerPlayerDecision.AllIn){
-				quantity++;
-			}
-		}
-		
-		return quantity > 1;
+		return activePlayers;
 	}
 
 	public void setPlayers(ArrayList<PokerPlayer> players) {
@@ -262,7 +291,7 @@ public class PokerGame {
 	}
 
 	public void setPlayerTurnIndex(int turnPosition) {
-		if (turnPosition > this.getPlayingPlayers().size()) {
+		if (turnPosition > this.getActivePlayers().size()) {
 			this.playerIndex = 0;
 		}
 		else {
@@ -277,25 +306,20 @@ public class PokerGame {
 	public void setTableCards(ArrayList<PokerCard> table) {
 		this.communitaryCards = table;
 	}
-
-	private void addCardInTable() {
-		PokerCard card = deck.shuffleCard();
-		getCommunitaryCards().add(card);
-	}
 	
-	public void nextTurn(PokerPlayerDecision decision) {		
-		if (getPlayerTurnIndex() + 1 >= this.getPlayingPlayers().size()) {
+	public void nextTurn(PokerPlayerMovement decision) {		
+		if (getPlayerTurnIndex() + 1 >= this.getActivePlayers().size()) {
 			this.setPlayerTurnIndex(0) ;
 		}
 		else {
-			if (decision != PokerPlayerDecision.Leave) {
+			if (decision != PokerPlayerMovement.Fold) {
 				setPlayerTurnIndex(getPlayerTurnIndex() + 1);
 			}		
 		}
 	}
 	
 	public boolean isFinish() {
-		return this.getPlayingPlayers().size() > 1;
+		return this.getActivePlayers().size() > 1;
 	}
 
 	public int getBottomPosition() {
@@ -304,5 +328,26 @@ public class PokerGame {
 
 	public void setBottomPosition(int bottomPosition) {
 		this.bottomPosition = bottomPosition;
+	}
+	
+	public void updatePlayerMovements() {
+		for (PokerPlayer player : this.getActivePlayers()) {
+			player.setMove(PokerPlayerMovement.Wait);
+		}
+	}
+	
+	private void showCommunitaryCard() {
+		PokerCard card = deck.shuffleCard();
+		getCommunitaryCards().add(card);
+	}
+	
+	private void notifyRaise(PokerPlayer player) {
+		ArrayList<PokerPlayer> activePlayers = this.getActivePlayers();
+		for (PokerPlayer pokerPlayer : activePlayers) {
+			boolean updateMovement = pokerPlayer.getMove() == PokerPlayerMovement.Call || pokerPlayer.getMove() == PokerPlayerMovement.Raise;
+			if (pokerPlayer != player && updateMovement) {
+				pokerPlayer.setMove(PokerPlayerMovement.Wait);
+			}
+		}
 	}
 }

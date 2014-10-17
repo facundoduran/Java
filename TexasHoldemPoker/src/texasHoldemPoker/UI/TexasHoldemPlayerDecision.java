@@ -9,7 +9,7 @@ import javax.swing.JTextField;
 
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerPlayer;
-import texasHoldemPoker.Model.PokerPlayerDecision;
+import texasHoldemPoker.Model.PokerPlayerMovement;
 import texasHoldemPoker.UI.CustomControls.ImagePanel;
 import texasHoldemPoker.Common.FileHelper;
 import texasHoldemPoker.Common.Validators;
@@ -49,7 +49,7 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	private int raiseAmount;
 	private int bigBlind;
 	private int pot;
-	private PokerPlayerDecision playerDecision;
+	private PokerPlayerMovement playerDecision;
 	private PokerPlayer pokerPlayer;
 	private ArrayList<PokerCard> communitaryCards;
 	private JLabel lblBigBlindValue;
@@ -275,11 +275,11 @@ public class TexasHoldemPlayerDecision extends JDialog {
 		setPlayerInfo();
 	}
 
-	public PokerPlayerDecision getPlayerDecision() {
+	public PokerPlayerMovement getPlayerDecision() {
 		return playerDecision;
 	}
 
-	public void setPlayerDecision(PokerPlayerDecision playerDecision) {
+	public void setPlayerDecision(PokerPlayerMovement playerDecision) {
 		this.playerDecision = playerDecision;
 	}
 
@@ -292,12 +292,12 @@ public class TexasHoldemPlayerDecision extends JDialog {
 	}
 	
 	private void playerChecks() {
-		this.playerDecision = PokerPlayerDecision.Call;
+		this.playerDecision = PokerPlayerMovement.Call;
 		this.setVisible(false);
 	}
 	
 	private void playerLeave() {
-		this.playerDecision = PokerPlayerDecision.Leave;	
+		this.playerDecision = PokerPlayerMovement.Fold;	
 		this.setVisible(false);
 	}
 	
@@ -309,12 +309,12 @@ public class TexasHoldemPlayerDecision extends JDialog {
 			int amount = Integer.parseInt(raiseAmount);
 			
 			if (amount == this.slBet.getMaximum()) {
-				this.playerDecision = PokerPlayerDecision.AllIn;
+				this.playerDecision = PokerPlayerMovement.AllIn;
 				this.setRaiseAmount(amount);
 				this.setVisible(false);
 			}
 			else if (amount >= slBet.getMinimum()) {
-				this.playerDecision = PokerPlayerDecision.Raise;
+				this.playerDecision = PokerPlayerMovement.Raise;
 				this.setRaiseAmount(amount);
 				this.setVisible(false);	
 			}			 

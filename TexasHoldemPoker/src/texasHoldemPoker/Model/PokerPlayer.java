@@ -11,7 +11,7 @@ public class PokerPlayer extends Player{
 	
 	private int balance;
 	
-	private PokerPlayerDecision decision;
+	private PokerPlayerMovement move;
 	
 	private PokerBlind blind;
 			
@@ -20,24 +20,26 @@ public class PokerPlayer extends Player{
 		this.hand = new ArrayList<PokerCard>();
 		this.setBet(0);
 		this.setBalance(0);
-		this.setDecision(PokerPlayerDecision.Play);
+		this.setMove(PokerPlayerMovement.Wait);
 		this.setBlind(PokerBlind.None);
 	}
-	
-
 	
 	public void addCard(PokerCard card) {
 		this.hand.add(card);
 	}
 	
+	public void call() {
+		this.setMove(PokerPlayerMovement.Call);
+	}
 	public void call(long amount) {
-		this.raise(amount);
+		this.call();
+		this.makeBet(amount);
 	}
 	
 	public void raise(long amount) {
 		if (this.getBalance() - amount > 0) {
-			this.bet += amount;
-			this.balance -= amount;
+			this.makeBet(amount);
+			this.setMove(PokerPlayerMovement.Raise);
 		}
 		else {			
 			this.allIn();
@@ -45,11 +47,11 @@ public class PokerPlayer extends Player{
 	}
 	
 	public void leave() {
-		this.setDecision(PokerPlayerDecision.Leave);
+		this.setMove(PokerPlayerMovement.Fold);
 	}
 	
 	public void allIn() {
-		this.setDecision(PokerPlayerDecision.AllIn);
+		this.setMove(PokerPlayerMovement.AllIn);
 		this.bet += balance;
 		this.balance = 0;		
 	}
@@ -80,18 +82,18 @@ public class PokerPlayer extends Player{
 
 	public void setBalance(int balance) {
 		this.balance = balance;
+		
+		if (balance == 0) {
+			this.setMove(PokerPlayerMovement.Out);
+		}
 	}
 
-	public PokerPlayerDecision getDecision() {
-		return decision;
+	public PokerPlayerMovement getMove() {
+		return move;
 	}
 
-	public void setDecision(PokerPlayerDecision decision) {
-		this.decision = decision;
-	}
-	
-	private void clearHand() {
-		this.hand = new ArrayList<PokerCard>();
+	public void setMove(PokerPlayerMovement decision) {
+		this.move = decision;
 	}
 
 	public boolean hasBigBlind() {
@@ -117,4 +119,9 @@ public class PokerPlayer extends Player{
 	public void setBlind(PokerBlind blind) {
 		this.blind = blind;
 	}	
+	
+	private void makeBet(long amount) {
+		this.bet += amount;
+		this.balance -= amount;
+	}
 }

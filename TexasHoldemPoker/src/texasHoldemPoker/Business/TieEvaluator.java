@@ -2,7 +2,6 @@ package texasHoldemPoker.Business;
 
 import java.util.ArrayList;
 
-import texasHoldemPoker.Common.Catalogs.PokerRankingCatalog;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerHandComparer;
 import texasHoldemPoker.Model.PokerHandEvaluation;

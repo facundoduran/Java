@@ -8,10 +8,8 @@ import java.util.Map;
 import texasHoldemPoker.Common.PokerCardComparator;
 import texasHoldemPoker.Common.PokerHelper;
 import texasHoldemPoker.Common.Catalogs.PokerRankingCatalog;
-import texasHoldemPoker.Model.Card;
 import texasHoldemPoker.Model.PokerCard;
 import texasHoldemPoker.Model.PokerHandComparer;
-import texasHoldemPoker.Model.Suit;
 
 public class PokerHandTieEvaluator {
 	

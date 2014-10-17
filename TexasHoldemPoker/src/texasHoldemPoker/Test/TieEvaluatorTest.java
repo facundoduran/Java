@@ -3,14 +3,10 @@ package texasHoldemPoker.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
 import org.junit.Test;
 
 import texasHoldemPoker.Business.HandEvaluator;
 import texasHoldemPoker.Business.PokerHandTieEvaluator;
-import texasHoldemPoker.Business.TieEvaluator;
-import texasHoldemPoker.Common.PokerCardComparator;
 import texasHoldemPoker.Model.*;
 
 public class TieEvaluatorTest {
@@ -91,9 +87,7 @@ public class TieEvaluatorTest {
 		PokerHandEvaluation firstPlayerEvaluation = HandEvaluator.getBestHand(firstPlayer, communitaryCards);
 		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
 		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
-		
-		int rank = firstPlayerEvaluation.getRank();
-		
+				
 		//tie beetween first, second and fourth- check the kickers
 		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
 		potentialWinners.add(firstPlayerEvaluation);
@@ -143,9 +137,7 @@ public class TieEvaluatorTest {
 		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
 		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
 		PokerHandEvaluation fourthPlayerEvaluation = HandEvaluator.getBestHand(fourthPlayer, communitaryCards);
-		
-		int rank = firstPlayerEvaluation.getRank();
-		
+				
 		//tie beetween first, second and fourth- check the kickers
 		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
 		potentialWinners.add(firstPlayerEvaluation);
@@ -196,9 +188,7 @@ public class TieEvaluatorTest {
 		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
 		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(thirdPlayer, communitaryCards);
 		PokerHandEvaluation fourthPlayerEvaluation = HandEvaluator.getBestHand(fourthPlayer, communitaryCards);
-		
-		int rank = firstPlayerEvaluation.getRank();
-		
+				
 		//tie beetween first, second and fourth- check the kickers
 		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
 		potentialWinners.add(firstPlayerEvaluation);
@@ -249,9 +239,7 @@ public class TieEvaluatorTest {
 		PokerHandEvaluation secondPlayerEvaluation = HandEvaluator.getBestHand(secondPlayer, communitaryCards);
 		PokerHandEvaluation thirdPlayerEvaluation = HandEvaluator.getBestHand(thirdPlayer, communitaryCards);
 		PokerHandEvaluation fourthPlayerEvaluation = HandEvaluator.getBestHand(fourthPlayer, communitaryCards);
-		
-		int rank = firstPlayerEvaluation.getRank();
-		
+				
 		//tie beetween first, second and fourth- check the kickers
 		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
 		potentialWinners.add(firstPlayerEvaluation);
@@ -472,7 +460,6 @@ public class TieEvaluatorTest {
 		
 		ArrayList<PokerHandEvaluation> potentialWinners = new ArrayList<PokerHandEvaluation>();
 		potentialWinners.add(firstPlayerEvaluation);
-		//potentialWinners.add(secondPlayerEvaluation);
 		potentialWinners.add(thirdPlayerEvaluation);
 		
 		ArrayList<PokerHandEvaluation> winners = this.getWinners(potentialWinners);

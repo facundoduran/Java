@@ -1,10 +1,11 @@
 package texasHoldemPoker.Model;
 
-public enum PokerPlayerDecision 
+public enum PokerPlayerMovement 
 {
 	Call,
 	Raise,
 	AllIn,
-	Leave,
-	Play
+	Fold,
+	Wait,
+	Out
 }
