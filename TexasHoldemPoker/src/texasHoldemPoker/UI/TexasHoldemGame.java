@@ -423,68 +423,26 @@ public class TexasHoldemGame extends JFrame{
 		
 		this.showPlayerInfo(this.game.getPlayers(), false);
 		
-		boolean allInBreak = false;
-		boolean finishGame = false;
-		int gameState = 0;
+		//Pre-flop betting round
+		doBettingRound();
 		
-		while(gameState < 4 && !finishGame)
-		{
-			boolean continuePlaying = false;
-			int playerPlayCounter = 1;
-			do
-			{				
-				PokerPlayer currentPlayer = this.game.getPlayer();				
-												
-				if (!currentPlayer.madeAllIn() && !allInBreak) {
-					this.showPlayerDecisionForm(currentPlayer);
-				}
-				else {
-					this.game.nextTurn(PokerPlayerDecision.AllIn);
-				}
-				
-				//check if all players leave
-				if(this.game.getPlayingPlayers().size() == 1) 
-				{
-					finishGame = true;
-				}
-				
-				//check if all players raise
-				if (this.game.allPlayersHasSameBet() && playerPlayCounter % this.game.getPlayingPlayers().size() == 0) {
-					continuePlaying = true;
-				}
-				
-				//check if all players made all in
-				if (!this.game.existMoreThanOnePlayerWithoutAllInOrLeave()) {
-					continuePlaying = true;
-				}
-				
-				playerPlayCounter++;
-			}				
-			while(!finishGame && !continuePlaying);
-			
-			if (!finishGame)
-			{
-				switch(gameState)
-				{
-					case 0:
-						this.game.flop();
-						showFlopCard();
-						break;
-					case 1:
-						this.game.turn();
-						showTurnCards();
-						break;
-					case 2:
-						this.game.river();
-						showRiverCard();
-						break;
-					default:
-						break;
-				}
-				
-				gameState++;
-			}
-		}
+		this.game.flop();
+		showFlopCard();
+		
+		//flop betting round
+		doBettingRound();
+
+		this.game.turn();
+		showTurnCards();
+		
+		//turn betting round
+		doBettingRound();
+		
+		this.game.river();
+		showRiverCard();
+		
+		//river betting round
+		doBettingRound();
 		
 		ArrayList<PokerHandEvaluation> winners = game.finishGame();
 		
@@ -499,6 +457,42 @@ public class TexasHoldemGame extends JFrame{
 		this.pnlWinner.setVisible(true);
 		
 		this.bigBlindPos++;
+	}
+	
+	private void doBettingRound() {
+		boolean finishGame = false;
+		boolean continuePlaying = true;
+		int playerPlayCounter = 1;
+		do
+		{				
+			PokerPlayer currentPlayer = this.game.getPlayer();				
+											
+			if (!currentPlayer.madeAllIn()) {
+				this.showPlayerDecisionForm(currentPlayer);
+			}
+			else {
+				this.game.nextTurn(PokerPlayerDecision.AllIn);
+			}
+			
+			//check if all players leave
+			if(this.game.getPlayingPlayers().size() == 1) 
+			{
+				finishGame = true;
+			}
+			
+			//check if all players has the same bet
+			if (this.game.allPlayersHasSameBet() && playerPlayCounter % this.game.getPlayingPlayers().size() == 0) {
+				continuePlaying = false;
+			}
+			
+			//check if all players made all in
+			if (!this.game.existMoreThanOnePlayerWithoutAllInOrLeave()) {
+				continuePlaying = false;
+			}
+			
+			playerPlayCounter++;
+		}				
+		while(!finishGame && continuePlaying);		
 	}
 
 	private void showPlayerDecisionForm(PokerPlayer currentPlayer) {
